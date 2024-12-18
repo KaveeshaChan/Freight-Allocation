@@ -7,20 +7,50 @@ const LoginPage = () => {
   const [email, setEmail] = useState(""); // To store email input
   const [password, setPassword] = useState(""); // To store password input
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage(""); // Clear previous errors
 
-    // Simulating a network request (you can replace this with actual logic)
-    setTimeout(() => {
-      // Simple validation for demo purposes
-      if (email !== "test@example.com" || password !== "password123") {
-        setErrorMessage("Incorrect email or password!"); // Set error message
+    // API endpoint
+    const apiUrl = "https://your-api-endpoint.com/login"; // Replace with your API endpoint
+
+    // Prepare the data for the API request
+    const payload = {
+      email: email,
+      password: password,
+    };
+
+    try {
+      // Make the API request
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload), // Send the email and password as JSON
+      });
+
+      // Check if the response is successful
+      if (!response.ok) {
+        // If the response is not OK, throw an error
+        throw new Error("Incorrect email or password!");
       }
 
-      setIsLoading(false); // Reset loading state
-    }, 3000); // Simulate a 3-second delay for the demo
+      // If the login is successful, handle the response
+      const data = await response.json();
+      // You can store the token or user data if needed
+      console.log(data);
+
+      // Reset the form or redirect the user
+      setIsLoading(false);
+      setEmail(""); // Clear the email input
+      setPassword(""); // Clear the password input
+    } catch (error) {
+      // Handle any errors
+      setErrorMessage(error.message);
+      setIsLoading(false);
+    }
   };
 
   return (
