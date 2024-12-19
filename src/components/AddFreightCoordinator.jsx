@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../assests/basilurlogo.png'; // Import the logo
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from react-icons
-import { Link } from 'react-router-dom';
+import Layout from './Layout';
 
 const AddFreightCoordinator = () => {
   const [freightAgents, setFreightAgents] = useState([]); // State for available freight agents
@@ -82,82 +81,7 @@ const AddFreightCoordinator = () => {
   
 
   return (
-    <div className="font-sans min-h-screen flex flex-col justify-between" style={{ backgroundColor: '#FFFFFF' }}>
-      {/* Header */}
-      <header
-        className="flex items-center justify-center p-2 mx-auto"
-        style={{
-          backgroundColor: '#191919',
-          color: '#FFFFFF',
-          borderRadius: '30px',
-          height: '50px',
-          width: '85%',
-          marginTop: '20px',
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <img src={logo} alt="Logo" className="mr-4" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-        <h1 className="text-lg font-bold flex-1 text-center" style={{ color: '#FFFFFF' }}>
-          Freight Allocation
-        </h1>
-      </header>
-
-      {/* Navigation Buttons */}
-      <nav className="mt-4 mb-8 w-85%">
-        <ul className="flex space-x-4 justify-center items-center">
-          <li>
-            <Link to="/Home">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Home
-              </button>
-            </Link>
-          </li>
-          <span className="text-orange-500">|</span>
-          <li>
-            <Link to="/add-freight-agent">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Add Freight Agent
-              </button>
-            </Link>
-          </li>
-          <span className="text-orange-500">|</span>
-          <li>
-            <Link to="/add-freight-coordinator">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Add Freight Coordinator
-              </button>
-            </Link>
-          </li>
-          <span className="text-orange-500">|</span>
-          <li>
-            <Link to="/add-main-user">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Add Main User
-              </button>
-            </Link>
-          </li>
-        </ul>
-      </nav>
+    <Layout>
 
       {/* Main Content */}
       <main className="flex-1 flex justify-center items-center mt-8">
@@ -351,19 +275,7 @@ const AddFreightCoordinator = () => {
         </div>
       )}
 
-      {/* Footer */}
-      <footer
-        className="p-4 text-center"
-        style={{
-          backgroundColor: 'transparent',
-          color: '#191919',
-          fontSize: '14px',
-          marginTop: '20px',
-        }}
-      >
-        © {new Date().getFullYear()} Freight Allocation. All Rights Reserved.
-      </footer>
-    </div>
+</Layout>
   );
 };
 

@@ -1,7 +1,6 @@
-import React, { useState } from 'react'; 
-import logo from '../assests/basilurlogo.png'; 
+import React, { useState } from 'react';  
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
-import { Link } from 'react-router-dom';
+import Layout from './Layout';
 
 const AddMainUser = () => {
   const [formData, setFormData] = useState({
@@ -66,105 +65,8 @@ const AddMainUser = () => {
   };
 
   return (
-    <div
-      className="font-sans min-h-screen flex flex-col justify-between"
-      style={{
-        backgroundColor: '#FFFFFF', // White background for the body
-      }}
-    >
-      {/* Header */}
-      <header
-        className="flex items-center justify-center p-2 mx-auto"
-        style={{
-          backgroundColor: '#191919', // Black header background
-          color: '#FFFFFF', // White font color
-          borderRadius: '30px', // Rounded corners
-          height: '50px', // Smaller header height
-          width: '85%', // Narrower width
-          marginTop: '20px', // Space from top
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow
-        }}
-      >
-        {/* Logo inside the header */}
-        <img
-          src={logo}
-          alt="Logo"
-          className="mr-4"
-          style={{
-            width: '40px', // Reduced logo size
-            height: '40px',
-            objectFit: 'contain',
-          }}
-        />
-
-        {/* Title centered in the header */}
-        <h1
-          className="text-lg font-bold flex-1 text-center"
-          style={{
-            color: '#FFFFFF', // White text color
-          }}
-        >
-          Freight Allocation
-        </h1>
-      </header>
-
-      {/* Navigation Buttons */}
-      <nav className="mt-4 mb-8 w-85%">
-        <ul className="flex space-x-4 justify-center items-center">
-          <li>
-            <Link to="/Home">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Home
-              </button>
-            </Link>
-          </li>
-          <span className="text-orange-500">|</span>
-          <li>
-            <Link to="/add-freight-agent">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Add Freight Agent
-              </button>
-            </Link>
-          </li>
-          <span className="text-orange-500">|</span>
-          <li>
-            <Link to="/add-freight-coordinator">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Add Freight Coordinator
-              </button>
-            </Link>
-          </li>
-          <span className="text-orange-500">|</span>
-          <li>
-            <Link to="/add-main-user">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Add Main User
-              </button>
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
+    <Layout>
+    
       {/* Main Content */}
       <main className="flex-1 flex justify-center items-center mt-8">
         <div
@@ -354,20 +256,7 @@ const AddMainUser = () => {
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <footer
-        className="p-4 text-center"
-        style={{
-          backgroundColor: 'transparent',
-          color: '#191919',
-          fontSize: '14px',
-          marginTop: '20px',
-        }}
-      >
-        © {new Date().getFullYear()} Freight Allocation. All Rights Reserved.
-      </footer>
-    </div>
+    </Layout>
   );
 };
 

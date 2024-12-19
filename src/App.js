@@ -6,6 +6,7 @@ import HomePage from './components/HomePage'; // Import AdminPage
 import AddFreightAgent from './components/AddFreightAgent'; // Add this page
 import AddFreightCoordinator from './components/AddFreightCoordinator.jsx'; // Add this page
 import AddMainUser from './components/AddMainUser'; // Add this page
+import Layout from './components/Layout.jsx';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/add-freight-agent" element={<AddFreightAgent />} />
         <Route path="/add-freight-coordinator" element={<AddFreightCoordinator />} />
         <Route path="/add-main-user" element={<AddMainUser />} />
+        <Route path="/Layout" element={<Layout />} />
       </Routes>
     </Router>
   );
