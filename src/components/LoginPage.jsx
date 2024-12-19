@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import logo from '../assests/basilurlogo.png'; // Import the logo
+import logo from '../assests/basilurlogo.png';
+import jwtDecode from 'jwt-decode';
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,49 +11,52 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrorMessage(""); // Clear previous errors
-
-    // API endpoint
+    setErrorMessage("");
+  
     const apiUrl = "http://localhost:5056/api/login";
-
-    // Prepare the data for the API request
-    const payload = {
-      email: email,
-      password: password,
-    };
-
+  
+    const payload = { email, password };
+  
     try {
-      // Make the API request
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload), // Send the email and password as JSON
-        
+        body: JSON.stringify(payload),
       });
-
-      // Check if the response is successful
+  
       if (!response.ok) {
-        // If the response is not OK, throw an error
-        throw new Error("Incorrect email or password!");
+        throw new Error("Invalid email or password!");
       }
-
-      // If the login is successful, handle the response
+  
       const data = await response.json();
-      // You can store the token or user data if needed
-      console.log(data);
+      const token = data.token;
 
-      // Reset the form or redirect the user
+      // Decode the token to get user role
+      const decodedToken = jwtDecode(token);
+      const roleName = decodedToken.roleName;
+
+      // Redirect based on role
+      if (roleName === "admin") {
+        window.location.href = "/admin-dashboard"; // Redirect to admin page
+      } else if (roleName === "main user") {
+        window.location.href = "/main-dashboard"; // Redirect to main user page
+      } else if (roleName === "common user") {
+        window.location.href = "/user-dashboard"; // Redirect to common user page
+      } else {
+        throw new Error("Unknown role");
+      }
+      console.log("Login successful",data);
+      setEmail("");
+      setPassword("");
       setIsLoading(false);
-      setEmail(""); // Clear the email input
-      setPassword(""); // Clear the password input
     } catch (error) {
-      // Handle any errors
       setErrorMessage(error.message);
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div
