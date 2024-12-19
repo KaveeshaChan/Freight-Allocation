@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../assests/basilurlogo.png';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,10 +39,10 @@ const LoginPage = () => {
 
       // Redirect based on role
       if (roleName === "admin") {
-        window.location.href = "/admin-dashboard"; // Redirect to admin page
-      } else if (roleName === "main user") {
+        window.location.href = "/Home"; // Redirect to admin page
+      } else if (roleName === "mainUser") {
         window.location.href = "/main-dashboard"; // Redirect to main user page
-      } else if (roleName === "common user") {
+      } else if (roleName === "commonUser") {
         window.location.href = "/user-dashboard"; // Redirect to common user page
       } else {
         throw new Error("Unknown role");
