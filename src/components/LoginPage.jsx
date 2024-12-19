@@ -13,7 +13,7 @@ const LoginPage = () => {
     setErrorMessage(""); // Clear previous errors
 
     // API endpoint
-    const apiUrl = "https://your-api-endpoint.com/login"; // Replace with your API endpoint
+    const apiUrl = "http://localhost:5056/api/login";
 
     // Prepare the data for the API request
     const payload = {
@@ -29,6 +29,7 @@ const LoginPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload), // Send the email and password as JSON
+        
       });
 
       // Check if the response is successful
