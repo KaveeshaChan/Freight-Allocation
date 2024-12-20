@@ -33,15 +33,19 @@ const LoginPage = () => {
       const data = await response.json();
       const token = data.token;
 
+      // Store the token in localStorage
+      localStorage.setItem("token", token);
+
       // Decode the token to get user role
       const decodedToken = jwtDecode(token);
       const roleName = decodedToken.roleName;
+      console.log(roleName);
 
       // Redirect based on role
       if (roleName === "admin") {
         window.location.href = "/Home"; // Redirect to admin page
       } else if (roleName === "mainUser") {
-        window.location.href = "/main-dashboard"; // Redirect to main user page
+        window.location.href = "/Home"; // Redirect to main user page
       } else if (roleName === "commonUser") {
         window.location.href = "/user-dashboard"; // Redirect to common user page
       } else {
