@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-
+import React, { useState, useMemo } from 'react';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-
 import Layout from './Layout';
 
 const AddFreightAgent = () => {
   const [formData, setFormData] = useState({
     name: '',
+    BRN: '',
     address: '',
     contactNumber: '',
     email: '',
@@ -25,24 +26,33 @@ const AddFreightAgent = () => {
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
+  const options = useMemo(() => countryList().getData(), []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCountryChange = (selectedOption) => {
+    setFormData((prev) => ({ ...prev, country: selectedOption.value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newErrors = {};
+    if (!formData.name) newErrors.name = 'Company Name is required';
+    if (!formData.BRN) newErrors.BRN = 'Business Registration Numberis required';
     if (!formData.country) newErrors.country = 'Country is required';
-    if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.address) newErrors.address = 'Address is required';
-    if (!formData.contactNumber) newErrors.contactNumber = 'Contact number is required';
-    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.address) newErrors.address = 'Company Address is required';
+    if (!formData.contactNumber) newErrors.contactNumber = 'Company Contact number is required';
+    if (!formData.email) newErrors.email = 'Company Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
     if (!formData.director1ContactNumber) newErrors.director1ContactNumber = 'Director 01 Contact Number is required';
     if (!formData.director1Email) newErrors.director1Email = 'Director 01 Email is required';
     if (!formData.director1Name) newErrors.director1Name = 'Director 01 Name is required';
     if (!formData.password) newErrors.password = 'Password is required';
+    
 
     setErrors(newErrors);
 
@@ -55,18 +65,23 @@ const AddFreightAgent = () => {
         setShowSuccessPopup(true);
         setFormData({
           name: '',
+          BRN: '',
+          country: '',
           address: '',
           contactNumber: '',
           email: '',
+          password: '',
           director1ContactNumber: '',
           director1Email: '',
           director1Name: '',
           director2ContactNumber: '',
           director2Email: '',
-          director2Name: '',
-          password: '',
-          country: ''
+          director2Name: ''
         });
+
+
+          
+          
       }, 1000);
     } else {
       setShowErrorPopup(true);
@@ -163,38 +178,14 @@ const AddFreightAgent = () => {
             Add Freight Agent
           </h2>
           <form onSubmit={handleSubmit} className="flex flex-col">
-            {/* Country */}
-            <div className="mb-3">
-              <label
-                htmlFor="country"
-                className="block mb-1 text-sm"
-                style={{ color: '#191919' }}
-              >
-                Country:
-              </label>
-              <input
-                type="text"
-                id="country"
-                name="country"
-                className="w-full p-2 border rounded-md text-sm"
-                style={{
-                  borderColor: '#191919',
-                  backgroundColor: '#FFFFFF',
-                  color: '#191919',
-                }}
-                value={formData.country}
-                onChange={handleChange}
-              />
-              {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
-            </div>
-            {/* Name */}
+            {/* company name */}
             <div className="mb-3">
               <label
                 htmlFor="name"
                 className="block mb-1 text-sm"
                 style={{ color: '#191919' }}
               >
-                Name:
+                Company Name:
               </label>
               <input
                 type="text"
@@ -212,6 +203,49 @@ const AddFreightAgent = () => {
               {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
             </div>
 
+            {/* BRN & country */}
+            <div className="mb-3 flex space-x-4">
+                <div className="w-1/2">
+                  <label
+                    htmlFor="BRN"
+                    className="block mb-1 text-sm"
+                    style={{ color: '#191919' }}
+                  >
+                    Business Registration Number:
+                  </label>
+                  <input
+                    type="text"
+                    id="BRN"
+                    name="BRN"
+                    className="w-full p-2 border rounded-md text-sm"
+                    style={{
+                      borderColor: '#191919',
+                      backgroundColor: '#FFFFFF',
+                      color: '#191919',
+                    }}
+                    value={formData.BRN}
+                    onChange={handleChange}
+                  />
+                  {errors.BRN && <p className="text-red-500 text-xs">{errors.BRN}</p>}
+                </div>
+                <div className="w-1/2">
+                  <label
+                    htmlFor="country"
+                    className="block mb-1 text-sm"
+                    style={{ color: '#191919' }}
+                  >
+                    Country:
+                  </label>
+                  <Select
+                    options={options}
+                    value={options.find((option) => option.value === formData.country)}
+                    onChange={handleCountryChange}
+                  />
+                  {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
+                </div>
+              </div>
+
+
             {/* Address */}
             <div className="mb-3">
               <label
@@ -219,7 +253,7 @@ const AddFreightAgent = () => {
                 className="block mb-1 text-sm"
                 style={{ color: '#191919' }}
               >
-                Address:
+                Company Address:
               </label>
               <input
                 type="text"
@@ -245,7 +279,7 @@ const AddFreightAgent = () => {
                   className="block mb-1 text-sm"
                   style={{ color: '#191919' }}
                 >
-                  Contact Number:
+                  Company Contact Number:
                 </label>
                 <input
                   type="text"
@@ -268,7 +302,7 @@ const AddFreightAgent = () => {
                   className="block mb-1 text-sm"
                   style={{ color: '#191919' }}
                 >
-                  Email:
+                  Company Email:
                 </label>
                 <input
                   type="email"
@@ -473,4 +507,5 @@ const AddFreightAgent = () => {
   );
 };
 
-export default AddFreightAgent;
+export default AddFreightAgent;      
+
