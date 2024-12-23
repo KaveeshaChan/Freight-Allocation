@@ -1,33 +1,48 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import logo from '../assests/basilurlogo.png'; // Import logo
-import { FaCaretDown } from 'react-icons/fa'; // Import caret down icon for dropdown
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import logo from "../assests/basilurlogo.png"; // Import logo
+import { FaCaretDown } from "react-icons/fa"; // Import caret down icon for dropdown
+import { jwtDecode } from 'jwt-decode'; // Ensure this is the correct import
 
 const Layout = ({ children }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false); // State for dropdown visibility
+  const [userRole, setUserRole] = useState(null); // State to store user role
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserRole(decodedToken.roleName); // Set user role from token
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
 
   return (
     <div
       className="font-sans min-h-screen flex flex-col"
       style={{
-        backgroundColor: '#FFFFFF', // White background for the page
-        margin: 0, // Remove any margin for the body
-        padding: 0, // Remove any padding
+        backgroundColor: "#FFFFFF",
+        margin: 0,
+        padding: 0,
       }}
     >
       {/* Header */}
       <header
         className="flex items-center justify-center p-2 mx-auto"
         style={{
-          backgroundColor: '#191919', // Black header background
-          color: '#FFFFFF', // White font color
-          borderRadius: '30px', // Rounded header corners
-          height: '50px', // Smaller header height
-          width: '85%', // Header width
-          marginTop: '20px', // Space from top
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow
-          paddingTop: '5px', // Adjust padding for compact header
-          paddingBottom: '5px', // Adjust padding for compact header
+          backgroundColor: "#191919", // Black header background
+          color: "#FFFFFF", // White font color
+          borderRadius: "30px", // Rounded header corners
+          height: "50px", // Smaller header height
+          width: "85%", // Header width
+          marginTop: "20px", // Space from top
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
+          paddingTop: "5px", // Adjust padding for compact header
+          paddingBottom: "5px", // Adjust padding for compact header
         }}
       >
         {/* Logo */}
@@ -36,16 +51,16 @@ const Layout = ({ children }) => {
           alt="Logo"
           className="mr-4"
           style={{
-            width: '40px', // Logo size
-            height: '40px',
-            objectFit: 'contain',
+            width: "40px", // Logo size
+            height: "40px",
+            objectFit: "contain",
           }}
         />
         {/* Title */}
         <h1
           className="text-lg font-bold flex-1 text-center"
           style={{
-            color: '#FFFFFF', // White text color
+            color: "#FFFFFF", // White text color
           }}
         >
           Freight Allocation
@@ -56,9 +71,9 @@ const Layout = ({ children }) => {
       <div
         className="mt-8 w-85%"
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <ul className="flex space-x-4 justify-center items-center flex-grow">
@@ -66,7 +81,7 @@ const Layout = ({ children }) => {
             <button
               className="text-lg font-medium text-black hover:text-orange-500 hover:underline flex items-center"
               style={{
-                transition: 'all 0.3s ease',
+                transition: "all 0.3s ease",
               }}
               onClick={() => setDropdownVisible(!isDropdownVisible)} // Toggle dropdown visibility
             >
@@ -105,7 +120,7 @@ const Layout = ({ children }) => {
               <button
                 className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
                 style={{
-                  transition: 'all 0.3s ease',
+                  transition: "all 0.3s ease",
                 }}
               >
                 Add Freight Agent
@@ -118,26 +133,30 @@ const Layout = ({ children }) => {
               <button
                 className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
                 style={{
-                  transition: 'all 0.3s ease',
+                  transition: "all 0.3s ease",
                 }}
               >
                 Add Freight Coordinator
               </button>
             </Link>
           </li>
-          <span className="text-orange-500">|</span>
-          <li>
-            <Link to="/add-main-user">
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Add Main User
-              </button>
-            </Link>
-          </li>
+          {userRole !== "mainUser" && ( // Conditionally render the Add Main User link
+            <>
+              <span className="text-orange-500">|</span>
+              <li>
+                <Link to="/add-main-user">
+                  <button
+                    className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
+                    style={{
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    Add Main User
+                  </button>
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
 
@@ -148,10 +167,10 @@ const Layout = ({ children }) => {
       <footer
         className="p-4 text-center mt-auto"
         style={{
-          backgroundColor: 'transparent', // Transparent background
-          color: '#191919', // Black text
-          fontSize: '14px',
-          marginTop: '20px',
+          backgroundColor: "transparent", // Transparent background
+          color: "#191919", // Black text
+          fontSize: "14px",
+          marginTop: "20px",
         }}
       >
         © {new Date().getFullYear()} Freight Allocation. All Rights Reserved.
