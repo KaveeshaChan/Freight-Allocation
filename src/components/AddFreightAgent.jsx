@@ -3,6 +3,7 @@ import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Layout from './Layout';
+import { getCountryCallingCode } from 'libphonenumber-js';
 
 const AddFreightAgent = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,16 @@ const AddFreightAgent = () => {
   };
 
   const handleCountryChange = (selectedOption) => {
-    setFormData((prev) => ({ ...prev, country: selectedOption.value }));
+    const countryCode = selectedOption.value; // Get the country code from the selected option
+    const callingCode = getCountryCallingCode(countryCode); // Get the calling code using libphonenumber-js
+
+    setFormData((prev) => ({
+      ...prev,
+      country: selectedOption.value,
+      contactNumber: `+${callingCode}`, // Prepend the calling code to the contact number
+      director1ContactNumber: `+${callingCode}`,
+      director2ContactNumber: `+${callingCode}`
+    }));
   };
 
   const handleSubmit = (e) => {
