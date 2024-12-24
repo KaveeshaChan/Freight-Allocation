@@ -1,6 +1,7 @@
 import React, { useState } from 'react';  
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import Layout from './Layout';
+import axios from 'axios'; // Importing axios
 
 const AddMainUser = () => {
   const [formData, setFormData] = useState({
@@ -40,56 +41,44 @@ const AddMainUser = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
-  const validationErrors = validateForm();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = validateForm();
 
-  if (Object.keys(validationErrors).length > 0) {
-    setErrors(validationErrors);
-    setShowErrorPopup(true);
-  } else {
-    // Remove spaces from the contact number before sending it
-    const cleanedContactNumber = formData.contactNumber.replace(/\s+/g, '');
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setShowErrorPopup(true);
+    } else {
+      // Remove spaces from the contact number before sending it
+      const cleanedContactNumber = formData.contactNumber.replace(/\s+/g, '');
+      const cleanedFormData = { ...formData, contactNumber: cleanedContactNumber };
 
-    // Create a new form data object with the cleaned contact number
-    const cleanedFormData = { ...formData, contactNumber: cleanedContactNumber };
+      // Debugging: Log cleaned form data
+      console.log("Form data to send:", cleanedFormData);
 
-    // Clear errors and show success popup
-    setErrors({});  // Reset errors state
-    setShowSuccessPopup(true);
+      setErrors({});  // Reset errors state
 
-    console.log('Sending data to API:', cleanedFormData);
-    // Log the cleaned form data
+      try {
+        const response = await axios.post('http://localhost:5056/api/add-main-user', cleanedFormData);
 
-    fetch('http://localhost:5056/api/add-main-user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(cleanedFormData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-
-    // Clear form data after success
-    setFormData({
-      name: '',
-      email: '',
-      contactNumber: '+94',
-      password: '',
-    });
-  }
-};
-  
+        if (response.status === 200) {
+          setShowSuccessPopup(true);
+          setFormData({
+            name: '',
+            email: '',
+            contactNumber: '+94',
+            password: '',
+          });
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setShowErrorPopup(true);
+      }
+    }
+  };
 
   return (
     <Layout>
-    
       {/* Main Content */}
       <main className="flex-1 flex justify-center items-center mt-8">
         <div
