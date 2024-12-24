@@ -3,7 +3,7 @@ import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Layout from './Layout';
-import { getCountryCallingCode } from 'libphonenumber-js';
+import { getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js';
 
 const AddFreightAgent = () => {
   const [formData, setFormData] = useState({
@@ -26,52 +26,70 @@ const AddFreightAgent = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [isCountrySelected, setIsCountrySelected] = useState(false); // Track if country is selected
+  const [callingCode, setCallingCode] = useState(""); // Store calling code
 
   const options = useMemo(() => countryList().getData(), []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const updatedFormData = { ...prev, [name]: value };
+      // console.log("Updated FormData:", updatedFormData); // Comment or remove this line
+      return updatedFormData;
+    });
   };
+  
 
   const handleCountryChange = (selectedOption) => {
-    const countryCode = selectedOption.value; // Get the country code from the selected option
-    const callingCode = getCountryCallingCode(countryCode); // Get the calling code using libphonenumber-js
+    const countryCode = selectedOption.value;
+    const newCallingCode = `+${getCountryCallingCode(countryCode)}`;
 
     setFormData((prev) => ({
       ...prev,
-      country: selectedOption.value,
-      contactNumber: `+${callingCode}`, // Prepend the calling code to the contact number
-      director1ContactNumber: `+${callingCode}`,
-      director2ContactNumber: `+${callingCode}`
+      country: selectedOption.label,
+      contactNumber: newCallingCode,
+      director1ContactNumber: newCallingCode,
+      director2ContactNumber: newCallingCode,
     }));
+    
+    setIsCountrySelected(true); // Mark country as selected
+    setCallingCode(newCallingCode); // Store calling code
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validatePhoneNumber = (number, country) => {
+    try {
+      const phoneNumber = parsePhoneNumberFromString(number, country);
+      return phoneNumber?.isValid() || false;
+    } catch {
+      return false;
+    }
+  };
 
-    const newErrors = {};
-    if (!formData.name) newErrors.name = 'Company Name is required';
-    if (!formData.BRN) newErrors.BRN = 'Business Registration Numberis required';
-    if (!formData.country) newErrors.country = 'Country is required';
-    if (!formData.address) newErrors.address = 'Company Address is required';
-    if (!formData.contactNumber) newErrors.contactNumber = 'Company Contact number is required';
-    if (!formData.email) newErrors.email = 'Company Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (!formData.director1ContactNumber) newErrors.director1ContactNumber = 'Director 01 Contact Number is required';
-    if (!formData.director1Email) newErrors.director1Email = 'Director 01 Email is required';
-    if (!formData.director1Name) newErrors.director1Name = 'Director 01 Name is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    
+  const cleanPhoneNumber = (number) => {
+    return number.replace(/\s+/g, ''); // Remove all whitespace characters
+  };
 
-    setErrors(newErrors);
+  const submitFormData = async (formData) => {
+    const cleanedFormData = {
+      ...formData,
+      contactNumber: cleanPhoneNumber(formData.contactNumber),
+      director1ContactNumber: cleanPhoneNumber(formData.director1ContactNumber),
+      director2ContactNumber: cleanPhoneNumber(formData.director2ContactNumber),
+    };
 
-    // If there are no errors, submit the form
-    if (Object.keys(newErrors).length === 0) {
-      console.log('Form submitted with:', formData);
+    console.log("Cleaned Form Data in submit:", cleanedFormData); // Log cleaned data
 
-      // Simulate sending email (You would replace this with actual email sending logic)
-      setTimeout(() => {
+    try {
+      const response = await fetch('http://localhost:5056/api/add-freight-agent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cleanedFormData),
+      });
+
+      if (response.ok) {
         setShowSuccessPopup(true);
         setFormData({
           name: '',
@@ -86,13 +104,51 @@ const AddFreightAgent = () => {
           director1Name: '',
           director2ContactNumber: '',
           director2Email: '',
-          director2Name: ''
+          director2Name: '',
         });
+      } else {
+        const errorData = await response.json();
+        console.error('Server Error:', errorData);
+        setShowErrorPopup(true);
+      }
+    } catch (error) {
+      console.error('Request Error:', error);
+      setShowErrorPopup(true);
+    }
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-          
-          
-      }, 1000);
+    const newErrors = {};
+
+    // Validation
+    if (!formData.name.trim()) newErrors.name = 'Company Name is required';
+    if (!formData.BRN.trim()) newErrors.BRN = 'Business Registration Number is required';
+    if (!formData.country) newErrors.country = 'Country is required';
+    if (!formData.address.trim()) newErrors.address = 'Company Address is required';
+    if (!formData.contactNumber.trim()) {
+      newErrors.contactNumber = 'Contact number is required';
+    } else if (!validatePhoneNumber(formData.contactNumber, formData.country)) {
+      newErrors.contactNumber = 'Invalid phone number';
+    }
+    if (!formData.email.trim()) newErrors.email = 'Company Email is required';
+    if (!formData.password.trim()) newErrors.password = 'Password is required';
+    if (!formData.director1ContactNumber.trim()) {
+      newErrors.director1ContactNumber = 'Director 01 Contact Number is required';
+    } else if (!validatePhoneNumber(formData.director1ContactNumber, formData.country)) {
+      newErrors.director1ContactNumber = 'Invalid phone number for Director 01';
+    }
+    if (!formData.director1Email.trim()) newErrors.director1Email = 'Director 01 Email is required';
+    if (!formData.director1Name.trim()) newErrors.director1Name = 'Director 01 Name is required';
+    if (formData.director2ContactNumber.trim() && !validatePhoneNumber(formData.director2ContactNumber, formData.country)) {
+      newErrors.director2ContactNumber = 'Invalid phone number for Director 02';
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      submitFormData(formData);
     } else {
       setShowErrorPopup(true);
     }
@@ -284,11 +340,7 @@ const AddFreightAgent = () => {
             {/* Contact Number & Email */}
             <div className="mb-3 flex space-x-4">
               <div className="w-1/2">
-                <label
-                  htmlFor="contactNumber"
-                  className="block mb-1 text-sm"
-                  style={{ color: '#191919' }}
-                >
+              <label htmlFor="contactNumber" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                   Company Contact Number:
                 </label>
                 <input
@@ -296,12 +348,8 @@ const AddFreightAgent = () => {
                   id="contactNumber"
                   name="contactNumber"
                   className="w-full p-2 border rounded-md text-sm"
-                  style={{
-                    borderColor: '#191919',
-                    backgroundColor: '#FFFFFF',
-                    color: '#191919',
-                  }}
-                  value={formData.contactNumber}
+                  style={{ borderColor: '#191919', backgroundColor: '#FFFFFF', color: '#191919' }}
+                  value={callingCode + formData.contactNumber.slice(callingCode.length)}
                   onChange={handleChange}
                 />
                 {errors.contactNumber && <p className="text-red-500 text-xs">{errors.contactNumber}</p>}
@@ -401,10 +449,13 @@ const AddFreightAgent = () => {
         id="director1ContactNumber"
         name="director1ContactNumber"
         className="w-full p-2 border rounded-md text-sm"
-        value={formData.director1ContactNumber}
+        style={{ borderColor: '#191919', backgroundColor: '#FFFFFF', color: '#191919' }}
+        value={callingCode + formData.director1ContactNumber.slice(callingCode.length)}
         onChange={handleChange}
       />
-      {errors.director1ContactNumber && <p className="text-red-500 text-xs">{errors.director1ContactNumber}</p>}
+      {errors.director1ContactNumber && (
+        <p className="text-red-500 text-xs">{errors.director1ContactNumber}</p>
+      )}
     </div>
 
     <div className="flex-1">
@@ -464,10 +515,13 @@ const AddFreightAgent = () => {
         id="director2ContactNumber"
         name="director2ContactNumber"
         className="w-full p-2 border rounded-md text-sm"
-        value={formData.director2ContactNumber}
+        style={{ borderColor: '#191919', backgroundColor: '#FFFFFF', color: '#191919' }}
+        value={callingCode + formData.director2ContactNumber.slice(callingCode.length)}
         onChange={handleChange}
       />
-      {errors.director2ContactNumber && <p className="text-red-500 text-xs">{errors.director2ContactNumber}</p>}
+      {errors.director2ContactNumber && (
+        <p className="text-red-500 text-xs">{errors.director2ContactNumber}</p>
+      )}
     </div>
 
     <div className="flex-1">
