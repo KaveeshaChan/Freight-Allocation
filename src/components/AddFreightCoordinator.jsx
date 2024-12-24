@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from react-icons
+import Select from 'react-select'; // Import react-select for country dropdown
+import countryList from 'react-select-country-list'; // Country list for the dropdown
+import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js'; // Import phone validation
 import Layout from './Layout';
+import axios from 'axios'; // Import axios
 
 const AddFreightCoordinator = () => {
   const [freightAgents, setFreightAgents] = useState([]); // State for available freight agents
@@ -10,11 +14,15 @@ const AddFreightCoordinator = () => {
     contactNumber: '',
     password: '',
     selectedAgent: '',
+    country: '',
+    callingCode: '', // Store the calling code separately
   });
   const [errors, setErrors] = useState({}); // State for error messages
   const [showErrorPopup, setShowErrorPopup] = useState(false); // State for controlling error popup visibility
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for controlling success popup visibility
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+
+  const countryOptions = useMemo(() => countryList().getData(), []); // Memoize country options
 
   useEffect(() => {
     // Simulate fetching data from the "Add Freight Agent" page (mocking a database call)
@@ -33,6 +41,17 @@ const AddFreightCoordinator = () => {
     });
   };
 
+  const handleCountryChange = (selectedCountry) => {
+    const callingCode = `+${getCountryCallingCode(selectedCountry.value)}`;
+    setFormData({
+      ...formData,
+      country: selectedCountry.label,
+      callingCode, // Store the calling code correctly
+      contactNumber: '', // Clear the contact number so the user can input their own
+    });
+  };
+  
+
   const closeErrorPopup = () => {
     setShowErrorPopup(false);
   };
@@ -48,41 +67,53 @@ const AddFreightCoordinator = () => {
     if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required';
     if (!formData.selectedAgent) newErrors.selectedAgent = 'Freight Agent is required';
     if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.country) newErrors.country = 'Country is required';
+    
+    // Validate the phone number format
+    if (formData.contactNumber && !isValidPhoneNumber(formData.contactNumber, formData.country)) {
+      newErrors.contactNumber = 'Invalid phone number';
+    }
 
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const validationErrors = validateForm();
-  
+    
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setShowErrorPopup(true);
     } else {
-      // Simulate sending an email notification after submitting the form
-      setShowSuccessPopup(true);
-  
-      // Clear the form data after success
-      setFormData({
-        name: '',
-        email: '',
-        contactNumber: '',
-        password: '',
-        selectedAgent: '',
-      });
-  
-      // Clear the error messages after success
-      setErrors({});  // Reset errors here
-  
+      console.log('Form Data before submitting:', formData); // Check the formData here
+      
+      try {
+        const response = await axios.post('http://localhost:5056/api/add-freight-coordinator', formData);
+        
+        if (response.status === 200) {
+          setShowSuccessPopup(true);
+          setFormData({
+            name: '',
+            email: '',
+            contactNumber: '',
+            password: '',
+            selectedAgent: '',
+            country: '',
+            callingCode: '',
+          });
+          setErrors({});
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setShowErrorPopup(true);
+      }
     }
   };
-  
   
 
   return (
     <Layout>
-
       {/* Main Content */}
       <main className="flex-1 flex justify-center items-center mt-8">
         <div
@@ -99,7 +130,24 @@ const AddFreightCoordinator = () => {
             Add Freight Coordinator
           </h2>
           <form className="flex flex-col" onSubmit={handleSubmit}>
-          <div className="mb-3">
+            {/* Country Dropdown */}
+            <div className="mb-3">
+              <label htmlFor="country" className="block mb-1 text-sm" style={{ color: '#191919' }}>
+                Country:
+              </label>
+              <Select
+                id="country"
+                name="country"
+                options={countryOptions}
+                onChange={handleCountryChange}
+                value={countryOptions.find(option => option.label === formData.country)}
+                placeholder="Select a Country"
+              />
+              {errors.country && <p className="text-red-600 text-sm">{errors.country}</p>}
+            </div>
+
+            {/* Freight Agent Dropdown */}
+            <div className="mb-3">
               <label htmlFor="selectedAgent" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Freight Agent:
               </label>
@@ -125,6 +173,7 @@ const AddFreightCoordinator = () => {
               {errors.selectedAgent && <p className="text-red-600 text-sm">{errors.selectedAgent}</p>}
             </div>
 
+            {/* Name Input */}
             <div className="mb-3">
               <label htmlFor="name" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Name:
@@ -145,6 +194,7 @@ const AddFreightCoordinator = () => {
               {errors.name && <p className="text-red-600 text-sm">{errors.name}</p>}
             </div>
 
+            {/* Email Input */}
             <div className="mb-3">
               <label htmlFor="email" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Email:
@@ -165,6 +215,7 @@ const AddFreightCoordinator = () => {
               {errors.email && <p className="text-red-600 text-sm">{errors.email}</p>}
             </div>
 
+            {/* Contact Number Input */}
             <div className="mb-3">
               <label htmlFor="contactNumber" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Contact Number:
@@ -185,6 +236,7 @@ const AddFreightCoordinator = () => {
               {errors.contactNumber && <p className="text-red-600 text-sm">{errors.contactNumber}</p>}
             </div>
 
+            {/* Password Input */}
             <div className="mb-3">
               <label htmlFor="password" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Password:
@@ -274,8 +326,7 @@ const AddFreightCoordinator = () => {
           </div>
         </div>
       )}
-
-</Layout>
+    </Layout>
   );
 };
 

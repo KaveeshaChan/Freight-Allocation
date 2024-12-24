@@ -141,9 +141,31 @@ const AddFreightAgent = () => {
     }
     if (!formData.director1Email.trim()) newErrors.director1Email = 'Director 01 Email is required';
     if (!formData.director1Name.trim()) newErrors.director1Name = 'Director 01 Name is required';
-    if (formData.director2ContactNumber.trim() && !validatePhoneNumber(formData.director2ContactNumber, formData.country)) {
-      newErrors.director2ContactNumber = 'Invalid phone number for Director 02';
-    }
+
+  // Validate Director 2 fields only if any Director 2 field is filled
+  const isDirector2DataProvided =
+  formData.director2Email.trim() || formData.director2Name.trim();
+
+if (formData.director2ContactNumber.trim() === callingCode) {
+  formData.director2ContactNumber = ""; // Assign empty value if it's just the calling code
+}
+
+if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
+  // Validate Contact Number if it's not empty
+  if (!formData.director2ContactNumber.trim()) {
+    newErrors.director2ContactNumber = "Director 02 Contact Number is required";
+  } else if (!validatePhoneNumber(formData.director2ContactNumber, formData.country)) {
+    newErrors.director2ContactNumber = "Invalid phone number for Director 02";
+  }
+
+  if (!formData.director2Email.trim()) {
+    newErrors.director2Email = "Director 02 Email is required";
+  }
+
+  if (!formData.director2Name.trim()) {
+    newErrors.director2Name = "Director 02 Name is required";
+  }
+}
 
     setErrors(newErrors);
 
@@ -151,8 +173,8 @@ const AddFreightAgent = () => {
       submitFormData(formData);
     } else {
       setShowErrorPopup(true);
-    }
-  };
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
@@ -481,7 +503,7 @@ const AddFreightAgent = () => {
 
 {/* Director 02 */}
 <div className="mb-3">
-  <h3 className="text-lg font-semibold" style={{ color: '#191919' }}>Director 02</h3>
+  <h3 className="text-lg font-semibold" style={{ color: '#191919' }}>Director 02 (Optional)</h3>
   
   <label
     htmlFor="director2Name"

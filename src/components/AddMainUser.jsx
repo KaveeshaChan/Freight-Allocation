@@ -6,7 +6,7 @@ const AddMainUser = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    contactNumber: '',
+    contactNumber: '+94',
     password: '',
   });
   const [errors, setErrors] = useState({}); // State for error messages
@@ -41,28 +41,51 @@ const AddMainUser = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
+  e.preventDefault();
+  const validationErrors = validateForm();
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setShowErrorPopup(true);
-    } else {
-      // Clear errors and show success popup
-      setErrors({});  // Reset errors state
-      setShowSuccessPopup(true);
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    setShowErrorPopup(true);
+  } else {
+    // Remove spaces from the contact number before sending it
+    const cleanedContactNumber = formData.contactNumber.replace(/\s+/g, '');
 
-      console.log("Sending email to: " + formData.email);
+    // Create a new form data object with the cleaned contact number
+    const cleanedFormData = { ...formData, contactNumber: cleanedContactNumber };
 
-      // Clear form data after success
-      setFormData({
-        name: '',
-        email: '',
-        contactNumber: '',
-        password: '',
+    // Clear errors and show success popup
+    setErrors({});  // Reset errors state
+    setShowSuccessPopup(true);
+
+    console.log('Sending data to API:', cleanedFormData);
+    // Log the cleaned form data
+
+    fetch('http://localhost:5056/api/add-main-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cleanedFormData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
-    }
-  };
+
+    // Clear form data after success
+    setFormData({
+      name: '',
+      email: '',
+      contactNumber: '+94',
+      password: '',
+    });
+  }
+};
+  
 
   return (
     <Layout>
