@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from react-icons
-import Select from 'react-select'; // Import react-select for country dropdown
-import countryList from 'react-select-country-list'; // Country list for the dropdown
-import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js'; // Import phone validation
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
+import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
 import Layout from './Layout';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 
 const AddFreightCoordinator = () => {
-  const [freightAgents, setFreightAgents] = useState([]); // State for available freight agents
+  const [freightAgents, setFreightAgents] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,22 +15,26 @@ const AddFreightCoordinator = () => {
     password: '',
     selectedAgent: '',
     country: '',
-    callingCode: '', // Store the calling code separately
+    callingCode: '',
   });
-  const [errors, setErrors] = useState({}); // State for error messages
-  const [showErrorPopup, setShowErrorPopup] = useState(false); // State for controlling error popup visibility
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for controlling success popup visibility
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [errors, setErrors] = useState({});
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const countryOptions = useMemo(() => countryList().getData(), []); // Memoize country options
+  const countryOptions = useMemo(() => countryList().getData(), []);
 
   useEffect(() => {
-    // Simulate fetching data from the "Add Freight Agent" page (mocking a database call)
-    setFreightAgents([
-      { id: '1', name: 'Agent 1' },
-      { id: '2', name: 'Agent 2' },
-      { id: '3', name: 'Agent 3' },
-    ]);
+    const fetchFreightAgents = async () => {
+      try {
+        const response = await axios.get('http://localhost:5056/api/freight-agents'); // Replace with your actual API endpoint
+        setFreightAgents(response.data);
+      } catch (error) {
+        console.error('Error fetching freight agents:', error);
+      }
+    };
+
+    fetchFreightAgents();
   }, []);
 
   const handleInputChange = (e) => {
@@ -46,19 +50,13 @@ const AddFreightCoordinator = () => {
     setFormData({
       ...formData,
       country: selectedCountry.label,
-      callingCode, // Store the calling code correctly
-      contactNumber: '', // Clear the contact number so the user can input their own
+      callingCode,
+      contactNumber: '',
     });
   };
-  
 
-  const closeErrorPopup = () => {
-    setShowErrorPopup(false);
-  };
-
-  const closeSuccessPopup = () => {
-    setShowSuccessPopup(false);
-  };
+  const closeErrorPopup = () => setShowErrorPopup(false);
+  const closeSuccessPopup = () => setShowSuccessPopup(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -68,8 +66,7 @@ const AddFreightCoordinator = () => {
     if (!formData.selectedAgent) newErrors.selectedAgent = 'Freight Agent is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (!formData.country) newErrors.country = 'Country is required';
-    
-    // Validate the phone number format
+
     if (formData.contactNumber && !isValidPhoneNumber(formData.contactNumber, formData.country)) {
       newErrors.contactNumber = 'Invalid phone number';
     }
@@ -79,18 +76,16 @@ const AddFreightCoordinator = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const validationErrors = validateForm();
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setShowErrorPopup(true);
     } else {
-      console.log('Form Data before submitting:', formData); // Check the formData here
-      
       try {
         const response = await axios.post('http://localhost:5056/api/add-freight-coordinator', formData);
-        
+
         if (response.status === 200) {
           setShowSuccessPopup(true);
           setFormData({
@@ -110,11 +105,9 @@ const AddFreightCoordinator = () => {
       }
     }
   };
-  
 
   return (
     <Layout>
-      {/* Main Content */}
       <main className="flex-1 flex justify-center items-center mt-8">
         <div
           className="p-6 rounded-lg shadow-lg"
@@ -130,7 +123,6 @@ const AddFreightCoordinator = () => {
             Add Freight Coordinator
           </h2>
           <form className="flex flex-col" onSubmit={handleSubmit}>
-            {/* Country Dropdown */}
             <div className="mb-3">
               <label htmlFor="country" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Country:
@@ -140,13 +132,12 @@ const AddFreightCoordinator = () => {
                 name="country"
                 options={countryOptions}
                 onChange={handleCountryChange}
-                value={countryOptions.find(option => option.label === formData.country)}
+                value={countryOptions.find((option) => option.label === formData.country)}
                 placeholder="Select a Country"
               />
               {errors.country && <p className="text-red-600 text-sm">{errors.country}</p>}
             </div>
 
-            {/* Freight Agent Dropdown */}
             <div className="mb-3">
               <label htmlFor="selectedAgent" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Freight Agent:
@@ -231,7 +222,9 @@ const AddFreightCoordinator = () => {
                   color: '#191919',
                 }}
                 value={formData.contactNumber}
-                onChange={handleInputChange}
+    onChange={handleInputChange}
+    placeholder="Please use country code (eg: +94 77xxxxxxx)"  // Added placeholder for example
+                
               />
               {errors.contactNumber && <p className="text-red-600 text-sm">{errors.contactNumber}</p>}
             </div>
@@ -267,6 +260,7 @@ const AddFreightCoordinator = () => {
               {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>}
             </div>
 
+
             <button
               type="submit"
               className="p-3 rounded-md text-lg cursor-pointer border-2 w-full mt-4"
@@ -283,14 +277,9 @@ const AddFreightCoordinator = () => {
         </div>
       </main>
 
-      {/* Error Popup */}
       {showErrorPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
+        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-semibold mb-4 text-red-600">Error</h2>
             <ul className="list-disc ml-5 text-sm text-gray-700">
               {Object.values(errors).map((error, index) => (
@@ -307,14 +296,9 @@ const AddFreightCoordinator = () => {
         </div>
       )}
 
-      {/* Success Popup */}
       {showSuccessPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
+        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-semibold mb-4 text-green-600">Success</h2>
             <p className="text-sm text-gray-700">The Freight Coordinator has been successfully added.</p>
             <button

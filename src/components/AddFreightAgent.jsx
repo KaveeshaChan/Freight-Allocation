@@ -593,5 +593,4 @@ if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
   );
 };
 
-export default AddFreightAgent;      
-
+export default AddFreightAgent;

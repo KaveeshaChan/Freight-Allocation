@@ -1,112 +1,147 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import logo from "../assests/basilurlogo.png"; // Import logo
-import { FaCaretDown } from "react-icons/fa"; // Import caret down icon for dropdown
-import { jwtDecode } from 'jwt-decode'; // Ensure this is the correct import
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import logo from '../assests/basilurlogo.png';
+import { FaCaretDown } from 'react-icons/fa';
 
 const Layout = ({ children }) => {
-  const [isDropdownVisible, setDropdownVisible] = useState(false); // State for dropdown visibility
-  const [userRole, setUserRole] = useState(null); // State to store user role
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isHovered, setHovered] = useState(false);
+  const hideTimeout = useRef(null);
+  const location = useLocation(); // Get the current route
+
+  const currentPage = location.pathname;
+
+  const handleMouseEnter = () => {
+    clearTimeout(hideTimeout.current);
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    hideTimeout.current = setTimeout(() => setHovered(false), 200);
+  };
+
+  const handleClickOutside = (e) => {
+    if (!e.target.closest('.dropdown-container')) {
+      setDropdownVisible(false);
+    }
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log(token);
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        setUserRole(decodedToken.roleName); // Set user role from token
-      } catch (error) {
-        console.error("Error decoding token:", error);
-      }
-    }
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      clearTimeout(hideTimeout.current);
+    };
   }, []);
 
   return (
     <div
       className="font-sans min-h-screen flex flex-col"
       style={{
-        backgroundColor: "#FFFFFF",
+        backgroundColor: '#FFFFFF',
         margin: 0,
         padding: 0,
       }}
     >
-      {/* Header */}
       <header
         className="flex items-center justify-center p-2 mx-auto"
         style={{
-          backgroundColor: "#191919", // Black header background
-          color: "#FFFFFF", // White font color
-          borderRadius: "30px", // Rounded header corners
-          height: "50px", // Smaller header height
-          width: "85%", // Header width
-          marginTop: "20px", // Space from top
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow
-          paddingTop: "5px", // Adjust padding for compact header
-          paddingBottom: "5px", // Adjust padding for compact header
+          backgroundColor: '#191919',
+          color: '#FFFFFF',
+          borderRadius: '30px',
+          height: '50px',
+          width: '85%',
+          marginTop: '20px',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+          paddingTop: '5px',
+          paddingBottom: '5px',
         }}
       >
-        {/* Logo */}
         <img
           src={logo}
           alt="Logo"
           className="mr-4"
           style={{
-            width: "40px", // Logo size
-            height: "40px",
-            objectFit: "contain",
+            width: '40px',
+            height: '40px',
+            objectFit: 'contain',
           }}
         />
-        {/* Title */}
         <h1
           className="text-lg font-bold flex-1 text-center"
           style={{
-            color: "#FFFFFF", // White text color
+            color: '#FFFFFF',
           }}
         >
           Freight Allocation
         </h1>
       </header>
 
-      {/* Navigation Bar */}
       <div
         className="mt-8 w-85%"
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <ul className="flex space-x-4 justify-center items-center flex-grow">
-          <li className="relative">
+          <li
+            className="relative dropdown-container"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <button
               className="text-lg font-medium text-black hover:text-orange-500 hover:underline flex items-center"
               style={{
-                transition: "all 0.3s ease",
+                transition: 'all 0.3s ease',
               }}
-              onClick={() => setDropdownVisible(!isDropdownVisible)} // Toggle dropdown visibility
             >
               In Progress <FaCaretDown className="ml-2" />
             </button>
-            {isDropdownVisible && (
+            {(isHovered || isDropdownVisible) && (
               <div
                 className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg"
                 style={{
                   zIndex: 10,
                 }}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 <ul>
+                  <li
+                    className={
+                      currentPage === '/In-Progress' ? 'blur text-gray-400' : ''
+                    }
+                  >
+                    <Link
+                      to="/In-Progress"
+                      className="block px-4 py-2 text-black hover:bg-orange-500"
+                    >
+                      In Progress
+                    </Link>
+                  </li>
                   <li>
-                    <Link to="/completed" className="block px-4 py-2 text-black hover:bg-orange-500">
+                    <Link
+                      to="/completed"
+                      className="block px-4 py-2 text-black hover:bg-orange-500"
+                    >
                       Completed
                     </Link>
                   </li>
                   <li>
-                    <Link to="/add-document" className="block px-4 py-2 text-black hover:bg-orange-500">
+                    <Link
+                      to="/add-document"
+                      className="block px-4 py-2 text-black hover:bg-orange-500"
+                    >
                       Add Document
                     </Link>
                   </li>
                   <li>
-                    <Link to="/view-freight-agents" className="block px-4 py-2 text-black hover:bg-orange-500">
+                    <Link
+                      to="/view-freight-agents"
+                      className="block px-4 py-2 text-black hover:bg-orange-500"
+                    >
                       View Freight Agents
                     </Link>
                   </li>
@@ -120,7 +155,7 @@ const Layout = ({ children }) => {
               <button
                 className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
                 style={{
-                  transition: "all 0.3s ease",
+                  transition: 'all 0.3s ease',
                 }}
               >
                 Add Freight Agent
@@ -133,44 +168,38 @@ const Layout = ({ children }) => {
               <button
                 className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
                 style={{
-                  transition: "all 0.3s ease",
+                  transition: 'all 0.3s ease',
                 }}
               >
                 Add Freight Coordinator
               </button>
             </Link>
           </li>
-          {userRole !== "mainUser" && ( // Conditionally render the Add Main User link
-            <>
-              <span className="text-orange-500">|</span>
-              <li>
-                <Link to="/add-main-user">
-                  <button
-                    className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                    style={{
-                      transition: "all 0.3s ease",
-                    }}
-                  >
-                    Add Main User
-                  </button>
-                </Link>
-              </li>
-            </>
-          )}
+          <span className="text-orange-500">|</span>
+          <li>
+            <Link to="/add-main-user">
+              <button
+                className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
+                style={{
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Add Main User
+              </button>
+            </Link>
+          </li>
         </ul>
       </div>
 
-      {/* Main Content */}
       <main className="flex-grow">{children}</main>
 
-      {/* Footer */}
       <footer
         className="p-4 text-center mt-auto"
         style={{
-          backgroundColor: "transparent", // Transparent background
-          color: "#191919", // Black text
-          fontSize: "14px",
-          marginTop: "20px",
+          backgroundColor: 'transparent',
+          color: '#191919',
+          fontSize: '14px',
+          marginTop: '20px',
         }}
       >
         © {new Date().getFullYear()} Freight Allocation. All Rights Reserved.
