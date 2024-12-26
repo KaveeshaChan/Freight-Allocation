@@ -123,20 +123,7 @@ const AddFreightCoordinator = () => {
             Add Freight Coordinator
           </h2>
           <form className="flex flex-col" onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="country" className="block mb-1 text-sm" style={{ color: '#191919' }}>
-                Country:
-              </label>
-              <Select
-                id="country"
-                name="country"
-                options={countryOptions}
-                onChange={handleCountryChange}
-                value={countryOptions.find((option) => option.label === formData.country)}
-                placeholder="Select a Country"
-              />
-              {errors.country && <p className="text-red-600 text-sm">{errors.country}</p>}
-            </div>
+            
 
             <div className="mb-3">
               <label htmlFor="selectedAgent" className="block mb-1 text-sm" style={{ color: '#191919' }}>
