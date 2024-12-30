@@ -27,8 +27,9 @@ const AddFreightCoordinator = () => {
   useEffect(() => {
     const fetchFreightAgents = async () => {
       try {
-        const response = await axios.get('http://localhost:5056/api/freight-agents'); // Replace with your actual API endpoint
-        setFreightAgents(response.data);
+        const response = await axios.get('http://localhost:5056/api/freight-agents-list'); // Replace with your actual API endpoint
+        console.log(response.data.freightAgentsList);
+        setFreightAgents(response.data.freightAgentsList || []);
       } catch (error) {
         console.error('Error fetching freight agents:', error);
       }
@@ -142,9 +143,9 @@ const AddFreightCoordinator = () => {
                 onChange={handleInputChange}
               >
                 <option value="">Select a Freight Agent</option>
-                {freightAgents.map((agent) => (
-                  <option key={agent.id} value={agent.id}>
-                    {agent.name}
+                {freightAgents && Array.isArray(freightAgents) && freightAgents.map((agent) => (
+                  <option key={agent.AgentID} value={agent.AgentID}>
+                    {agent.Freight_Agent}
                   </option>
                 ))}
               </select>
