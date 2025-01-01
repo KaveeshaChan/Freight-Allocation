@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Select from 'react-select';
-import countryList from 'react-select-country-list';
 import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
 import Layout from './Layout';
 import axios from 'axios';
@@ -13,16 +12,13 @@ const AddFreightCoordinator = () => {
     email: '',
     contactNumber: '',
     password: '',
-    selectedAgent: '',
-    country: '',
-    callingCode: '',
+    freightAgent: '',
   });
   const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const countryOptions = useMemo(() => countryList().getData(), []);
+  const [serverErrorMessage, setServerErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchFreightAgents = async () => {
@@ -46,15 +42,15 @@ const AddFreightCoordinator = () => {
     });
   };
 
-  const handleCountryChange = (selectedCountry) => {
-    const callingCode = `+${getCountryCallingCode(selectedCountry.value)}`;
-    setFormData({
-      ...formData,
-      country: selectedCountry.label,
-      callingCode,
-      contactNumber: '',
-    });
-  };
+  // const handleCountryChange = (selectedCountry) => {
+  //   const callingCode = `+${getCountryCallingCode(selectedCountry.value)}`;
+  //   setFormData({
+  //     ...formData,
+  //     country: selectedCountry.label,
+  //     callingCode,
+  //     contactNumber: '',
+  //   });
+  // };
 
   const closeErrorPopup = () => setShowErrorPopup(false);
   const closeSuccessPopup = () => setShowSuccessPopup(false);
@@ -64,9 +60,8 @@ const AddFreightCoordinator = () => {
     if (!formData.name) newErrors.name = 'Name is required';
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required';
-    if (!formData.selectedAgent) newErrors.selectedAgent = 'Freight Agent is required';
+    if (!formData.freightAgent) newErrors.freightAgent = 'Freight Agent is required';
     if (!formData.password) newErrors.password = 'Password is required';
-    if (!formData.country) newErrors.country = 'Country is required';
 
     if (formData.contactNumber && !isValidPhoneNumber(formData.contactNumber, formData.country)) {
       newErrors.contactNumber = 'Invalid phone number';
@@ -85,23 +80,37 @@ const AddFreightCoordinator = () => {
       setShowErrorPopup(true);
     } else {
       try {
-        const response = await axios.post('http://localhost:5056/api/add-freight-coordinator', formData);
+        console.log(formData);
+        const response = await fetch('http://localhost:5056/api/add-freight-coordinator', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
 
-        if (response.status === 200) {
+        if (response.ok) {
           setShowSuccessPopup(true);
           setFormData({
             name: '',
             email: '',
             contactNumber: '',
             password: '',
-            selectedAgent: '',
+            freightAgent: '',
             country: '',
             callingCode: '',
           });
           setErrors({});
+          setServerErrorMessage('');
+        } else {
+          const errorData = await response.json();
+          console.error('Server Error:', errorData);
+          setServerErrorMessage(errorData.message || 'An error occurred');
+          setShowErrorPopup(true);
         }
       } catch (error) {
         console.error('Error submitting form:', error);
+        setServerErrorMessage('An error occurred while submitting the form');
         setShowErrorPopup(true);
       }
     }
@@ -127,19 +136,19 @@ const AddFreightCoordinator = () => {
             
 
             <div className="mb-3">
-              <label htmlFor="selectedAgent" className="block mb-1 text-sm" style={{ color: '#191919' }}>
+              <label htmlFor="freightAgent" className="block mb-1 text-sm" style={{ color: '#191919' }}>
                 Freight Agent:
               </label>
               <select
-                id="selectedAgent"
-                name="selectedAgent"
+                id="freightAgent"
+                name="freightAgent"
                 className="w-full p-2 border rounded-md text-sm"
                 style={{
                   borderColor: '#191919',
                   backgroundColor: '#FFFFFF',
                   color: '#191919',
                 }}
-                value={formData.selectedAgent}
+                value={formData.freightAgent}
                 onChange={handleInputChange}
               >
                 <option value="">Select a Freight Agent</option>
@@ -149,7 +158,7 @@ const AddFreightCoordinator = () => {
                   </option>
                 ))}
               </select>
-              {errors.selectedAgent && <p className="text-red-600 text-sm">{errors.selectedAgent}</p>}
+              {errors.freightAgent && <p className="text-red-600 text-sm">{errors.freightAgent}</p>}
             </div>
 
             {/* Name Input */}
@@ -273,6 +282,7 @@ const AddFreightCoordinator = () => {
               {Object.values(errors).map((error, index) => (
                 <li key={index}>{error}</li>
               ))}
+                {serverErrorMessage && <li>{serverErrorMessage}</li>}
             </ul>
             <button
               onClick={closeErrorPopup}

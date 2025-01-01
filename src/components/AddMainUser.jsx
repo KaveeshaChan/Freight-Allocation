@@ -10,7 +10,7 @@ const AddMainUser = () => {
     contactNumber: '+94',
     password: '',
   });
-  const [errors, setErrors] = useState({}); // State for error messages
+  const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false); // State for controlling error popup visibility
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for controlling success popup visibility
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
