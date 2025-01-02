@@ -4,6 +4,8 @@ import Select from 'react-select';
 import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
 import Layout from './Layout';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 const AddFreightCoordinator = () => {
   const [freightAgents, setFreightAgents] = useState([]);
@@ -19,6 +21,7 @@ const AddFreightCoordinator = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [serverErrorMessage, setServerErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFreightAgents = async () => {
@@ -33,6 +36,25 @@ const AddFreightCoordinator = () => {
 
     fetchFreightAgents();
   }, []);
+
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('token'); // Get token from storage
+      if (!token) {
+        navigate('/login'); // Redirect to login if no token
+        return;
+      }
+
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
+      if (decodedToken.roleName !== 'admin' && decodedToken.roleName !== 'mainUser') {
+        navigate('/unauthorized'); // Redirect if not an admin or mainUser
+      }
+    } catch (error) {
+      console.error('Error decoding token or navigating:', error);
+      navigate('/login'); // Handle invalid or malformed token
+    }
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

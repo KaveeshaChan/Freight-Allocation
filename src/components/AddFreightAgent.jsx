@@ -1,9 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Layout from './Layout';
 import { getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 const AddFreightAgent = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +30,26 @@ const AddFreightAgent = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [isCountrySelected, setIsCountrySelected] = useState(false); // Track if country is selected
   const [callingCode, setCallingCode] = useState(""); // Store calling code
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('token'); // Get token from storage
+      if (!token) {
+        navigate('/login'); // Redirect to login if no token
+        return;
+      }
+
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
+      if (decodedToken.roleName !== 'admin' && decodedToken.roleName !== 'mainUser') {
+        navigate('/unauthorized'); // Redirect if not an admin or mainUser
+      }
+    } catch (error) {
+      console.error('Error decoding token or navigating:', error);
+      navigate('/login'); // Handle invalid or malformed token
+    }
+  }, [navigate]);
 
   const options = useMemo(() => countryList().getData(), []);
 
