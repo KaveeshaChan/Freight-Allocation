@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import Layout from './Layout';
+import Layout from './Main_Layout';
 import { getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';

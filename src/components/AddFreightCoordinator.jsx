@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Select from 'react-select';
 import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
-import Layout from './Layout';
+import Layout from './Main_Layout';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';

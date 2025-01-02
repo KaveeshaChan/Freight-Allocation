@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Correct import for named export
-import Layout from './Layout'; // Ensure this path is correct
+import Layout from './Main_Layout'; // Ensure this path is correct
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [roleName, setRoleName] = useState('');
 
   useEffect(() => {
     try {
@@ -15,6 +16,7 @@ const HomePage = () => {
       }
 
       const decodedToken = jwtDecode(token);
+      setRoleName(decodedToken.roleName);
       console.log(decodedToken);
       if (decodedToken.roleName !== 'admin' && decodedToken.roleName !== 'mainUser') {
         navigate('/unauthorized'); // Redirect if not an admin or mainUser
@@ -27,9 +29,9 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <h1>Welcome, Admin!</h1>
+      <h1>Welcome, {roleName}!</h1>
     </Layout>
   );
 };
 
-export default HomePage;
+export default HomePage;
