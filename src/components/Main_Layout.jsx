@@ -8,8 +8,10 @@ const Layout = ({ children }) => {
   const [isHovered, setHovered] = useState(false);
   const hideTimeout = useRef(null);
   const location = useLocation(); // Get the current route
-
   const currentPage = location.pathname;
+  // Retrieve the role from localStorage
+  const userRole = localStorage.getItem("userRole");
+
 
   const handleMouseEnter = () => {
     clearTimeout(hideTimeout.current);
@@ -184,19 +186,23 @@ const Layout = ({ children }) => {
                 </button>
               </Link>
             </li>
-            <span className="text-orange-500">|</span>
-            <li>
-              <Link to="/add-main-user">
-                <button
-                  className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                  style={{
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  Add Main User
-                </button>
-              </Link>
-            </li>
+            {userRole === 'admin' && (
+              <>
+                <span className="text-orange-500">|</span>
+                <li>
+                  <Link to="/add-main-user">
+                    <button
+                      className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
+                      style={{
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      Add Main User
+                    </button>
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

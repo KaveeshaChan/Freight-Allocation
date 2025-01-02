@@ -33,13 +33,13 @@ const LoginPage = () => {
       const data = await response.json();
       const token = data.token;
 
-      // Store the token in localStorage
-      localStorage.setItem("token", token);
-
-      // Decode the token to get user role
+            // Decode the token to get user role
       const decodedToken = jwtDecode(token);
       const roleName = decodedToken.roleName;
-      console.log(roleName);
+
+      // Store the token in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("userRole", roleName);
 
       // Redirect based on role
       if (roleName === "admin") {
