@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';  
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import Layout from './Main_Layout';
-import axios from 'axios'; // Importing axios
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,72 +12,10 @@ const AddMainUser = () => {
     password: '',
   });
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false); // State for controlling error popup visibility
   const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State for controlling success popup visibility
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const navigate = useNavigate();
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const closeErrorPopup = () => {
-    setShowErrorPopup(false);
-  };
-
-  const closeSuccessPopup = () => {
-    setShowSuccessPopup(false);
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.contactNumber) newErrors.contactNumber = 'Contact Number is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-
-    return newErrors;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setShowErrorPopup(true);
-    } else {
-      // Remove spaces from the contact number before sending it
-      const cleanedContactNumber = formData.contactNumber.replace(/\s+/g, '');
-      const cleanedFormData = { ...formData, contactNumber: cleanedContactNumber };
-
-      // Debugging: Log cleaned form data
-      console.log("Form data to send:", cleanedFormData);
-
-      setErrors({});  // Reset errors state
-
-      try {
-        const response = await axios.post('http://localhost:5056/api/add-main-user', cleanedFormData);
-
-        if (response.status === 200) {
-          setShowSuccessPopup(true);
-          setFormData({
-            name: '',
-            email: '',
-            contactNumber: '+94',
-            password: '',
-          });
-        }
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        setShowErrorPopup(true);
-      }
-    }
-  };
 
   useEffect(() => {
     try {
@@ -98,6 +35,84 @@ const AddMainUser = () => {
       navigate('/login'); // Handle invalid or malformed token
     }
   }, [navigate]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      const updatedFormData = { ...prev, [name]: value };
+      // console.log("Updated FormData:", updatedFormData); // Comment or remove this line
+      return updatedFormData;
+    });
+  };
+
+  const cleanPhoneNumber = (number) => {
+    return number.replace(/\s+/g, ''); // Remove all whitespace characters
+  };
+
+  const submitFormData = async (formData) => {
+    const cleanedFormData = {
+      ...formData,
+      contactNumber: cleanPhoneNumber(formData.contactNumber),
+    };
+  
+    try {
+      const response = await fetch('http://localhost:5056/api/add-main-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cleanedFormData),
+      });
+  
+      const responseData = await response.json(); // Wait for the response to be parsed
+  
+      if (response.status === 201) {
+        console.log(response.status);
+        console.log(responseData.message);
+        setShowSuccessPopup(true);
+        setFormData({
+          name: '',
+          email: '',
+          contactNumber: '+94',
+          password: '',
+        });
+      } else {
+        // Handle cases where the response status is not 201 (error case)
+        setShowErrorPopup(true);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setShowErrorPopup(true);
+    }
+  };
+  
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.contactNumber.trim()) newErrors.contactNumber = 'Contact Number is required';
+    if (!formData.password.trim()) newErrors.password = 'Password is required';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      submitFormData(formData);
+    } else {
+      setShowErrorPopup(true);
+    }
+  };
+
+  const closeErrorPopup = () => {
+    setShowErrorPopup(false);
+  };
+
+  const closeSuccessPopup = () => {
+    setShowSuccessPopup(false);
+  };
 
   return (
     <Layout>
@@ -245,51 +260,52 @@ const AddMainUser = () => {
         </div>
       </main>
 
-      {/* Error Popup */}
-      {showErrorPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
-            <h2 className="text-lg font-semibold mb-4 text-red-600">Error</h2>
-            <ul className="list-disc ml-5 text-sm text-gray-700">
-              {Object.values(errors).map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-            <button
-              onClick={closeErrorPopup}
-              className="mt-4 p-2 w-full bg-red-600 text-white rounded-md"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+{/* Error Popup */}
+{showErrorPopup && (
+  <div
+    className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
+  >
+    <div
+      className="bg-white p-6 rounded-lg shadow-lg w-96"
+    >
+      <h2 className="text-lg font-semibold mb-4 text-red-600">Error</h2>
+      <ul className="list-disc ml-5 text-sm text-gray-700">
+        {Object.values(errors).map((error, index) => (
+          <li key={index}>{error}</li>
+        ))}
+      </ul>
+      <button
+        onClick={closeErrorPopup}
+        className="mt-4 p-2 w-full bg-red-600 text-white rounded-md"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
 
-      {/* Success Popup */}
-      {showSuccessPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
-            <h2 className="text-lg font-semibold mb-4 text-green-600">Success</h2>
-            <p className="text-sm text-gray-700">
-              The main user was successfully added and username/password have been sent!
-            </p>
-            <button
-              onClick={closeSuccessPopup}
-              className="mt-4 p-2 w-full bg-green-600 text-white rounded-md"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+{/* Success Popup */}
+{showSuccessPopup && (
+  <div
+    className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
+  >
+    <div
+      className="bg-white p-6 rounded-lg shadow-lg w-96"
+    >
+      <h2 className="text-lg font-semibold mb-4 text-green-600">Success</h2>
+      <p className="text-sm text-gray-700">
+        The main user was successfully added!
+      </p>
+      <button
+        onClick={closeSuccessPopup}
+        className="mt-4 p-2 w-full bg-green-600 text-white rounded-md"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
     </Layout>
   );
 };
