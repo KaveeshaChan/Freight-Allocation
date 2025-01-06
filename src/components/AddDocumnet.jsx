@@ -38,6 +38,11 @@ const InProgress = () => {
   };
 
   const handleSubmit = () => {
+    if (!formData.orderNo || !formData.fromRoute || !formData.toRoute) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
     setFormData({
       orderType: 'import',
       shipmentType: 'airFreight',
@@ -48,8 +53,8 @@ const InProgress = () => {
       term: '',
       type: '',
     });
-    setPreviewData(null); // Clear the preview after submitting
-    setShowTable(false); // Hide the table after submission
+    setPreviewData(null); // Clear preview data
+    setShowTable(false); // Hide the table
   };
 
   // Display content based on dropdown selections
@@ -61,7 +66,7 @@ const InProgress = () => {
       height: '100%', // Ensure it takes the full height of the parent box
       width: '100%', // Ensure it takes the full width of the parent box
     };
-  
+
     const boxStyle = {
       backgroundColor: 'red',
       color: 'white',
@@ -70,40 +75,48 @@ const InProgress = () => {
       textAlign: 'center',
       fontWeight: 'bold',
       display: 'inline-block', // Ensure the box adjusts to content size
+      marginBottom: '1rem', // Add space between the red label and input fields
     };
-  
+
     if (formData.orderType === 'import' && formData.shipmentType === 'airFreight') {
       return (
         <div style={parentBoxStyle}>
-          <div style={boxStyle}>You selected Import - Air Freight</div>
+          <div style={boxStyle}>Import - Air Freight</div>
+        </div>
+      );
+    }
+    if (formData.orderType === 'export' && formData.shipmentType === 'airFreight') {
+      return (
+        <div style={parentBoxStyle}>
+          <div style={boxStyle}>Export - Air Freight</div>
         </div>
       );
     }
     if (formData.orderType === 'export' && formData.shipmentType === 'lcl') {
       return (
         <div style={parentBoxStyle}>
-          <div style={boxStyle}>You selected Export - LCL</div>
+          <div style={boxStyle}>Export - LCL</div>
         </div>
       );
     }
     if (formData.orderType === 'export' && formData.shipmentType === 'fcl') {
       return (
         <div style={parentBoxStyle}>
-          <div style={boxStyle}>You selected Export - FCL</div>
+          <div style={boxStyle}>Export - FCL</div>
         </div>
       );
     }
     if (formData.orderType === 'import' && formData.shipmentType === 'lcl') {
       return (
         <div style={parentBoxStyle}>
-          <div style={boxStyle}>You selected Import - LCL</div>
+          <div style={boxStyle}>Import - LCL</div>
         </div>
       );
     }
     if (formData.orderType === 'import' && formData.shipmentType === 'fcl') {
       return (
         <div style={parentBoxStyle}>
-          <div style={boxStyle}>You selected Import - FCL</div>
+          <div style={boxStyle}>Import - FCL</div>
         </div>
       );
     }
@@ -113,9 +126,6 @@ const InProgress = () => {
       </div>
     );
   };
-  
-  
-  
 
   return (
     <Layout>
@@ -178,6 +188,7 @@ const InProgress = () => {
                   onChange={handleInputChange}
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   placeholder="Enter Order No"
+                  aria-label="Order Number"
                 />
               </div>
               <div className="flex-1">
@@ -190,6 +201,7 @@ const InProgress = () => {
                     onChange={handleInputChange}
                     className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     placeholder="From"
+                    aria-label="From Route"
                   />
                   <input
                     id="toRoute"
@@ -198,6 +210,7 @@ const InProgress = () => {
                     onChange={handleInputChange}
                     className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     placeholder="To"
+                    aria-label="To Route"
                   />
                 </div>
               </div>
@@ -213,6 +226,7 @@ const InProgress = () => {
                   value={formData.shipmentReadyDate}
                   onChange={handleInputChange}
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                  aria-label="Shipment Ready Date"
                 />
               </div>
               <div className="flex-1">
@@ -224,6 +238,7 @@ const InProgress = () => {
                   onChange={handleInputChange}
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   placeholder="Enter Term"
+                  aria-label="Term"
                 />
               </div>
               <div className="flex-1">
@@ -235,6 +250,7 @@ const InProgress = () => {
                   onChange={handleInputChange}
                   className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   placeholder="Enter Type"
+                  aria-label="Type"
                 />
               </div>
             </div>
@@ -245,6 +261,7 @@ const InProgress = () => {
             <button
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center space-x-2"
               onClick={handlePreview}
+              disabled={!formData.orderNo || !formData.fromRoute || !formData.toRoute}
             >
               <span>Preview Table Data</span>
             </button>
