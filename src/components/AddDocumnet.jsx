@@ -17,6 +17,8 @@ const DocumentPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  console.log()
+
   const prepareDataForBackend = () => {
     const dataToSend = {
       orderType: orderType || null,
@@ -29,7 +31,7 @@ const DocumentPage = () => {
         dataToSend[key] = null;
       }
     }
-
+    console.log(dataToSend);
     return dataToSend;
   };
 
@@ -61,6 +63,7 @@ const DocumentPage = () => {
           <ExportAirFreight
             formData={formData}
             handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit} // Pass handleSubmit here
           />
         );
       case "export-lcl":
@@ -68,6 +71,7 @@ const DocumentPage = () => {
           <ExportLCL
             formData={formData}
             handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit} // Pass handleSubmit here
           />
         );
       case "export-fcl":
@@ -75,6 +79,7 @@ const DocumentPage = () => {
           <ExportFCL
             formData={formData}
             handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit} // Pass handleSubmit here
           />
         );
       case "import-airFreight":
@@ -82,6 +87,7 @@ const DocumentPage = () => {
           <ImportAirFreight
             formData={formData}
             handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit} // Pass handleSubmit here
           />
         );
       case "import-lcl":
@@ -89,6 +95,7 @@ const DocumentPage = () => {
           <ImportLCL
             formData={formData}
             handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit} // Pass handleSubmit here
           />
         );
       case "import-fcl":
@@ -96,12 +103,14 @@ const DocumentPage = () => {
           <ImportFCL
             formData={formData}
             handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit} // Pass handleSubmit here
           />
         );
       default:
         return null;
     }
   };
+  
 
   return (
     <Layout>
