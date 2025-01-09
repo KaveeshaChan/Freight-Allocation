@@ -1,169 +1,136 @@
-import React, { useState } from 'react';
-import Layout from './Main_Layout';
+import React, { useState } from "react";
+import Layout from "./Main_Layout";
+import ExportAirFreight from "./ExportAirFreight";
+import ExportLCL from "./ExportLCL";
+import ExportFCL from "./ExportFCL";
+import ImportAirFreight from "./ImportAirFreight";
+import ImportLCL from "./ImportLCL";
+import ImportFCL from "./ImportFCL";
 
-const InProgress = () => {
-  const [formData, setFormData] = useState({
-    orderType: 'import',
-    shipmentType: 'airFreight',
-    orderNo: '',
-    fromRoute: '',
-    toRoute: '',
-    shipmentReadyDate: '',
-    term: '',
-    type: '',
-  });
-
-  const [previewData, setPreviewData] = useState(null); // Store the previewed data
-  const [showTable, setShowTable] = useState(false); // Control table visibility
+const DocumentPage = () => {
+  const [formData, setFormData] = useState({});
+  const [orderType, setOrderType] = useState("export");
+  const [shipmentType, setShipmentType] = useState("airFreight");
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDropdownChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
-
-  const handlePreview = () => {
-    setPreviewData(formData); // Store the form data for preview
-    setShowTable((prevState) => !prevState); // Toggle table visibility
-  };
-
-  const handleSubmit = () => {
-    if (!formData.orderNo || !formData.fromRoute || !formData.toRoute) {
-      alert("Please fill all required fields.");
-      return;
-    }
-
-    setFormData({
-      orderType: 'import',
-      shipmentType: 'airFreight',
-      orderNo: '',
-      fromRoute: '',
-      toRoute: '',
-      shipmentReadyDate: '',
-      term: '',
-      type: '',
-    });
-    setPreviewData(null); // Clear preview data
-    setShowTable(false); // Hide the table
-  };
-
-  // Display content based on dropdown selections
-  const renderDynamicContent = () => {
-    const parentBoxStyle = {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100%', // Ensure it takes the full height of the parent box
-      width: '100%', // Ensure it takes the full width of the parent box
+  const prepareDataForBackend = () => {
+    const dataToSend = {
+      orderType: orderType || null,
+      shipmentType: shipmentType || null,
+      ...formData,
     };
 
-    const boxStyle = {
-      backgroundColor: 'red',
-      color: 'white',
-      padding: '0.5rem 1rem', // Adjust padding for the box size
-      borderRadius: '8px',
-      textAlign: 'center',
-      fontWeight: 'bold',
-      display: 'inline-block', // Ensure the box adjusts to content size
-      marginBottom: '1rem', // Add space between the red label and input fields
-    };
+    for (let key in dataToSend) {
+      if (dataToSend[key] === "") {
+        dataToSend[key] = null;
+      }
+    }
 
-    if (formData.orderType === 'import' && formData.shipmentType === 'airFreight') {
-      return (
-        <div style={parentBoxStyle}>
-          <div style={boxStyle}>Import - Air Freight</div>
-        </div>
-      );
+    return dataToSend;
+  };
+
+  const handleSubmit = async (event) => {
+    console.log("handleSubmit function is called"); 
+    event.preventDefault();  // Prevent default form submission
+    const data = prepareDataForBackend();
+
+    try {
+      const response = await fetch("http://localhost:5056/api/add-new-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+      console.log("Success:", responseData);
+    } catch (error) {
+      console.error("Error:", error);
     }
-    if (formData.orderType === 'export' && formData.shipmentType === 'airFreight') {
-      return (
-        <div style={parentBoxStyle}>
-          <div style={boxStyle}>Export - Air Freight</div>
-        </div>
-      );
+  };
+
+  const renderActiveComponent = () => {
+    switch (`${orderType}-${shipmentType}`) {
+      case "export-airFreight":
+        return (
+          <ExportAirFreight
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
+      case "export-lcl":
+        return (
+          <ExportLCL
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
+      case "export-fcl":
+        return (
+          <ExportFCL
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
+      case "import-airFreight":
+        return (
+          <ImportAirFreight
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
+      case "import-lcl":
+        return (
+          <ImportLCL
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
+      case "import-fcl":
+        return (
+          <ImportFCL
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
+      default:
+        return null;
     }
-    if (formData.orderType === 'export' && formData.shipmentType === 'lcl') {
-      return (
-        <div style={parentBoxStyle}>
-          <div style={boxStyle}>Export - LCL</div>
-        </div>
-      );
-    }
-    if (formData.orderType === 'export' && formData.shipmentType === 'fcl') {
-      return (
-        <div style={parentBoxStyle}>
-          <div style={boxStyle}>Export - FCL</div>
-        </div>
-      );
-    }
-    if (formData.orderType === 'import' && formData.shipmentType === 'lcl') {
-      return (
-        <div style={parentBoxStyle}>
-          <div style={boxStyle}>Import - LCL</div>
-        </div>
-      );
-    }
-    if (formData.orderType === 'import' && formData.shipmentType === 'fcl') {
-      return (
-        <div style={parentBoxStyle}>
-          <div style={boxStyle}>Import - FCL</div>
-        </div>
-      );
-    }
-    return (
-      <div style={parentBoxStyle}>
-        <div style={boxStyle}>Please select an option.</div>
-      </div>
-    );
   };
 
   return (
     <Layout>
-      <div className="p-4 mt-8">
-        <div className="flex items-center mb-6">
-          <button
-            className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
-            style={{ transition: 'all 0.3s ease' }}
-          >
-            Add Document
-          </button>
+      <div className="p-8 mt-8">
+        <div className="flex items-center space-x-6 mb-6">
+          <form onSubmit={handleSubmit}>
+            <button type="submit" className="px-6 py-3 bg-orange-500 text-white rounded-md">
+              Add New Document
+            </button>
+          </form>
 
-          {/* Order Type Selection */}
-          <div className="ml-4">
-            <label htmlFor="orderType" className="block text-gray-700 font-medium mr-4 inline">
-              Select Order Type:
-            </label>
+          <div className="flex items-center space-x-2">
+            <label className="font-medium text-gray-700">Select Order Type:</label>
             <select
-              id="orderType"
-              value={formData.orderType}
-              onChange={handleDropdownChange}
-              className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              onChange={(e) => setOrderType(e.target.value)}
+              value={orderType}
+              className="p-2 bg-black text-white border-2 border-gray-300 rounded-md"
             >
-              <option value="import">Import</option>
               <option value="export">Export</option>
+              <option value="import">Import</option>
             </select>
           </div>
 
-          {/* Shipment Type Selection */}
-          <div className="ml-4">
-            <label htmlFor="shipmentType" className="block text-gray-700 font-medium mr-4 inline">
-              Shipment Type:
-            </label>
+          <div className="flex items-center space-x-2">
+            <label className="font-medium text-gray-700">Select Shipment Type:</label>
             <select
-              id="shipmentType"
-              value={formData.shipmentType}
-              onChange={handleDropdownChange}
-              className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              onChange={(e) => setShipmentType(e.target.value)}
+              value={shipmentType}
+              className="p-2 bg-black text-white border-2 border-gray-300 rounded-md"
             >
               <option value="airFreight">Air Freight</option>
               <option value="lcl">LCL</option>
@@ -172,142 +139,17 @@ const InProgress = () => {
           </div>
         </div>
 
-        {/* Box containing dynamic content */}
-        <div className="border p-6 rounded-md shadow-lg mx-auto mt-6 max-w-7xl bg-white">
-          {renderDynamicContent()}
+        <h2 className="text-xl font-bold text-gray-700 mb-4 text-center w-full uppercase">
+          {orderType.charAt(0).toUpperCase() + orderType.slice(1)} -{" "}
+          {shipmentType
+            .replace(/([A-Z])/g, " $1")
+            .replace(/^./, (str) => str.toUpperCase())}
+        </h2>
 
-          {/* Input Fields */}
-          <div className="mb-6">
-            <div className="flex gap-4 mb-4">
-              <div className="flex-1">
-                <label htmlFor="orderNo" className="block text-gray-700 font-medium mb-2">Order No</label>
-                <input
-                  id="orderNo"
-                  type="text"
-                  value={formData.orderNo}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                  placeholder="Enter Order No"
-                  aria-label="Order Number"
-                />
-              </div>
-              <div className="flex-1">
-                <label htmlFor="route" className="block text-gray-700 font-medium mb-2">Route</label>
-                <div className="flex gap-2">
-                  <input
-                    id="fromRoute"
-                    type="text"
-                    value={formData.fromRoute}
-                    onChange={handleInputChange}
-                    className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="From"
-                    aria-label="From Route"
-                  />
-                  <input
-                    id="toRoute"
-                    type="text"
-                    value={formData.toRoute}
-                    onChange={handleInputChange}
-                    className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="To"
-                    aria-label="To Route"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Other Fields */}
-            <div className="flex gap-4 mb-4">
-              <div className="flex-1">
-                <label htmlFor="shipmentReadyDate" className="block text-gray-700 font-medium mb-2">Shipment Ready Date</label>
-                <input
-                  id="shipmentReadyDate"
-                  type="date"
-                  value={formData.shipmentReadyDate}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                  aria-label="Shipment Ready Date"
-                />
-              </div>
-              <div className="flex-1">
-                <label htmlFor="term" className="block text-gray-700 font-medium mb-2">Term</label>
-                <input
-                  id="term"
-                  type="text"
-                  value={formData.term}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                  placeholder="Enter Term"
-                  aria-label="Term"
-                />
-              </div>
-              <div className="flex-1">
-                <label htmlFor="type" className="block text-gray-700 font-medium mb-2">Type</label>
-                <input
-                  id="type"
-                  type="text"
-                  value={formData.type}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                  placeholder="Enter Type"
-                  aria-label="Type"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Preview Button */}
-          <div className="flex justify-center mb-4">
-            <button
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center space-x-2"
-              onClick={handlePreview}
-              disabled={!formData.orderNo || !formData.fromRoute || !formData.toRoute}
-            >
-              <span>Preview Table Data</span>
-            </button>
-          </div>
-
-          {/* Table */}
-          {showTable && (
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-gray-300 text-xs">
-                <thead>
-                  <tr className="bg-green-500 text-white">
-                    <th className="border border-gray-300 p-2">Order No</th>
-                    <th className="border border-gray-300 p-2">Route</th>
-                    <th className="border border-gray-300 p-2">Shipment Ready Date</th>
-                    <th className="border border-gray-300 p-2">Term</th>
-                    <th className="border border-gray-300 p-2">Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {previewData && (
-                    <tr>
-                      <td className="border border-gray-300 p-2">{previewData.orderNo}</td>
-                      <td className="border border-gray-300 p-2">{`${previewData.fromRoute} to ${previewData.toRoute}`}</td>
-                      <td className="border border-gray-300 p-2">{previewData.shipmentReadyDate}</td>
-                      <td className="border border-gray-300 p-2">{previewData.term}</td>
-                      <td className="border border-gray-300 p-2">{previewData.type}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* Submit Button */}
-          <div className="flex justify-end mt-4">
-            <button
-              className="px-4 py-2 bg-orange-500 text-white rounded-md"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
+        {renderActiveComponent()}
       </div>
     </Layout>
   );
 };
 
-export default InProgress;
+export default DocumentPage;
