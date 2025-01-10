@@ -6,7 +6,7 @@ const ExportAirFreight = ({ formData, handleInputChange, handleSubmit }) => (
     <CommonFields formData={formData} handleInputChange={handleInputChange} />
 
     <form onSubmit={(e) => { e.preventDefault(); handleSubmit(e); }}>
-      <div className="max-w-sm mb-6">
+      <div className="max-w-sm mb-6 mt-6">
         <div className="flex justify-between items-center">
           <label htmlFor="cargoType" className="block text-sm font-medium mb-2 text-black">
             6. Cargo Type
@@ -52,7 +52,7 @@ const ExportAirFreight = ({ formData, handleInputChange, handleSubmit }) => (
           value={formData.chargeableWeight || ""}
           onChange={handleInputChange}
           id="hs-floating-underline-input-chargeableWeight"
-          className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+         className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
           placeholder="Enter chargeable weight in Kg"
           min="0" // ensures only positive values
         />
@@ -70,7 +70,7 @@ const ExportAirFreight = ({ formData, handleInputChange, handleSubmit }) => (
           value={formData.grossWeight || ""}
           onChange={handleInputChange}
           id="hs-floating-underline-input-grossWeight"
-          className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
           placeholder="Enter the Gross Weight"
         />
       </div>
@@ -87,7 +87,7 @@ const ExportAirFreight = ({ formData, handleInputChange, handleSubmit }) => (
           value={formData.cargoCBM || ""}
           onChange={handleInputChange}
           id="hs-floating-underline-input-cargoCBM"
-          className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
           placeholder="Enter the Cargo CBM"
         />
       </div>
@@ -104,9 +104,9 @@ const ExportAirFreight = ({ formData, handleInputChange, handleSubmit }) => (
           value={formData.noOfPallets || ""}
           onChange={handleInputChange}
           id="hs-floating-underline-input-noOfPallets"
-          className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
           placeholder="Enter the number of pallets"
-          min="1" // Ensure the value is at least 1
+          min="0" // Ensure the value is at least 1
         />
       </div>
 
@@ -122,7 +122,7 @@ const ExportAirFreight = ({ formData, handleInputChange, handleSubmit }) => (
           value={formData.targetDate || ""}
           onChange={handleInputChange}
           id="hs-floating-underline-input-targetDate"
-          className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
           placeholder="DD/MM/YYYY"
         />
       </div>
@@ -153,7 +153,7 @@ const ExportAirFreight = ({ formData, handleInputChange, handleSubmit }) => (
   <textarea
     name="additionalNotes"
     id="additional-notes"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="Enter any additional notes here..."
     rows="4"
   />

@@ -6,7 +6,7 @@ import CommonFields from './commonFields';
   <form onSubmit={handleSubmit}> {/* Wrap the entire form in a <form> tag */}
     <CommonFields formData={formData} handleInputChange={handleInputChange} />
 
-    <div className="max-w-sm mb-6">
+    <div className="max-w-sm mb-6 mt-6">
   <div className="flex justify-between items-center">
     <label htmlFor="hs-floating-underline-input-palletCBM" className="block text-sm font-medium mb-2 text-black">
       6. Pallet CBM
@@ -18,7 +18,7 @@ import CommonFields from './commonFields';
     value={formData.palletCBM || ""}
     onChange={handleInputChange}
     id="hs-floating-underline-input-palletCBM"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="Enter the Pallet CBM"
   />
 </div>
@@ -36,7 +36,7 @@ import CommonFields from './commonFields';
     value={formData.cargoCBM || ""}
     onChange={handleInputChange}
     id="hs-floating-underline-input-cargoCBM"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="Enter the Cargo CBM"
   />
 </div>
@@ -54,7 +54,7 @@ import CommonFields from './commonFields';
     value={formData.grossWeight || ""}
     onChange={handleInputChange}
     id="hs-floating-underline-input-grossWeight"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="Enter the Gross Weight"
   />
 </div>
@@ -71,9 +71,9 @@ import CommonFields from './commonFields';
     value={formData.noOfPallets || ""}
     onChange={handleInputChange}
     id="hs-floating-underline-input-noOfPallets"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="Enter the number of pallets"
-    min="1" // Ensure the value is at least 1
+    min="0" // Ensure the value is at least 1
   />
 </div>
 
@@ -89,7 +89,7 @@ import CommonFields from './commonFields';
     value={formData.targetDate || ""}
     onChange={handleInputChange}
     id="hs-floating-underline-input-targetDate"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="DD/MM/YYYY"
   />
 </div>
@@ -105,7 +105,7 @@ import CommonFields from './commonFields';
     value={formData.productDescription || ""}
     onChange={handleInputChange}
     id="hs-floating-underline-input-productDescription"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="Enter the product description"
     rows="4"
   />
@@ -139,7 +139,7 @@ import CommonFields from './commonFields';
   <textarea
     name="additionalNotes"
     id="additional-notes"
-    className="py-3 px-4 block w-full border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-white border-gray-400 text-black placeholder-gray-400 focus:ring-black"
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
     placeholder="Enter any additional notes here..."
     rows="4"
   />

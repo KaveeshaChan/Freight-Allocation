@@ -145,7 +145,7 @@ const Layout = ({ children }) => {
                         to="/add-document"
                         className="block px-4 py-2 text-black hover:bg-orange-500"
                       >
-                        Add Document
+                        Add New Order
                       </Link>
                     </li>
                     <li>

@@ -12,13 +12,13 @@ const DocumentPage = () => {
   const [orderType, setOrderType] = useState("export");
   const [shipmentType, setShipmentType] = useState("airFreight");
 
+  // Handle input changes for form fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  console.log()
-
+  // Prepare the data before sending to backend
   const prepareDataForBackend = () => {
     const dataToSend = {
       orderType: orderType || null,
@@ -26,19 +26,23 @@ const DocumentPage = () => {
       ...formData,
     };
 
+    // Convert empty fields to null
     for (let key in dataToSend) {
       if (dataToSend[key] === "") {
         dataToSend[key] = null;
       }
     }
-    console.log(dataToSend);
+
+    console.log(dataToSend); // For debugging
     return dataToSend;
   };
 
+  // Handle form submission
   const handleSubmit = async (event) => {
-    console.log("handleSubmit function is called"); 
-    event.preventDefault();  // Prevent default form submission
-    const data = prepareDataForBackend();
+    console.log("handleSubmit function is called");
+    event.preventDefault(); // Prevent default form submission
+
+    const data = prepareDataForBackend(); // Get prepared data
 
     try {
       const response = await fetch("http://localhost:5056/api/add-new-order", {
@@ -50,12 +54,13 @@ const DocumentPage = () => {
       });
 
       const responseData = await response.json();
-      console.log("Success:", responseData);
+      console.log("Success:", responseData); // Success log
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error); // Error log
     }
   };
 
+  // Render the appropriate component based on orderType and shipmentType
   const renderActiveComponent = () => {
     switch (`${orderType}-${shipmentType}`) {
       case "export-airFreight":
@@ -63,7 +68,7 @@ const DocumentPage = () => {
           <ExportAirFreight
             formData={formData}
             handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit} // Pass handleSubmit here
+            handleSubmit={handleSubmit}
           />
         );
       case "export-lcl":
@@ -71,7 +76,7 @@ const DocumentPage = () => {
           <ExportLCL
             formData={formData}
             handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit} // Pass handleSubmit here
+            handleSubmit={handleSubmit}
           />
         );
       case "export-fcl":
@@ -79,7 +84,7 @@ const DocumentPage = () => {
           <ExportFCL
             formData={formData}
             handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit} // Pass handleSubmit here
+            handleSubmit={handleSubmit}
           />
         );
       case "import-airFreight":
@@ -87,7 +92,7 @@ const DocumentPage = () => {
           <ImportAirFreight
             formData={formData}
             handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit} // Pass handleSubmit here
+            handleSubmit={handleSubmit}
           />
         );
       case "import-lcl":
@@ -95,7 +100,7 @@ const DocumentPage = () => {
           <ImportLCL
             formData={formData}
             handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit} // Pass handleSubmit here
+            handleSubmit={handleSubmit}
           />
         );
       case "import-fcl":
@@ -103,14 +108,13 @@ const DocumentPage = () => {
           <ImportFCL
             formData={formData}
             handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit} // Pass handleSubmit here
+            handleSubmit={handleSubmit}
           />
         );
       default:
         return null;
     }
   };
-  
 
   return (
     <Layout>
@@ -118,7 +122,7 @@ const DocumentPage = () => {
         <div className="flex items-center space-x-6 mb-6">
           <form onSubmit={handleSubmit}>
             <button type="submit" className="px-6 py-3 bg-orange-500 text-white rounded-md">
-              Add New Document
+              Add New Order
             </button>
           </form>
 
@@ -148,14 +152,14 @@ const DocumentPage = () => {
           </div>
         </div>
 
-        <h2 className="text-xl font-bold text-gray-700 mb-4 text-center w-full uppercase">
-          {orderType.charAt(0).toUpperCase() + orderType.slice(1)} -{" "}
-          {shipmentType
-            .replace(/([A-Z])/g, " $1")
-            .replace(/^./, (str) => str.toUpperCase())}
-        </h2>
+        <div className="border-2 border-black p-6 mb-8 rounded-md shadow-lg">
+          <h2 className="text-xl font-bold text-gray-700 mb-4 text-center w-full uppercase">
+            {orderType.charAt(0).toUpperCase() + orderType.slice(1)} -{" "}
+            {shipmentType.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
+          </h2>
 
-        {renderActiveComponent()}
+          {renderActiveComponent()} {/* Render the active component */}
+        </div>
       </div>
     </Layout>
   );
