@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Select from 'react-select';
 import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
-import Layout from './Main_Layout';
+import Layout from '../Layouts/Main_Layout';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
@@ -26,11 +26,28 @@ const AddFreightCoordinator = () => {
   useEffect(() => {
     const fetchFreightAgents = async () => {
       try {
-        const response = await axios.get('http://localhost:5056/api/freight-agents-list'); // Replace with your actual API endpoint
+        const token = localStorage.getItem('token'); // Get token from localStorage
+        if (!token) {
+          throw new Error('No token found. Please log in again.');
+        }
+    
+        const response = await axios.get(
+          'http://localhost:5056/api/addFreightAgentCoordinator/freight-agents-list',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }
+        );
+    
         console.log(response.data.freightAgentsList);
         setFreightAgents(response.data.freightAgentsList || []);
       } catch (error) {
-        console.error('Error fetching freight agents:', error);
+        console.error('Error fetching freight agents:', error.message);
+        if (error.response && error.response.status === 401) {
+          console.error('Unauthorized. Redirecting to login.');
+          // Handle unauthorized error (e.g., redirect to login page)
+        }
       }
     };
 
@@ -65,7 +82,7 @@ const AddFreightCoordinator = () => {
   };
 
   // const handleCountryChange = (selectedCountry) => {
-  //   const callingCode = `+${getCountryCallingCode(selectedCountry.value)}`;
+  //   const callingCode = +${getCountryCallingCode(selectedCountry.value)};
   //   setFormData({
   //     ...formData,
   //     country: selectedCountry.label,

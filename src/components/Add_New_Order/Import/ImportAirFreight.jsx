@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CommonFields from './commonFields';
+import CommonFields from '../commonFields';
 
 const ImportAirFreight = ({ formData, handleInputChange, handleSubmit }) => {
   const [isCargoLoose, setIsCargoLoose] = useState(formData.cargoType === 'LooseCargo');

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Correct import for named export
-import Layout from './Main_Layout'; // Ensure this path is correct
+import Layout from './Layouts/Main_Layout'; // Ensure this path is correct
 
 const HomePage = () => {
   const navigate = useNavigate();

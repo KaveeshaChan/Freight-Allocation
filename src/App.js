@@ -3,14 +3,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoadingPage from './components/LoadingPage';
 import LoginPage from './components/LoginPage';
 import HomePage from './components/HomePage'; // Import AdminPage
-import AddFreightAgent from './components/AddFreightAgent'; // Add this page
-import AddFreightCoordinator from './components/AddFreightCoordinator.jsx'; // Add this page
-import AddMainUser from './components/AddMainUser'; // Add this page
-import Layout from './components/Main_Layout.jsx';
-import Layout2 from './components/Layout-Common_User.jsx';
+import AddFreightAgent from './components/Add_Users/AddFreightAgent.jsx'; // Add this page
+import AddFreightCoordinator from './components/Add_Users/AddFreightCoordinator.jsx'; // Add this page
+import AddMainUser from './components/Add_Users/AddMainUser.jsx'; // Add this page
+import Layout from './components/Layouts/Main_Layout.jsx';
+import Layout2 from './components/Layouts/Layout-Common_User.jsx';
 import InProgress from './components/InProgress.jsx';
 import Completed from './components/Completed.jsx';
-import AddNewOrder from './components/AddNewOrder.jsx';
+import AddNewOrder from './components/Add_New_Order/AddNewOrder.jsx';
 import ViewFreightAgents from './components/ViewFreightAgents.jsx';
 
 

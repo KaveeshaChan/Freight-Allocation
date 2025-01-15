@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Layout from './Main_Layout';
+import Layout from './Layouts/Main_Layout';
 
 const InProgress = () => {
   const [searchTerm, setSearchTerm] = useState('');

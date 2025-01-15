@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../assests/basilurlogo.png';
+import logo from '../../assests/basilurlogo.png';
 import { FaCaretDown } from 'react-icons/fa';
 
 const Layout = ({ children }) => {

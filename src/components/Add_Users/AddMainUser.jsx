@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';  
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
-import Layout from './Main_Layout';
+import Layout from '../Layouts/Main_Layout';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 

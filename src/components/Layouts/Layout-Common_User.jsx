@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assests/basilurlogo.png"; // Import logo
+import logo from "../../assests/basilurlogo.png"
 import { FaCaretDown } from "react-icons/fa"; // Import caret down icon for dropdown
 import { jwtDecode } from 'jwt-decode'; // Ensure this is the correct import
 

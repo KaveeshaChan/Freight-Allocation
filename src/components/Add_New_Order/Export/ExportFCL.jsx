@@ -1,5 +1,5 @@
 import React from 'react';
-import CommonFields from './commonFields';
+import CommonFields from '../commonFields';
 
 const ExportFCL = ({ formData, handleInputChange, handleSubmit }) => {
   // Function to reset the form

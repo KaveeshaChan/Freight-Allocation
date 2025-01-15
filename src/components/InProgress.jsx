@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import Layout from './Main_Layout';
+import Layout from './Layouts/Main_Layout';
 
 const InProgress = () => {
   const [searchTerm, setSearchTerm] = useState('');

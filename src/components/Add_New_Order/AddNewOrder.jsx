@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Layout from "./Main_Layout";
-import ExportAirFreight from "./ExportAirFreight";
-import ExportLCL from "./ExportLCL";
-import ExportFCL from "./ExportFCL";
-import ImportAirFreight from "./ImportAirFreight";
-import ImportLCL from "./ImportLCL";
-import ImportFCL from "./ImportFCL";
+import Layout from "../Layouts/Main_Layout";
+import ExportAirFreight from "./Export/ExportAirFreight";
+import ExportLCL from "./Export/ExportLCL";
+import ExportFCL from "./Export/ExportFCL";
+import ImportAirFreight from "./Import/ImportAirFreight";
+import ImportLCL from "./Import/ImportLCL";
+import ImportFCL from "./Import/ImportFCL";
 
 const DocumentPage = () => {
   const [formData, setFormData] = useState({});
