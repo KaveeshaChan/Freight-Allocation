@@ -101,7 +101,7 @@ const Layout = ({ children }) => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/add-document" className="block px-4 py-2 text-black hover:bg-orange-500">
+                      <Link to="/add-new-order" className="block px-4 py-2 text-black hover:bg-orange-500">
                         Due Orders
                       </Link>
                     </li>

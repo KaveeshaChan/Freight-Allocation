@@ -142,7 +142,7 @@ const Layout = ({ children }) => {
                     </li>
                     <li>
                       <Link
-                        to="/add-document"
+                        to="/add-new-order"
                         className="block px-4 py-2 text-black hover:bg-orange-500"
                       >
                         Add New Order

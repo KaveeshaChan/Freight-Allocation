@@ -10,7 +10,7 @@ import Layout from './components/Main_Layout.jsx';
 import Layout2 from './components/Layout-Common_User.jsx';
 import InProgress from './components/InProgress.jsx';
 import Completed from './components/Completed.jsx';
-import AddDocument from './components/AddDocumnet.jsx';
+import AddNewOrder from './components/AddNewOrder.jsx';
 import ViewFreightAgents from './components/ViewFreightAgents.jsx';
 
 
@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/Layout2" element={<Layout2 />} />
         <Route path="/In-Progress" element={<InProgress />} />
         <Route path="/Completed" element={<Completed />} />
-        <Route path="/add-document" element={<AddDocument />} />
+        <Route path="/add-new-order" element={<AddNewOrder />} />
         <Route path="/view-freight-agents" element={<ViewFreightAgents />} />
       </Routes>
     </Router>
