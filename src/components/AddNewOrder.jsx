@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "./Main_Layout";
 import ExportAirFreight from "./ExportAirFreight";
 import ExportLCL from "./ExportLCL";
@@ -11,6 +11,14 @@ const DocumentPage = () => {
   const [formData, setFormData] = useState({});
   const [orderType, setOrderType] = useState("export");
   const [shipmentType, setShipmentType] = useState("airFreight");
+
+  useEffect(() => {
+    resetForm(); // Reset the form data when the orderType or shipmentType changes
+  }, [orderType, shipmentType]);
+
+  const resetForm = () => {
+    setFormData({}); // Reset form data to empty
+  };
 
   // Handle input changes for form fields
   const handleInputChange = (e) => {
