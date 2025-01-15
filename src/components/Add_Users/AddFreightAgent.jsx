@@ -104,7 +104,7 @@ const AddFreightAgent = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5056/api/addFreightAgent', {
+      const response = await fetch('http://localhost:5056/api/add-freight-agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
