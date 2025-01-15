@@ -56,10 +56,12 @@ const AddMainUser = () => {
     };
   
     try {
-      const response = await fetch('http://localhost:5056/api/add-main-user', {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5056/api/add-main-user/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(cleanedFormData),
       });

@@ -103,10 +103,12 @@ const AddFreightAgent = () => {
     console.log("Cleaned Form Data in submit:", cleanedFormData); // Log cleaned data
 
     try {
-      const response = await fetch('http://localhost:5056/api/add-freight-agent', {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5056/api/addFreightAgent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(cleanedFormData),
       });

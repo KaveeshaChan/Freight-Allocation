@@ -120,10 +120,12 @@ const AddFreightCoordinator = () => {
     } else {
       try {
         console.log(formData);
-        const response = await fetch('http://localhost:5056/api/add-freight-coordinator', {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5056/api/addFreightAgentCoordinator/add-freight-coordinator', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData)
         });
