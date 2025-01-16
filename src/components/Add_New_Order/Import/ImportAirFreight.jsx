@@ -1,87 +1,207 @@
 import React, { useState } from 'react';
-import CommonFields from '../commonFields';
 
-const ImportAirFreight = ({ formData, handleInputChange, handleSubmit }) => {
-  const [isCargoLoose, setIsCargoLoose] = useState(formData.cargoType === 'LooseCargo');
-  const [errors, setErrors] = useState({
-    chargeableWeight: '',
-    grossWeight: '',
-    cargoType: '',
-    cargoCBM: '',
-    noOfPallets: '',
-    targetDate: ''
-  });
+const InputField = ({ label, name, value, placeholder, onChange, error, type = "text" }) => (
+  <div className="max-w-sm mb-6">
+    <label htmlFor={name} className="block text-sm font-medium mb-2 text-black">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value || ""}
+      onChange={onChange}
+      id={name}
+      className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+      placeholder={placeholder}
+    />
+    {error && <p className="text-red-500 text-sm">{error}</p>}
+  </div>
+);
+
+const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType }) => {
+  const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-
-  const handleCargoTypeChange = (e) => {
-    const selectedCargoType = e.target.value;
-    setIsCargoLoose(selectedCargoType === 'LooseCargo');
-    handleInputChange(e);
-
-    if (selectedCargoType === 'LooseCargo') {
-      handleInputChange({ target: { name: 'noOfPallets', value: '' } });
-    }
-  };
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   const validateForm = () => {
-    const newErrors = {};
-    if (!formData.chargeableWeight) newErrors.chargeableWeight = 'Please enter chargeable weight (Kg)';
-    if (!formData.grossWeight) newErrors.grossWeight = 'Please enter gross weight (Kg)';
-    if (!formData.cargoType) newErrors.cargoType = 'Please select cargo type';
-    if (!formData.cargoCBM) newErrors.cargoCBM = 'Please enter cargo CBM';
-    if (!formData.noOfPallets && formData.cargoType === 'PalletizedCargo') newErrors.noOfPallets = 'Please enter number of pallets';
-    if (!formData.targetDate) newErrors.targetDate = 'Please select target date';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    let formErrors = {};
+    if (!formData.orderNumber) formErrors.orderNumber = "Order number is required";
+    if (!formData.routeFrom) formErrors.routeFrom = "Route from is required";
+    if (!formData.routeTo) formErrors.routeTo = "Route to is required";
+    if (!formData.shipmentReadyDate) formErrors.shipmentReadyDate = "Shipment ready date is required";
+    if (!formData.deliveryTerm) formErrors.deliveryTerm = "Delivery term is required";
+    if (!formData.type) formErrors.type = "Type is required";
+    if (!formData.chargeableWeight) formErrors.chargeableWeight = "Chargeable weight (Kg) is required";
+    if (!formData.grossWeight) formErrors.grossWeight = "Gross weight is required";
+    if (!formData.cargoType) formErrors.cargoType = "Cargo type is required";
+    if (!formData.cargoCBM) formErrors.cargoCBM = "Cargo CBM is required";
+    if (formData.cargoType === "PalletizedCargo" && !formData.noOfPallets) formErrors.noOfPallets = "Number of pallets is required";
+    if (!formData.targetDate) formErrors.targetDate = "Target date is required";
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
-    console.log("Form submitted with event:", e); // Log the event object to verify it
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const maxFileSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxFileSize) {
+      alert("File size exceeds 5MB limit.");
+      return;
+    }
+
+    setUploadedFile(file);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log("Form submitted!");
 
     if (validateForm()) {
-      // Ensure handleSubmit is properly defined and expects the event
-      handleSubmit(e); // Pass the event to handleSubmit
+      try {
+        const formDataWithFile = new FormData();
+
+        if (uploadedFile) {
+          console.log("File uploaded:", uploadedFile);
+          formDataWithFile.append("fileUpload", uploadedFile);
+        } else {
+          console.log("No file uploaded.");
+        }
+
+        console.log("Order Type:", orderType);
+        console.log("Shipment Type:", shipmentType);
+
+        formDataWithFile.append("orderType", orderType);
+        formDataWithFile.append("shipmentType", shipmentType);
+
+        Object.keys(formData).forEach((key) => {
+          console.log(`${key}: ${formData[key]}`);
+          formDataWithFile.append(key, formData[key]);
+        });
+
+        console.log("Data to send to backend:", formDataWithFile);
+
+        const response = await fetch("http://localhost:5056/api/add-new-order", {
+          method: "POST",
+          body: formDataWithFile,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message}`);
+          return;
+        }
+
+        const responseData = await response.json();
+        console.log("Success:", responseData);
+
+      } catch (error) {
+        console.error("Error:", error);
+      }
+
       resetForm();
     } else {
       setShowErrorPopup(true);
     }
   };
 
-  const handlePopupClose = () => {
-    setShowErrorPopup(false);
-  };
-
   const resetForm = () => {
-    handleInputChange({ target: { name: 'chargeableWeight', value: '' } });
-    handleInputChange({ target: { name: 'grossWeight', value: '' } });
-    handleInputChange({ target: { name: 'cargoCBM', value: '' } });
-    handleInputChange({ target: { name: 'noOfPallets', value: '' } });
-    handleInputChange({ target: { name: 'targetDate', value: '' } });
-    handleInputChange({ target: { name: 'additionalNotes', value: '' } });
-    setIsCargoLoose(false);
+    const resetFields = {
+      orderNumber: "",
+      chargeableWeight: "",
+      routeFrom: "",
+      routeTo: "",
+      shipmentReadyDate: "",
+      deliveryTerm: "",
+      type: "",
+      grossWeight: "",
+      cargoType: "",
+      cargoCBM: "",
+      noOfPallets: "",
+      targetDate: "",
+      fileUpload: "",
+      additionalNotes: "",
+    };
+
+    Object.keys(resetFields).forEach((field) =>
+      handleInputChange({ target: { name: field, value: resetFields[field] } })
+    );
+    setUploadedFile(null);
     setErrors({});
   };
 
+  const handleCargoTypeChange = (e) => {
+    handleInputChange(e);
+  };
+
   return (
-    <form onSubmit={handleFormSubmit} className="max-w-full w-full mx-auto px-4">
-      {showErrorPopup && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
-            <h2 className="text-lg text-red-500 font-semibold">Please fill all required fields</h2>
-            <button
-              onClick={handlePopupClose}
-              className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg"
-            >
-              Close
-            </button>
+    <form onSubmit={handleFormSubmit}>
+      {/* Order Number and Route */}
+      <div className="grid grid-cols-2 gap-6 mb-6">
+        <InputField 
+          label="1. Order Number" 
+          name="orderNumber" 
+          value={formData.orderNumber} 
+          placeholder="Enter the order number"
+          onChange={handleInputChange}
+          error={errors.orderNumber}
+        />
+        <div className="col-span-1">
+          <label htmlFor="route" className="block text-sm font-medium mb-2 text-black">
+            2. Route
+          </label>
+          <div className="flex space-x-2 -mt-2">
+            <InputField 
+              name="routeFrom" 
+              value={formData.routeFrom} 
+              placeholder="From"
+              onChange={handleInputChange}
+              error={errors.routeFrom}
+            />
+            <span className="text-sm text-black my-auto">-</span>
+            <InputField 
+              name="routeTo" 
+              value={formData.routeTo} 
+              placeholder="To"
+              onChange={handleInputChange}
+              error={errors.routeTo}
+            />
           </div>
         </div>
-      )}
+      </div>
 
-      <CommonFields formData={formData} handleInputChange={handleInputChange} />
+      {/* Shipment Ready Date, Delivery Term, and Type */}
+      <div className="grid grid-cols-3 gap-6 mb-6">
+        <InputField 
+          label="3. Shipment Ready Date" 
+          name="shipmentReadyDate" 
+          value={formData.shipmentReadyDate} 
+          placeholder="DD/MM/YYYY"
+          onChange={handleInputChange}
+          error={errors.shipmentReadyDate}
+          type="date"
+        />
+        <InputField 
+          label="4. Delivery Term" 
+          name="deliveryTerm" 
+          value={formData.deliveryTerm} 
+          placeholder="Enter the Delivery Term"
+          onChange={handleInputChange}
+          error={errors.deliveryTerm}
+        />
+        <InputField 
+          label="5. Type" 
+          name="type" 
+          value={formData.type} 
+          placeholder="Enter the type"
+          onChange={handleInputChange}
+          error={errors.type}
+        />
+      </div>
 
+      {/* Cargo Type */}
       <div className="w-full mb-6 mt-6">
         <label htmlFor="cargoType" className="block text-sm font-medium mb-2 text-black">
           6. Cargo Type
@@ -115,117 +235,87 @@ const ImportAirFreight = ({ formData, handleInputChange, handleSubmit }) => {
         {errors.cargoType && <p className="text-red-500 italic text-sm">{errors.cargoType}</p>}
       </div>
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div>
-          <label htmlFor="hs-floating-underline-input-chargeableWeight" className="block text-sm font-medium mb-2 text-black">
-            7. Chargeable Weight (Kg) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="chargeableWeight"
-            value={formData.chargeableWeight || ""}
-            onChange={handleInputChange}
-            id="hs-floating-underline-input-chargeableWeight"
-            className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-            placeholder="Enter chargeable weight in Kg"
-            min="0"
-          />
-          {errors.chargeableWeight && (
-            <p className="text-red-500 italic text-xs">{errors.chargeableWeight}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="hs-floating-underline-input-grossWeight" className="block text-sm font-medium mb-2 text-black">
-            8. Gross Weight (Kg) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="grossWeight"
-            value={formData.grossWeight || ""}
-            onChange={handleInputChange}
-            id="hs-floating-underline-input-grossWeight"
-            className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-            placeholder="Enter the Gross Weight"
-          />
-          {errors.grossWeight && (
-            <p className="text-red-500 italic text-sm">{errors.grossWeight}</p>
-          )}
-        </div>
-        <div>
-          <label htmlFor="hs-floating-underline-input-cargoCBM" className="block text-sm font-medium mb-2 text-black">
-            9. Cargo CBM <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="cargoCBM"
-            value={formData.cargoCBM || ""}
-            onChange={handleInputChange}
-            id="hs-floating-underline-input-cargoCBM"
-            className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-            placeholder="Enter the Cargo CBM"
-          />
-          {errors.cargoCBM && <p className="text-red-500 italic text-sm">{errors.cargoCBM}</p>}
-        </div>
-      </div>
+      {/* Chargeable Weight, Gross Weight, Cargo CBM */}
+      <InputField 
+        label="7. Chargeable Weight (Kg)" 
+        name="chargeableWeight" 
+        value={formData.chargeableWeight} 
+        placeholder="Enter the Chargeable Weight (Kg)"
+        onChange={handleInputChange}
+        error={errors.chargeableWeight}
+      />
+      <InputField 
+        label="8. Gross Weight (Kg)" 
+        name="grossWeight" 
+        value={formData.grossWeight} 
+        placeholder="Enter the Gross Weight"
+        onChange={handleInputChange}
+        error={errors.grossWeight}
+      />
+      <InputField 
+        label="9. Cargo CBM" 
+        name="cargoCBM" 
+        value={formData.cargoCBM} 
+        placeholder="Enter the Cargo CBM"
+        onChange={handleInputChange}
+        error={errors.cargoCBM}
+      />
 
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div>
-          <label htmlFor="hs-floating-underline-input-noOfPallets" className="block text-sm font-medium mb-2 text-black">
-            10. No. of Pallets
-          </label>
-          <input
-            type="number"
-            name="noOfPallets"
-            value={formData.noOfPallets || ""}
-            onChange={handleInputChange}
-            id="hs-floating-underline-input-noOfPallets"
-            className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-            placeholder="Enter the number of pallets"
-            min="0"
-            disabled={isCargoLoose}
-          />
-          {errors.noOfPallets && <p className="text-red-500 italic text-sm">{errors.noOfPallets}</p>}
-        </div>
-        <div>
-          <label htmlFor="hs-floating-underline-input-targetDate" className="block text-sm font-medium mb-2 text-black">
-            11. Target Date <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="targetDate"
-            value={formData.targetDate || ""}
-            onChange={handleInputChange}
-            id="hs-floating-underline-input-targetDate"
-            className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-          {errors.targetDate && <p className="text-red-500 italic text-sm">{errors.targetDate}</p>}
-        </div>
-      </div>
+      {/* No. of Pallets and Target Date */}
+      <InputField 
+        label="10. No. of Pallets" 
+        name="noOfPallets" 
+        value={formData.noOfPallets} 
+        placeholder="Enter the number of pallets"
+        onChange={handleInputChange}
+        error={errors.noOfPallets}
+        type="number"
+      />
+      <InputField 
+        label="11. Target Date" 
+        name="targetDate" 
+        value={formData.targetDate} 
+        placeholder="DD/MM/YYYY"
+        onChange={handleInputChange}
+        error={errors.targetDate}
+        type="date"
+      />
 
-      <div className="w-full mb-6">
-        <label className="block text-sm font-medium mb-2 text-black">12. Upload File</label>
+      {/* File Upload */}
+      <div className="max-w-sm mb-6">
+        <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
+          12. Upload File
+        </label>
         <input
+          name="fileUpload"
           type="file"
           accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
-          className="block w-full text-sm text-gray-500
-            file:py-2 file:px-4 file:rounded-lg
-            file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+          onChange={handleFileUpload}
+          id="fileUpload"
+          className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
         />
+        {uploadedFile && (
+          <div className="mt-2 text-sm text-gray-600">
+            <strong>Selected file:</strong> {uploadedFile.name}
+          </div>
+        )}
       </div>
 
+      {/* Additional Notes */}
       <div className="w-full mb-6">
-        <label htmlFor="additional-notes" className="block text-sm font-medium mb-2 text-black">
-          Additional Notes
+        <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
+          13. Additional Notes
         </label>
         <textarea
           name="additionalNotes"
-          id="additional-notes"
+          id="additionalNotes"
           className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
           placeholder="Enter any additional notes here..."
           rows="4"
         />
       </div>
 
+      {/* Submit Button */}
       <div className="w-full mb-6">
         <button
           type="submit"
@@ -234,6 +324,19 @@ const ImportAirFreight = ({ formData, handleInputChange, handleSubmit }) => {
           Submit
         </button>
       </div>
+
+      {showErrorPopup && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
+            <h2 className="text-lg text-red-500 font-semibold">
+              Please fill all required fields
+            </h2>
+            <button onClick={() => setShowErrorPopup(false)} className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </form>
   );
 };

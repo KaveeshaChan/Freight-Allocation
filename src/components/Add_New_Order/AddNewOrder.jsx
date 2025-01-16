@@ -13,114 +13,52 @@ const DocumentPage = () => {
   const [shipmentType, setShipmentType] = useState("airFreight");
 
   useEffect(() => {
-    resetForm(); // Reset the form data when the orderType or shipmentType changes
+    resetForm(); // Reset the form data when orderType or shipmentType changes
   }, [orderType, shipmentType]);
 
   const resetForm = () => {
     setFormData({}); // Reset form data to empty
   };
 
-  // Handle input changes for form fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Prepare the data before sending to backend
-  const prepareDataForBackend = () => {
-    const dataToSend = {
-      orderType: orderType || null,
-      shipmentType: shipmentType || null,
-      ...formData,
-    };
-
-    // Convert empty fields to null
-    for (let key in dataToSend) {
-      if (dataToSend[key] === "") {
-        dataToSend[key] = null;
-      }
-    }
-
-    console.log(dataToSend); // For debugging
-    return dataToSend;
-  };
-
-  // Handle form submission
-  const handleSubmit = async (event) => {
-    console.log("handleSubmit function is called");
-    event.preventDefault(); // Prevent default form submission
-
-    const data = prepareDataForBackend(); // Get prepared data
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submitting form with:");
+    console.log("Order Type:", orderType);
+    console.log("Shipment Type:", shipmentType);
+    console.log("Other Data:", formData);
 
     try {
+      const dataToSend = {
+        orderType,
+        shipmentType,
+        ...formData,
+      };
+
+      // Convert empty fields to null
+      for (let key in dataToSend) {
+        if (dataToSend[key] === "") {
+          dataToSend[key] = null;
+        }
+      }
+
       const response = await fetch("http://localhost:5056/api/add-new-order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(dataToSend),
       });
 
       const responseData = await response.json();
-      console.log("Success:", responseData); // Success log
+      console.log("Success:", responseData);
+      resetForm();
     } catch (error) {
-      console.error("Error:", error); // Error log
-    }
-  };
-
-  // Render the appropriate component based on orderType and shipmentType
-  const renderActiveComponent = () => {
-    switch (`${orderType}-${shipmentType}`) {
-      case "export-airFreight":
-        return (
-          <ExportAirFreight
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-          />
-        );
-      case "export-lcl":
-        return (
-          <ExportLCL
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-          />
-        );
-      case "export-fcl":
-        return (
-          <ExportFCL
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-          />
-        );
-      case "import-airFreight":
-        return (
-          <ImportAirFreight
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-          />
-        );
-      case "import-lcl":
-        return (
-          <ImportLCL
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-          />
-        );
-      case "import-fcl":
-        return (
-          <ImportFCL
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
-          />
-        );
-      default:
-        return null;
+      console.error("Error:", error);
     }
   };
 
@@ -128,8 +66,11 @@ const DocumentPage = () => {
     <Layout>
       <div className="p-8 mt-8">
         <div className="flex items-center space-x-6 mb-6">
-          <form onSubmit={handleSubmit}>
-            <button type="submit" className="px-6 py-3 bg-orange-500 text-white rounded-md">
+          <form onSubmit={handleFormSubmit}>
+            <button
+              type="submit"
+              className="px-6 py-3 bg-orange-500 text-white rounded-md"
+            >
               Add New Order
             </button>
           </form>
@@ -166,7 +107,24 @@ const DocumentPage = () => {
             {shipmentType.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
           </h2>
 
-          {renderActiveComponent()} {/* Render the active component */}
+          {orderType === "import" && shipmentType === "lcl" && (
+            <ImportLCL formData={formData} handleInputChange={handleInputChange} />
+          )}
+          {orderType === "import" && shipmentType === "fcl" && (
+            <ImportFCL formData={formData} handleInputChange={handleInputChange} />
+          )}
+          {orderType === "import" && shipmentType === "airFreight" && (
+            <ImportAirFreight formData={formData} handleInputChange={handleInputChange} />
+          )}
+          {orderType === "export" && shipmentType === "airFreight" && (
+            <ExportAirFreight formData={formData} handleInputChange={handleInputChange} />
+          )}
+          {orderType === "export" && shipmentType === "lcl" && (
+            <ExportLCL formData={formData} handleInputChange={handleInputChange} />
+          )}
+          {orderType === "export" && shipmentType === "fcl" && (
+            <ExportFCL formData={formData} handleInputChange={handleInputChange} />
+          )}
         </div>
       </div>
     </Layout>

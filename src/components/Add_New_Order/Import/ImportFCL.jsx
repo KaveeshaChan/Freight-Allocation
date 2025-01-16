@@ -1,123 +1,283 @@
-import React from 'react';
-import CommonFields from '../commonFields';
+import React, { useState } from 'react';
 
-const ImportFCL = ({ formData, handleInputChange, handleSubmit }) => {
-  // Function to reset the form
-  const resetForm = () => {
-    handleInputChange({ target: { name: 'noOfContainers', value: '' } });
-    handleInputChange({ target: { name: 'targetDate', value: '' } });
-    handleInputChange({ target: { name: 'productDescription', value: '' } });
-    handleInputChange({ target: { name: 'additionalNotes', value: '' } });
+const InputField = ({ label, name, value, placeholder, onChange, error, type = "text" }) => (
+  <div className="max-w-sm mb-6">
+    <label htmlFor={name} className="block text-sm font-medium mb-2 text-black">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value || ""}
+      onChange={onChange}
+      id={name}
+      className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+      placeholder={placeholder}
+    />
+    {error && <p className="text-red-500 text-sm">{error}</p>}
+  </div>
+);
+
+const ImportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => {
+  const [errors, setErrors] = useState({});
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const validateForm = () => {
+    let formErrors = {};
+    if (!formData.orderNumber) formErrors.orderNumber = "Order number is required";
+    if (!formData.routeFrom) formErrors.routeFrom = "Route from is required";
+    if (!formData.routeTo) formErrors.routeTo = "Route to is required";
+    if (!formData.shipmentReadyDate) formErrors.shipmentReadyDate = "Shipment ready date is required";
+    if (!formData.deliveryTerm) formErrors.deliveryTerm = "Delivery term is required";
+    if (!formData.type) formErrors.type = "Type is required";
+    if (!formData.palletCBM) formErrors.noOfContainers = "no.of Containers are required";
+    if (!formData.targetDate) formErrors.targetDate = "Target date is required";
+    if (!formData.productDescription) formErrors.productDescription = "Product description is required";
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const maxFileSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxFileSize) {
+      alert("File size exceeds 5MB limit.");
+      return;
+    }
+
+    setUploadedFile(file);
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    handleSubmit();
-    resetForm(); // Reset the form fields after submitting
+
+    console.log("Form submitted!");
+
+    if (validateForm()) {
+      try {
+        const formDataWithFile = new FormData();
+
+        if (uploadedFile) {
+          console.log("File uploaded:", uploadedFile);
+          formDataWithFile.append("fileUpload", uploadedFile);
+        } else {
+          console.log("No file uploaded.");
+        }
+
+        console.log("Order Type:", orderType);
+        console.log("Shipment Type:", shipmentType);
+
+        formDataWithFile.append("orderType", orderType);
+        formDataWithFile.append("shipmentType", shipmentType);
+
+        Object.keys(formData).forEach((key) => {
+          console.log(`${key}: ${formData[key]}`);
+          formDataWithFile.append(key, formData[key]);
+        });
+
+        console.log("Data to send to backend:", formDataWithFile);
+
+        const response = await fetch("http://localhost:5056/api/add-new-order", {
+          method: "POST",
+          body: formDataWithFile,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message}`);
+          return;
+        }
+
+        const responseData = await response.json();
+        console.log("Success:", responseData);
+
+      } catch (error) {
+        console.error("Error:", error);
+      }
+
+      resetForm();
+    } else {
+      setShowErrorPopup(true);
+    }
   };
+
+  const resetForm = () => {
+    const resetFields = {
+      orderNumber: '',       
+routeFrom: '',       
+routeTo: '',       
+shipmentReadyDate: '',      
+ DeliveryTerm: '',      
+ type: '',       
+noOfContainers: '',       
+targetDate: '',       
+productDescription: '',       
+additionalNotes: '',    };
+
+    Object.keys(resetFields).forEach((field) =>
+      handleInputChange({ target: { name: field, value: resetFields[field] } })
+    );
+    setUploadedFile(null);
+    setErrors({});
+  };
+
+
 
   return (
-    <>
-      <CommonFields formData={formData} handleInputChange={handleInputChange} />
-      <form onSubmit={handleFormSubmit}>
-      <div className="max-w-sm mb-6 mt-6">
-        <div className="flex justify-between items-center">
-          <label htmlFor="hs-floating-underline-input-noOfContainers" className="block text-sm font-medium mb-2 text-black">
-            6. No. of Containers
-          </label>
-        </div>
-        <input
-          type="number"
-          name="noOfContainers"
-          value={formData.noOfContainers || ""}
-          onChange={(e) => {
-            const value = Math.max(0, parseInt(e.target.value, 10)); // Ensure positive value
-            handleInputChange({ target: { name: e.target.name, value } });
-          }}
-          id="hs-floating-underline-input-noOfContainers"
-          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-          placeholder="Enter the number of containers"
-        />
-      </div>
-
-      <div className="max-w-sm mb-6">
-        <div className="flex justify-between items-center">
-          <label htmlFor="hs-floating-underline-input-targetDate" className="block text-sm font-medium mb-2 text-black">
-            7. Target Date
-          </label>
-        </div>
-        <input
-          type="date"
-          name="targetDate"
-          value={formData.targetDate || ""}
+    <form onSubmit={handleFormSubmit}>
+      <div className="grid grid-cols-2 gap-6 mb-6">
+        <InputField 
+          label="1. Order Number" 
+          name="orderNumber" 
+          value={formData.orderNumber} 
+          placeholder="Enter the order number"
           onChange={handleInputChange}
-          id="hs-floating-underline-input-targetDate"
-          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-          placeholder="DD/MM/YYYY"
+          error={errors.orderNumber}
         />
-      </div>
-
-      <div className="max-w-sm mb-6">
-        <div className="flex justify-between items-center">
-          <label htmlFor="hs-floating-underline-input-productDescription" className="block text-sm font-medium mb-2 text-black">
-            8. Product Description
+        <div className="col-span-1 ">
+          <label htmlFor="route" className="block text-sm font-medium mb-2 text-black">
+            2. Route
           </label>
-        </div>
-        <textarea
-          name="productDescription"
-          value={formData.productDescription || ""}
-          onChange={handleInputChange}
-          id="hs-floating-underline-input-productDescription"
-          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-          placeholder="Enter the product description"
-          rows="4"
-        />
-      </div>
-
-      <div className="max-w-sm mb-6">
-          <label className="block">
-            <span className="sr-only">Choose profile photo</span>
-            <input
-              type="file"
-              accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
-              className="block w-full text-sm text-gray-500
-                file:me-4 file:py-2 file:px-4
-                file:rounded-lg file:border-0
-                file:text-sm file:font-semibold
-                file:bg-blue-600 file:text-white
-                hover:file:bg-blue-700
-                file:disabled:opacity-50 file:disabled:pointer-events-none"
+          <div className="flex space-x-2 -mt-2">
+            <InputField 
+               
+              name="routeFrom" 
+              value={formData.routeFrom} 
+              placeholder="From"
+              onChange={handleInputChange}
+              error={errors.routeFrom}
             />
-          </label>
+            <span className="text-sm text-black my-auto">-</span>
+            <InputField 
+               
+              name="routeTo" 
+              value={formData.routeTo} 
+              placeholder="To"
+              onChange={handleInputChange}
+              error={errors.routeTo}
+            />
           </div>
+        </div>
+      </div>
 
-          {/* Additional Notes */}
-          <div className="max-w-sm mb-6">
-  <div className="flex justify-between items-center">
-    <label htmlFor="additional-notes" className="block text-sm font-medium mb-2 text-black">
-      Additional Notes
-    </label>
-  </div>
-  <textarea
-    name="additionalNotes"
-    id="additional-notes"
-    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-    placeholder="Enter any additional notes here..."
-    rows="4"
+      {/* Shipment Ready Date, Delivery Term, and Type */}
+      <div className="grid grid-cols-3 gap-6 mb-6">
+        <InputField 
+          label="3. Shipment Ready Date" 
+          name="shipmentReadyDate" 
+          value={formData.shipmentReadyDate} 
+          placeholder="DD/MM/YYYY"
+          onChange={handleInputChange}
+          error={errors.shipmentReadyDate}
+          type="date"
+        />
+        <InputField 
+          label="4. Delivery Term" 
+          name="deliveryTerm" 
+          value={formData.deliveryTerm} 
+          placeholder="Enter the Delivery Term"
+          onChange={handleInputChange}
+          error={errors.deliveryTerm}
+        />
+        <InputField 
+          label="5. Type" 
+          name="type" 
+          value={formData.type} 
+          placeholder="Enter the type"
+          onChange={handleInputChange}
+          error={errors.type}
+        />
+      </div>
+
+      {/* No. of Containers */}
+      <InputField 
+        label="6. No. of Containers" 
+        name="noOfContainers" 
+        value={formData.noOfContainers} 
+        placeholder="Enter the number of containers"
+        onChange={handleInputChange}
+        type="number"
+        error={errors.noOfContainers}
+      />
+
+<InputField 
+        label="7. Target Date" 
+        name="targetDate" 
+        value={formData.targetDate} 
+        placeholder="DD/MM/YYYY"
+        onChange={handleInputChange}
+        error={errors.targetDate}
+        type="date"
+      />
+
+      {/* Product Description */}
+      <InputField 
+        label="8. Product Description" 
+        name="productDescription" 
+        value={formData.productDescription} 
+        placeholder="Enter the product description"
+        onChange={handleInputChange}
+        type="textarea"
+        error={errors.productDescription}
+      />
+
+      {/* File Upload */}
+      <div className="max-w-sm mb-6">
+  <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
+    12. Upload File
+  </label>
+  <input
+    name="fileUpload"
+    type="file"
+    accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
+    onChange={handleFileUpload}
+    id="fileUpload"
+    className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
   />
+  {uploadedFile && (
+    <div className="mt-2 text-sm text-gray-600">
+      <strong>Selected file:</strong> {uploadedFile.name}
+    </div>
+  )}
 </div>
 
-<div className="max-w-sm mb-6">
-          <button
-            type="submit"
-            className="py-3 px-6 bg-orange-500 text-white rounded-lg text-sm hover:bg-orange-600"
-          >
-            Submit
-          </button>
+      {/* Additional Notes */}
+      <InputField 
+        label="10. Additional Notes" 
+        name="additionalNotes" 
+        value={formData.additionalNotes} 
+        placeholder="Enter any additional notes here..."
+        onChange={handleInputChange}
+        type="textarea"
+      />
+
+      {/* Submit Button */}
+      <div className="w-full mb-6">
+        <button
+          type="submit"
+          className="py-3 px-6 bg-orange-500 text-white rounded-lg text-sm hover:bg-orange-600 w-full"
+        >
+          Submit
+        </button>
+      </div>
+
+      {showErrorPopup && (
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
+            <h2 className="text-lg text-red-500 font-semibold">
+              Please fill all required fields
+            </h2>
+            <button onClick={() => setShowErrorPopup(false)} className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg">
+              Close
+            </button>
+          </div>
         </div>
-        </form>
-      
-    </>
+      )}
+
+    </form>
   );
 };
 
