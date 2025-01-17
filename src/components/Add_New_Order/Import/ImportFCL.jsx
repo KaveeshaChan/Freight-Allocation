@@ -106,8 +106,8 @@ const ImportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
 
   const resetForm = () => {
     const resetFields = {
-      orderNumber: '',       
-routeFrom: '',       
+      orderNumber: '',
+      routeFrom: '',       
 routeTo: '',       
 shipmentReadyDate: '',      
  DeliveryTerm: '',      
@@ -115,7 +115,9 @@ shipmentReadyDate: '',
 noOfContainers: '',       
 targetDate: '',       
 productDescription: '',       
-additionalNotes: '',    };
+additionalNotes: '',
+fileUpload: '',
+    };
 
     Object.keys(resetFields).forEach((field) =>
       handleInputChange({ target: { name: field, value: resetFields[field] } })
@@ -227,13 +229,14 @@ additionalNotes: '',    };
       {/* File Upload */}
       <div className="max-w-sm mb-6">
   <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
-    12. Upload File
+    9. Upload File
   </label>
   <input
     name="fileUpload"
     type="file"
     accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
     onChange={handleFileUpload}
+    value={formData.fileUpload || ""}
     id="fileUpload"
     className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
   />
@@ -244,15 +247,20 @@ additionalNotes: '',    };
   )}
 </div>
 
-      {/* Additional Notes */}
-      <InputField 
-        label="10. Additional Notes" 
-        name="additionalNotes" 
-        value={formData.additionalNotes} 
-        placeholder="Enter any additional notes here..."
-        onChange={handleInputChange}
-        type="textarea"
-      />
+<div className="w-full mb-6">
+  <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
+    10. Additional Notes
+  </label>
+  <textarea
+    name="additionalNotes"
+    id="additionalNotes"
+    value={formData.additionalNotes || ""}
+    onChange={handleInputChange}
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+    placeholder="Enter any additional notes here..."
+    rows="4"
+  />
+</div> 
 
       {/* Submit Button */}
       <div className="w-full mb-6">

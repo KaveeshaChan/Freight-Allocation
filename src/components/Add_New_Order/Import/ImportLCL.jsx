@@ -253,9 +253,8 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         type="textarea"
       />
 
-      {/* File Upload */}
-      {/* File Upload */}
-<div className="max-w-sm mb-6">
+     {/* File Upload */}
+     <div className="max-w-sm mb-6">
   <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
     12. Upload File
   </label>
@@ -264,6 +263,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
     type="file"
     accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
     onChange={handleFileUpload}
+    value={formData.fileUpload || ""}
     id="fileUpload"
     className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
   />
@@ -274,19 +274,20 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
   )}
 </div>
 
-
-      <div className="w-full mb-6">
-        <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
-          13. Additional Notes
-        </label>
-        <textarea
-          name="additionalNotes"
-          id="additionalNotes"
-          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-          placeholder="Enter any additional notes here..."
-          rows="4"
-        />
-      </div> 
+<div className="w-full mb-6">
+  <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
+    13. Additional Notes
+  </label>
+  <textarea
+    name="additionalNotes"
+    id="additionalNotes"
+    value={formData.additionalNotes || ""}
+    onChange={handleInputChange}
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+    placeholder="Enter any additional notes here..."
+    rows="4"
+  />
+</div> 
 
       <div className="w-full mb-6">
         <button

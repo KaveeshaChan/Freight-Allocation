@@ -25,41 +25,17 @@ const DocumentPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     console.log("Submitting form with:");
     console.log("Order Type:", orderType);
     console.log("Shipment Type:", shipmentType);
     console.log("Other Data:", formData);
 
-    try {
-      const dataToSend = {
-        orderType,
-        shipmentType,
-        ...formData,
-      };
+    // You can perform other actions here, like saving data locally, displaying a message, etc.
+    // In this case, no API call is made.
 
-      // Convert empty fields to null
-      for (let key in dataToSend) {
-        if (dataToSend[key] === "") {
-          dataToSend[key] = null;
-        }
-      }
-
-      const response = await fetch("http://localhost:5056/api/add-new-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
-
-      const responseData = await response.json();
-      console.log("Success:", responseData);
-      resetForm();
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    resetForm();
   };
 
   return (
@@ -108,22 +84,42 @@ const DocumentPage = () => {
           </h2>
 
           {orderType === "import" && shipmentType === "lcl" && (
-            <ImportLCL formData={formData} handleInputChange={handleInputChange} />
+            <ImportLCL formData={formData}
+            handleInputChange={handleInputChange}
+            orderType={orderType}
+            shipmentType={shipmentType} />
           )}
           {orderType === "import" && shipmentType === "fcl" && (
-            <ImportFCL formData={formData} handleInputChange={handleInputChange} />
+            <ImportFCL formData={formData}
+            handleInputChange={handleInputChange}
+            orderType={orderType}
+            shipmentType={shipmentType} />
           )}
           {orderType === "import" && shipmentType === "airFreight" && (
-            <ImportAirFreight formData={formData} handleInputChange={handleInputChange} />
+            <ImportAirFreight formData={formData}
+            handleInputChange={handleInputChange}
+            orderType={orderType}
+            shipmentType={shipmentType} />
           )}
           {orderType === "export" && shipmentType === "airFreight" && (
-            <ExportAirFreight formData={formData} handleInputChange={handleInputChange} />
+            <ExportAirFreight formData={formData}
+            handleInputChange={handleInputChange}
+            orderType={orderType}
+            shipmentType={shipmentType} />
           )}
           {orderType === "export" && shipmentType === "lcl" && (
-            <ExportLCL formData={formData} handleInputChange={handleInputChange} />
+            <ExportLCL fformData={formData}
+            handleInputChange={handleInputChange}
+            orderType={orderType}
+            shipmentType={shipmentType} />
           )}
           {orderType === "export" && shipmentType === "fcl" && (
-            <ExportFCL formData={formData} handleInputChange={handleInputChange} />
+            <ExportFCL
+            formData={formData}
+            handleInputChange={handleInputChange}
+            orderType={orderType}
+            shipmentType={shipmentType}
+          />
           )}
         </div>
       </div>

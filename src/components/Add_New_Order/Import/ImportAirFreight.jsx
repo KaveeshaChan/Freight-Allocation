@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const InputField = ({ label, name, value, placeholder, onChange, error, type = "text" }) => (
+const InputField = ({ label, name, value, placeholder, onChange, error, type = "text", disabled = false, style = {} }) => (
   <div className="max-w-sm mb-6">
     <label htmlFor={name} className="block text-sm font-medium mb-2 text-black">
       {label}
@@ -11,7 +11,9 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
       value={value || ""}
       onChange={onChange}
       id={name}
-      className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+      disabled={disabled}
+      style={style}
+      className={`py-3 px-4 block w-full ${disabled ? "bg-gray-400 text-gray-600" : "bg-gray-300 text-black"} placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500`}
       placeholder={placeholder}
     />
     {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -37,6 +39,9 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     if (!formData.cargoCBM) formErrors.cargoCBM = "Cargo CBM is required";
     if (formData.cargoType === "PalletizedCargo" && !formData.noOfPallets) formErrors.noOfPallets = "Number of pallets is required";
     if (!formData.targetDate) formErrors.targetDate = "Target date is required";
+    if (!formData.length) formErrors.length = "Length is required";
+    if (!formData.height) formErrors.height = "Height is required";
+    if (!formData.width) formErrors.width = "Width is required";
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
@@ -122,7 +127,12 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       noOfPallets: "",
       targetDate: "",
       fileUpload: "",
+      productDescription: "",
       additionalNotes: "",
+      length: "",
+      width: "",
+      height: "",
+
     };
 
     Object.keys(resetFields).forEach((field) =>
@@ -235,6 +245,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         {errors.cargoType && <p className="text-red-500 italic text-sm">{errors.cargoType}</p>}
       </div>
 
+
       {/* Chargeable Weight, Gross Weight, Cargo CBM */}
       <InputField 
         label="7. Chargeable Weight (Kg)" 
@@ -259,20 +270,69 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         placeholder="Enter the Cargo CBM"
         onChange={handleInputChange}
         error={errors.cargoCBM}
+      /> 
+
+<div className="mb-6">
+  <label htmlFor="dimensions" className="block text-sm font-medium mb-2 text-black">
+    10. Dimensions (Length * Height * Width)
+  </label>
+  <div className="grid grid-cols-3 gap-4">
+    <div>
+      <input
+        type="number"
+        name="length"
+        id="length"
+        value={formData.length || ""}
+        placeholder="Length (cm)"
+        onChange={handleInputChange}
+        className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-gray-600 border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
       />
+      {errors.length && <p className="text-red-500 text-sm mt-1">{errors.length}</p>}
+    </div>
+    <div>
+      <input
+        type="number"
+        name="height"
+        id="height"
+        value={formData.height || ""}
+        placeholder="Height (cm)"
+        onChange={handleInputChange}
+        className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-gray-600 border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+      />
+      {errors.height && <p className="text-red-500 text-sm mt-1">{errors.height}</p>}
+    </div>
+    <div>
+      <input
+        type="number"
+        name="width"
+        id="width"
+        value={formData.width || ""}
+        placeholder="Width (cm)"
+        onChange={handleInputChange}
+        className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-gray-600 border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+      />
+      {errors.width && <p className="text-red-500 text-sm mt-1">{errors.width}</p>}
+    </div>
+  </div>
+</div>
+
 
       {/* No. of Pallets and Target Date */}
+{/* Number of Pallets (if applicable) */}
+{formData.cargoType === "PalletizedCargo" && (
+  <InputField
+    label="11. Number of Pallets"
+    name="noOfPallets"
+    value={formData.noOfPallets}
+    placeholder="Enter the number of pallets"
+    onChange={handleInputChange}
+    error={errors.noOfPallets}
+    type="number"
+  />
+)}
+
       <InputField 
-        label="10. No. of Pallets" 
-        name="noOfPallets" 
-        value={formData.noOfPallets} 
-        placeholder="Enter the number of pallets"
-        onChange={handleInputChange}
-        error={errors.noOfPallets}
-        type="number"
-      />
-      <InputField 
-        label="11. Target Date" 
+        label="12. Target Date" 
         name="targetDate" 
         value={formData.targetDate} 
         placeholder="DD/MM/YYYY"
@@ -281,39 +341,52 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         type="date"
       />
 
+      {/* Product Description */}
+      <InputField 
+        label="13. Product Description" 
+        name="productDescription" 
+        value={formData.productDescription} 
+        placeholder="Enter the product description"
+        onChange={handleInputChange}
+        type="textarea"
+        error={errors.productDescription}
+      />
+
       {/* File Upload */}
       <div className="max-w-sm mb-6">
-        <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
-          12. Upload File
-        </label>
-        <input
-          name="fileUpload"
-          type="file"
-          accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
-          onChange={handleFileUpload}
-          id="fileUpload"
-          className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
-        />
-        {uploadedFile && (
-          <div className="mt-2 text-sm text-gray-600">
-            <strong>Selected file:</strong> {uploadedFile.name}
-          </div>
-        )}
-      </div>
+  <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
+    14. Upload File
+  </label>
+  <input
+    name="fileUpload"
+    type="file"
+    accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
+    onChange={handleFileUpload}
+    value={formData.fileUpload || ""}
+    id="fileUpload"
+    className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+  />
+  {uploadedFile && (
+    <div className="mt-2 text-sm text-gray-600">
+      <strong>Selected file:</strong> {uploadedFile.name}
+    </div>
+  )}
+</div>
 
-      {/* Additional Notes */}
-      <div className="w-full mb-6">
-        <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
-          13. Additional Notes
-        </label>
-        <textarea
-          name="additionalNotes"
-          id="additionalNotes"
-          className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-          placeholder="Enter any additional notes here..."
-          rows="4"
-        />
-      </div>
+<div className="w-full mb-6">
+  <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
+    15. Additional Notes
+  </label>
+  <textarea
+    name="additionalNotes"
+    id="additionalNotes"
+    value={formData.additionalNotes || ""}
+    onChange={handleInputChange}
+    className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+    placeholder="Enter any additional notes here..."
+    rows="4"
+  />
+</div>
 
       {/* Submit Button */}
       <div className="w-full mb-6">
@@ -342,3 +415,5 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 };
 
 export default ImportAirFreight;
+
+
