@@ -138,7 +138,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
       {/* Order Number and Route */}
       <div className="grid grid-cols-2 gap-6 mb-6">
         <InputField 
-          label="1. Order Number" 
+          label="&#x2022; Order Number" 
           name="orderNumber" 
           value={formData.orderNumber} 
           placeholder="Enter the order number"
@@ -147,7 +147,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         />
         <div className="col-span-1">
           <label htmlFor="route" className="block text-sm font-medium mb-2 text-black">
-            2. Route
+          &#x2022; Route
           </label>
           <div className="flex space-x-2 -mt-2">
             <InputField 
@@ -174,7 +174,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
       {/* Shipment Ready Date, Delivery Term, and Type */}
       <div className="grid grid-cols-3 gap-6 mb-6">
         <InputField 
-          label="3. Shipment Ready Date" 
+          label="&#x2022; Shipment Ready Date" 
           name="shipmentReadyDate" 
           value={formData.shipmentReadyDate} 
           placeholder="DD/MM/YYYY"
@@ -183,7 +183,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           type="date"
         />
         <InputField 
-          label="4. Delivery Term" 
+          label="&#x2022; Delivery Term" 
           name="deliveryTerm" 
           value={formData.deliveryTerm} 
           placeholder="Enter the Delivery Term"
@@ -191,7 +191,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           error={errors.deliveryTerm}
         />
         <InputField 
-          label="5. Type" 
+          label="&#x2022; Type" 
           name="type" 
           value={formData.type} 
           placeholder="Enter the type"
@@ -202,7 +202,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
 
       {/* Pallet CBM, Cargo CBM, Gross Weight */}
       <InputField 
-        label="6. Pallet CBM" 
+        label="&#x2022; Pallet CBM" 
         name="palletCBM" 
         value={formData.palletCBM} 
         placeholder="Enter the Pallet CBM"
@@ -210,7 +210,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         error={errors.palletCBM}
       />
       <InputField 
-        label="7. Cargo CBM" 
+        label="&#x2022; Cargo CBM" 
         name="cargoCBM" 
         value={formData.cargoCBM} 
         placeholder="Enter the Cargo CBM"
@@ -218,7 +218,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         error={errors.cargoCBM}
       />
       <InputField 
-        label="8. Gross Weight (Kg)" 
+        label="&#x2022; Gross Weight (Kg)" 
         name="grossWeight" 
         value={formData.grossWeight} 
         placeholder="Enter the Gross Weight"
@@ -226,7 +226,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         error={errors.grossWeight}
       />
       <InputField 
-        label="9. No. of Pallets" 
+        label="&#x2022; No. of Pallets" 
         name="noOfPallets" 
         value={formData.noOfPallets} 
         placeholder="Enter the number of pallets"
@@ -235,7 +235,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         type="number"
       />
       <InputField 
-        label="10. Target Date" 
+        label="&#x2022; Target Date" 
         name="targetDate" 
         value={formData.targetDate} 
         placeholder="DD/MM/YYYY"
@@ -244,7 +244,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         type="date"
       />
       <InputField 
-        label="11. Product Description" 
+        label="&#x2022; Product Description" 
         name="productDescription" 
         value={formData.productDescription} 
         placeholder="Enter the product description"
@@ -256,7 +256,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
      {/* File Upload */}
      <div className="max-w-sm mb-6">
   <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
-    12. Upload File
+  &#x2022; Upload File
   </label>
   <input
     name="fileUpload"
@@ -276,7 +276,7 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
 
 <div className="w-full mb-6">
   <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
-    13. Additional Notes
+  &#x2022; Additional Notes
   </label>
   <textarea
     name="additionalNotes"

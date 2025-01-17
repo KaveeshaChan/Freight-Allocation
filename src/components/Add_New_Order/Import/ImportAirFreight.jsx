@@ -151,7 +151,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       {/* Order Number and Route */}
       <div className="grid grid-cols-2 gap-6 mb-6">
         <InputField 
-          label="1. Order Number" 
+          label="&#x2022; Order Number" 
           name="orderNumber" 
           value={formData.orderNumber} 
           placeholder="Enter the order number"
@@ -160,7 +160,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         />
         <div className="col-span-1">
           <label htmlFor="route" className="block text-sm font-medium mb-2 text-black">
-            2. Route
+          &#x2022; Route
           </label>
           <div className="flex space-x-2 -mt-2">
             <InputField 
@@ -185,7 +185,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       {/* Shipment Ready Date, Delivery Term, and Type */}
       <div className="grid grid-cols-3 gap-6 mb-6">
         <InputField 
-          label="3. Shipment Ready Date" 
+          label=" &#x2022; Shipment Ready Date" 
           name="shipmentReadyDate" 
           value={formData.shipmentReadyDate} 
           placeholder="DD/MM/YYYY"
@@ -194,7 +194,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           type="date"
         />
         <InputField 
-          label="4. Delivery Term" 
+          label=" &#x2022; Delivery Term" 
           name="deliveryTerm" 
           value={formData.deliveryTerm} 
           placeholder="Enter the Delivery Term"
@@ -202,7 +202,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           error={errors.deliveryTerm}
         />
         <InputField 
-          label="5. Type" 
+          label=" &#x2022; Type" 
           name="type" 
           value={formData.type} 
           placeholder="Enter the type"
@@ -214,7 +214,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       {/* Cargo Type */}
       <div className="w-full mb-6 mt-6">
         <label htmlFor="cargoType" className="block text-sm font-medium mb-2 text-black">
-          6. Cargo Type
+        &#x2022; Cargo Type
         </label>
         <div className="flex space-x-4">
           <div className="flex items-center">
@@ -248,7 +248,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 
       {/* Chargeable Weight, Gross Weight, Cargo CBM */}
       <InputField 
-        label="7. Chargeable Weight (Kg)" 
+        label=" &#x2022; Chargeable Weight (Kg)" 
         name="chargeableWeight" 
         value={formData.chargeableWeight} 
         placeholder="Enter the Chargeable Weight (Kg)"
@@ -256,7 +256,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         error={errors.chargeableWeight}
       />
       <InputField 
-        label="8. Gross Weight (Kg)" 
+        label=" &#x2022; Gross Weight (Kg)" 
         name="grossWeight" 
         value={formData.grossWeight} 
         placeholder="Enter the Gross Weight"
@@ -264,17 +264,17 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         error={errors.grossWeight}
       />
       <InputField 
-        label="9. Cargo CBM" 
+        label=" &#x2022; Cargo CBM" 
         name="cargoCBM" 
         value={formData.cargoCBM} 
         placeholder="Enter the Cargo CBM"
         onChange={handleInputChange}
         error={errors.cargoCBM}
       /> 
-
+{formData.cargoType === "PalletizedCargo" && (
 <div className="mb-6">
   <label htmlFor="dimensions" className="block text-sm font-medium mb-2 text-black">
-    10. Dimensions (Length * Height * Width)
+  &#x2022; Dimensions (Length * Height * Width)
   </label>
   <div className="grid grid-cols-3 gap-4">
     <div>
@@ -315,13 +315,14 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     </div>
   </div>
 </div>
+)}
 
 
       {/* No. of Pallets and Target Date */}
 {/* Number of Pallets (if applicable) */}
 {formData.cargoType === "PalletizedCargo" && (
   <InputField
-    label="11. Number of Pallets"
+    label=" &#x2022; Number of Pallets"
     name="noOfPallets"
     value={formData.noOfPallets}
     placeholder="Enter the number of pallets"
@@ -332,7 +333,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 )}
 
       <InputField 
-        label="12. Target Date" 
+        label=" &#x2022; Target Date" 
         name="targetDate" 
         value={formData.targetDate} 
         placeholder="DD/MM/YYYY"
@@ -343,7 +344,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 
       {/* Product Description */}
       <InputField 
-        label="13. Product Description" 
+        label=" &#x2022; Product Description" 
         name="productDescription" 
         value={formData.productDescription} 
         placeholder="Enter the product description"
@@ -355,7 +356,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       {/* File Upload */}
       <div className="max-w-sm mb-6">
   <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
-    14. Upload File
+  &#x2022; Upload File
   </label>
   <input
     name="fileUpload"
@@ -375,7 +376,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 
 <div className="w-full mb-6">
   <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
-    15. Additional Notes
+  &#x2022; Additional Notes
   </label>
   <textarea
     name="additionalNotes"

@@ -128,7 +128,7 @@ additionalNotes: '',    };
     <form onSubmit={handleFormSubmit}>
       <div className="grid grid-cols-2 gap-6 mb-6">
         <InputField 
-          label="1. Order Number" 
+          label="&#x2022; Order Number" 
           name="orderNumber" 
           value={formData.orderNumber} 
           placeholder="Enter the order number"
@@ -137,7 +137,7 @@ additionalNotes: '',    };
         />
         <div className="col-span-1 ">
           <label htmlFor="route" className="block text-sm font-medium mb-2 text-black">
-            2. Route
+          &#x2022; Route
           </label>
           <div className="flex space-x-2 -mt-2">
             <InputField 
@@ -164,7 +164,7 @@ additionalNotes: '',    };
       {/* Shipment Ready Date, Delivery Term, and Type */}
       <div className="grid grid-cols-3 gap-6 mb-6">
         <InputField 
-          label="3. Shipment Ready Date" 
+          label="&#x2022; Shipment Ready Date" 
           name="shipmentReadyDate" 
           value={formData.shipmentReadyDate} 
           placeholder="DD/MM/YYYY"
@@ -173,7 +173,7 @@ additionalNotes: '',    };
           type="date"
         />
         <InputField 
-          label="4. Delivery Term" 
+          label="&#x2022; Delivery Term" 
           name="deliveryTerm" 
           value={formData.deliveryTerm} 
           placeholder="Enter the Delivery Term"
@@ -181,7 +181,7 @@ additionalNotes: '',    };
           error={errors.deliveryTerm}
         />
         <InputField 
-          label="5. Type" 
+          label="&#x2022; Type" 
           name="type" 
           value={formData.type} 
           placeholder="Enter the type"
@@ -192,7 +192,7 @@ additionalNotes: '',    };
 
       {/* No. of Containers */}
       <InputField 
-        label="6. No. of Containers" 
+        label="&#x2022; No. of Containers" 
         name="noOfContainers" 
         value={formData.noOfContainers} 
         placeholder="Enter the number of containers"
@@ -202,7 +202,7 @@ additionalNotes: '',    };
       />
 
 <InputField 
-        label="7. Target Date" 
+        label="&#x2022; Target Date" 
         name="targetDate" 
         value={formData.targetDate} 
         placeholder="DD/MM/YYYY"
@@ -216,7 +216,7 @@ additionalNotes: '',    };
       {/* File Upload */}
       <div className="max-w-sm mb-6">
   <label htmlFor="fileUpload" className="block text-sm font-medium mb-2 text-black">
-    8. Upload File
+  &#x2022; Upload File
   </label>
   <input
     name="fileUpload"
@@ -236,7 +236,7 @@ additionalNotes: '',    };
 
 <div className="w-full mb-6">
   <label htmlFor="additionalNotes" className="block text-sm font-medium mb-2 text-black">
-    9. Additional Notes
+  &#x2022; Additional Notes
   </label>
   <textarea
     name="additionalNotes"

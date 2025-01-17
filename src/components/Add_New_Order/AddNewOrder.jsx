@@ -108,7 +108,7 @@ const DocumentPage = () => {
             shipmentType={shipmentType} />
           )}
           {orderType === "export" && shipmentType === "lcl" && (
-            <ExportLCL fformData={formData}
+            <ExportLCL formData={formData}
             handleInputChange={handleInputChange}
             orderType={orderType}
             shipmentType={shipmentType} />
