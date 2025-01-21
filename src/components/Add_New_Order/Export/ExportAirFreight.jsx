@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { handleFileUpload } from '../fileUploadHandler';
 
 const InputField = ({ label, name, value, placeholder, onChange, error, type = "text", disabled = false, style = {} }) => (
   <div className="max-w-sm mb-6">
@@ -25,6 +26,17 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
 
+  const onFileUpload = async (e) => {
+    const file = e.target.files[0];
+    try {
+      const jsonData = await handleFileUpload(file, setUploadedFile);
+      console.log('File converted to JSON:', jsonData);
+    } catch (error) {
+      alert(error.message);
+      console.error('Error uploading file:', error);
+    }
+  };
+
   const validateForm = () => {
     let formErrors = {};
     if (!formData.orderNumber) formErrors.orderNumber = "Order number is required";
@@ -43,51 +55,38 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     return Object.keys(formErrors).length === 0;
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxFileSize) {
-      alert("File size exceeds 5MB limit.");
-      return;
-    }
-
-    setUploadedFile(file);
-  };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("Form submitted!");
 
     if (validateForm()) {
       try {
         const formDataWithFile = new FormData();
 
         if (uploadedFile) {
-          console.log("File uploaded:", uploadedFile);
           formDataWithFile.append("fileUpload", uploadedFile);
         } else {
           console.log("No file uploaded.");
         }
 
-        console.log("Order Type:", orderType);
-        console.log("Shipment Type:", shipmentType);
-
         formDataWithFile.append("orderType", orderType);
         formDataWithFile.append("shipmentType", shipmentType);
 
         Object.keys(formData).forEach((key) => {
-          console.log(`${key}: ${formData[key]}`);
+          // console.log(`${key}: ${formData[key]}`);
           formDataWithFile.append(key, formData[key]);
         });
 
-        console.log("Data to send to backend:", formDataWithFile);
+        for (let [key, value] of formDataWithFile.entries()) {
+          console.log(`${key}:`, value);
+        }
 
-        const response = await fetch("http://localhost:5056/api/add-new-order", {
+        const token = localStorage.getItem('token');
+        const response = await fetch("http://localhost:5056/api/orderHandling/add-new-order/export-airFreight", {
           method: "POST",
           body: formDataWithFile,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
@@ -293,7 +292,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     name="fileUpload"
     type="file"
     accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
-    onChange={handleFileUpload}
+    onChange={onFileUpload}
     value={formData.fileUpload || ""}
     id="fileUpload"
     className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
