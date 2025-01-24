@@ -22,16 +22,20 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
 const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => {
   const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Please fill all required fields");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [fileName, setFileName] = useState(null)
 
   const onFileUpload = async (e) => {
     const file = e.target.files[0];
+    setFileName(file.name)
     try {
-      const jsonData = await handleFileUpload(file, setUploadedFile);
-      console.log('File converted to JSON:', jsonData);
+      await handleFileUpload(file, setUploadedFile);
     } catch (error) {
-      alert(error.message);
       console.error('Error uploading file:', error);
+      setErrorMessage("Error uploading file:", error)
+      setShowErrorPopup(true);
     }
   };
 
@@ -58,47 +62,53 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
 
     if (validateForm()) {
       try {
-        const formDataWithFile = new FormData();
-
-        if (uploadedFile) {
-          console.log("File uploaded:", uploadedFile);
-          formDataWithFile.append("fileUpload", uploadedFile);
-        } else {
-          console.log("No file uploaded.");
+        // Prepare the payload as an object
+        const payload = {
+          orderType,
+          shipmentType,
+          orderNumber: formData.orderNumber,
+          routeFrom: formData.routeFrom,
+          routeTo: formData.routeTo,
+          shipmentReadyDate: formData.shipmentReadyDate,
+          deliveryTerm: formData.deliveryTerm,
+          type: formData.type,
+          numberOfPallets: formData.noOfPallets || null,
+          palletCBM: formData.palletCBM,
+          cargoCBM: formData.cargoCBM,
+          grossWeight: formData.grossWeight,
+          targetDate: formData.targetDate,
+          additionalNotes: formData.additionalNotes || null,
+          fileUpload: uploadedFile,
+          fileName: fileName ? fileName.split('.')[0] : null
         }
 
-        console.log("Order Type:", orderType);
-        console.log("Shipment Type:", shipmentType);
-
-        formDataWithFile.append("orderType", orderType);
-        formDataWithFile.append("shipmentType", shipmentType);
-
-        Object.keys(formData).forEach((key) => {
-          console.log(`${key}: ${formData[key]}`);
-          formDataWithFile.append(key, formData[key]);
-        });
-
-        console.log("Data to send to backend:", formDataWithFile);
-
-        const response = await fetch("http://localhost:5056/api/add-new-order", {
+        const token = localStorage.getItem('token');
+        const response = await fetch("http://localhost:5056/api/orderHandling/add-new-order/export-lcl", {
           method: "POST",
-          body: formDataWithFile,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
           const errorData = await response.json();
-          alert(`Error: ${errorData.message}`);
+          setErrorMessage(errorData.message)
+          setShowErrorPopup(true);
           return;
         }
 
         const responseData = await response.json();
         console.log("Success:", responseData);
+        setShowSuccessPopup(true)
+        resetForm();
 
       } catch (error) {
-        console.error("Error:", error);
+        setErrorMessage("Error:", error)
+        setShowErrorPopup(true);
       }
 
-      resetForm();
     } else {
       setShowErrorPopup(true);
     }
@@ -119,6 +129,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
       targetDate: '',
       fileUpload: '',
       additionalNotes: '',
+      fileName: ''
     };
 
     Object.keys(resetFields).forEach((field) =>
@@ -248,15 +259,15 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
   <input
     name="fileUpload"
     type="file"
-    accept=".pdf, .doc, .docx, .xls, .xlsx, image/*"
+    accept=".xls, .xlsx"
     onChange={onFileUpload}
-    value={formData.fileUpload || ""}
+    value={formData.uploadedFile || ""}
     id="fileUpload"
     className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
   />
   {uploadedFile && (
     <div className="mt-2 text-sm text-gray-600">
-      <strong>Selected file:</strong> {uploadedFile.name}
+      <strong>Selected file:</strong> {fileName}
     </div>
   )}
 </div>
@@ -286,17 +297,30 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
       </div>
 
       {showErrorPopup && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
-            <h2 className="text-lg text-red-500 font-semibold">
-              Please fill all required fields
-            </h2>
-            <button onClick={() => setShowErrorPopup(false)} className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg">
-              Close
-            </button>
+          <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
+              <h2 className="text-lg text-red-500 font-semibold">
+                {errorMessage}
+              </h2>
+              <button onClick={() => setShowErrorPopup(false)} className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg">
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {showSuccessPopup && (
+          <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
+              <h2 className="text-lg text-green-500 font-semibold">
+                New Order Added Successfully!
+              </h2>
+              <button onClick={() => setShowSuccessPopup(false)} className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg">
+                Close
+              </button>
+            </div>
+          </div>
+        )}
     </form>
   );
 };
