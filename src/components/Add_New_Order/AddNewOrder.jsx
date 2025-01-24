@@ -40,23 +40,21 @@ const DocumentPage = () => {
 
   return (
     <Layout>
-      <div className="p-8 mt-8">
+      <div className="p-4 mt-8">
         <div className="flex items-center space-x-6 mb-6">
           <form onSubmit={handleFormSubmit}>
-            <button
-              type="submit"
-              className="px-6 py-3 bg-orange-500 text-white rounded-md"
-            >
-              Add New Order
-            </button>
+          <span className="px-4 py-2 border-2 border-orange-500 text-orange-500 bg-transparent rounded-md">
+        Add New Order
+      </span>
           </form>
 
+          
           <div className="flex items-center space-x-2">
             <label className="font-medium text-gray-700">Select Order Type:</label>
             <select
               onChange={(e) => setOrderType(e.target.value)}
               value={orderType}
-              className="p-2 bg-black text-white border-2 border-gray-300 rounded-md"
+              className="p-2  bg-orange-500 text-white rounded-md"
             >
               <option value="export">Export</option>
               <option value="import">Import</option>
@@ -68,7 +66,7 @@ const DocumentPage = () => {
             <select
               onChange={(e) => setShipmentType(e.target.value)}
               value={shipmentType}
-              className="p-2 bg-black text-white border-2 border-gray-300 rounded-md"
+              className="p-2 bg-orange-500 text-white rounded-md"
             >
               <option value="airFreight">Air Freight</option>
               <option value="lcl">LCL</option>

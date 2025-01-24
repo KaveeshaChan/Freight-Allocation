@@ -1,0 +1,10 @@
+/* Reduce the max-height for the table wrapper */
+.table-wrapper {
+    max-height: 300px;  /* Set the reduced height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+  }
+  
+  .table-wrapper::-webkit-scrollbar {
+    display: none;  /* Hide the scrollbar */
+  }
+  

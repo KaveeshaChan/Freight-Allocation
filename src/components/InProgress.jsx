@@ -47,12 +47,9 @@ const InProgress = () => {
     <Layout>
       <div className="p-4 mt-8">
         <div className="flex items-center justify-between mb-6">
-          <button
-            className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
-            style={{ transition: 'all 0.3s ease' }}
-          >
-            In Progress
-          </button>
+        <span className="px-4 py-2 border-2 border-orange-500 text-orange-500 bg-transparent rounded-md">
+        In Progress
+      </span>
 
           <form
             onSubmit={handleSearchSubmit}
