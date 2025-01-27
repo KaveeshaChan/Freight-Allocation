@@ -354,10 +354,10 @@ const closeCoordinatorPopup = () => {
           </button>
         </div>
 
-        {/* Table Section */}
-<div className="table-wrapper">
-  <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
-    <thead className="bg-gradient-to-r from-orange-600 to-orange-500 text-white">
+        <div className="table-wrapper border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+  <table className="min-w-full bg-white">
+  <thead className="bg-gradient-to-r from-orange-600 to-orange-500 text-white sticky top-0 z-[1]">
+
       <tr>
         <th className="px-6 py-3 text-left font-semibold text-sm">Freight Agent Name</th>
         <th className="px-6 py-3 text-left font-semibold text-sm">Email</th>
@@ -366,7 +366,9 @@ const closeCoordinatorPopup = () => {
         <th className="px-6 py-3 text-left font-semibold text-sm">Status</th>
       </tr>
     </thead>
-    <tbody className="divide-y divide-gray-200">
+    <tbody
+      className="divide-y divide-gray-200 overflow-y-auto h-[400px]" // Added scrollable height
+    >
       {filteredAgents.map((agent, index) => (
         <tr
           key={index}
@@ -401,19 +403,18 @@ const closeCoordinatorPopup = () => {
 
 
 
-{/* Agent Details Popup */}
+
 {showPopup && (
   <div
-    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-300"
+    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50] transition-opacity duration-300"
     role="dialog"
     aria-labelledby="agentPopupTitle"
     aria-modal="true"
   >
     <div
       className="relative bg-white p-8 rounded-xl shadow-xl w-[600px] max-h-[90vh] overflow-auto transform transition-all duration-300"
-      style={{ marginTop: '100px' }} // Increased marginTop for more downward positioning
+      style={{ marginTop: '100px' }}
     >
-
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2
