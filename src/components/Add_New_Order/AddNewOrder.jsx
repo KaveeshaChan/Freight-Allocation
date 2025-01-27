@@ -54,7 +54,8 @@ const DocumentPage = () => {
             <select
               onChange={(e) => setOrderType(e.target.value)}
               value={orderType}
-              className="p-2  bg-orange-500 text-white rounded-md"
+              className="p-2 bg-transparent border border-orange-500 text-orange-500 rounded-md"
+
             >
               <option value="export">Export</option>
               <option value="import">Import</option>
@@ -66,7 +67,7 @@ const DocumentPage = () => {
             <select
               onChange={(e) => setShipmentType(e.target.value)}
               value={shipmentType}
-              className="p-2 bg-orange-500 text-white rounded-md"
+              className="p-2 bg-transparent border border-orange-500 text-orange-500 rounded-md"
             >
               <option value="airFreight">Air Freight</option>
               <option value="lcl">LCL</option>
@@ -75,8 +76,8 @@ const DocumentPage = () => {
           </div>
         </div>
 
-        <div className="border-2 border-black p-6 mb-8 rounded-md shadow-lg">
-          <h2 className="text-xl font-bold text-gray-700 mb-4 text-center w-full uppercase">
+        <div className="border-2 border-orange-500 p-6 mb-8 rounded-md shadow-lg">
+          <h2 className="text-xl font-bold text-orange-500 mb-4 text-center w-full uppercase">
             {orderType.charAt(0).toUpperCase() + orderType.slice(1)} -{" "}
             {shipmentType.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
           </h2>

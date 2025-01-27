@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { handleFileUpload } from '../fileUploadHandler';
 
 const InputField = ({ label, name, value, placeholder, onChange, error, type = "text" }) => (
-  <div className="max-w-sm mb-6">
+  <div className="mb-4">
     <label htmlFor={name} className="block text-sm font-medium mb-2 text-black">
       {label}
     </label>
@@ -12,12 +12,13 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
       value={value || ""}
       onChange={onChange}
       id={name}
-      className="py-3 px-4 block w-full bg-gray-300 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+      className="py-2 px-3 block w-full bg-gray-200 text-black placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
       placeholder={placeholder}
     />
     {error && <p className="text-red-500 text-sm">{error}</p>}
   </div>
 );
+
 
 const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => {
   const [errors, setErrors] = useState({});
@@ -142,90 +143,91 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit} className="max-w-xl mx-auto p-4">
 
-      {/* Order Number and Route */}
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <InputField 
-          label="&#x2022; Order Number" 
-          name="orderNumber" 
-          value={formData.orderNumber} 
-          placeholder="Enter the order number"
-          onChange={handleInputChange}
-          error={errors.orderNumber}
-        />
-        <div className="col-span-1">
-          <label htmlFor="route" className="block text-sm font-medium mb-2 text-black">
+      {/* Order Number */}
+      <InputField
+        label="&#x2022; Order Number"
+        name="orderNumber"
+        value={formData.orderNumber}
+        placeholder="Enter the order number"
+        onChange={handleInputChange}
+        error={errors.orderNumber}
+      />
+
+        {/* Route */}
+      <div className="mb-4">
+        <label htmlFor="route" className="block text-sm font-medium mb-1 text-black">
           &#x2022; Route
-          </label>
-          <div className="flex space-x-2 -mt-2">
-            <InputField 
-               
-              name="routeFrom" 
-              value={formData.routeFrom} 
-              placeholder="From"
-              onChange={handleInputChange}
-              error={errors.routeFrom}
-            />
-            <span className="text-sm text-black my-auto">-</span>
-            <InputField 
-               
-              name="routeTo" 
-              value={formData.routeTo} 
-              placeholder="To"
-              onChange={handleInputChange}
-              error={errors.routeTo}
-            />
-          </div>
+        </label>
+        <div className="flex space-x-3">
+          <InputField
+            name="routeFrom"
+            value={formData.routeFrom}
+            placeholder="From"
+            onChange={handleInputChange}
+            error={errors.routeFrom}
+          />
+          <span className="text-sm text-black my-auto">-</span>
+          <InputField
+            name="routeTo"
+            value={formData.routeTo}
+            placeholder="To"
+            onChange={handleInputChange}
+            error={errors.routeTo}
+          />
         </div>
       </div>
 
       {/* Shipment Ready Date, Delivery Term, and Type */}
-      <div className="grid grid-cols-3 gap-6 mb-6">
-        <InputField 
-          label="&#x2022; Shipment Ready Date" 
-          name="shipmentReadyDate" 
-          value={formData.shipmentReadyDate} 
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <InputField
+          label="&#x2022; Shipment Ready Date"
+          name="shipmentReadyDate"
+          value={formData.shipmentReadyDate}
           placeholder="DD/MM/YYYY"
           onChange={handleInputChange}
           error={errors.shipmentReadyDate}
           type="date"
         />
-        <InputField 
-          label="&#x2022; Delivery Term" 
-          name="deliveryTerm" 
-          value={formData.deliveryTerm} 
+        <InputField
+          label="&#x2022; Delivery Term"
+          name="deliveryTerm"
+          value={formData.deliveryTerm}
           placeholder="Enter the Delivery Term"
           onChange={handleInputChange}
           error={errors.deliveryTerm}
         />
-        <InputField 
-          label="&#x2022; Type" 
-          name="type" 
-          value={formData.type} 
-          placeholder="Enter the type"
-          onChange={handleInputChange}
-          error={errors.type}
-        />
       </div>
 
-      {/* Pallet CBM, Cargo CBM, Gross Weight */}
-      <InputField 
-        label="&#x2022; Pallet CBM" 
-        name="palletCBM" 
-        value={formData.palletCBM} 
-        placeholder="Enter the Pallet CBM"
+      <InputField
+        label="&#x2022; Type"
+        name="type"
+        value={formData.type}
+        placeholder="Enter the type"
         onChange={handleInputChange}
-        error={errors.palletCBM}
+        error={errors.type}
       />
-      <InputField 
-        label="&#x2022; Cargo CBM" 
-        name="cargoCBM" 
-        value={formData.cargoCBM} 
-        placeholder="Enter the Cargo CBM"
-        onChange={handleInputChange}
-        error={errors.cargoCBM}
-      />
+
+      {/* pallet CBM, Cargo CBM */}
+      <div className="grid grid-cols-2 gap-4 mb-4 mt-6">
+        <InputField
+          label="&#x2022; Pallet CBM"
+          name="palletCBM"
+          value={formData.palletCBM}
+          placeholder="Enter the Pallet CBM"
+          onChange={handleInputChange}
+          error={errors.palletCBM}
+        />
+        <InputField
+          label="&#x2022; Cargo CBM"
+          name="cargoCBM"
+          value={formData.cargoCBM}
+          placeholder="Enter the Cargo CBM"
+          onChange={handleInputChange}
+          error={errors.cargoCBM}
+        />
+      </div>
       <InputField 
         label="&#x2022; Gross Weight (Kg)" 
         name="grossWeight" 
