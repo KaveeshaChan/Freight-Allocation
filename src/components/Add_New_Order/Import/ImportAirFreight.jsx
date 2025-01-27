@@ -28,6 +28,7 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [fileName, setFileName] = useState(null)
+  const userId = localStorage.getItem('userId');
 
   const onFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -87,7 +88,8 @@ const ImportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           targetDate: formData.targetDate,
           additionalNotes: formData.additionalNotes || null,
           fileUpload: uploadedFile,
-          fileName: fileName ? fileName.split('.')[0] : null
+          fileName: fileName ? fileName.split('.')[0] : null,
+          userId
         }
 
         const token = localStorage.getItem('token');
