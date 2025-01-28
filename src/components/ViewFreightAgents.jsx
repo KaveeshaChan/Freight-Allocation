@@ -1,218 +1,72 @@
 // Import necessary libraries
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from './Layouts/Main_Layout';
 import { FaSearch } from 'react-icons/fa';
 import '../assests/table.css';
 
-// Mock JSON data
-const agents = [
-  {
-    AgentID: -1,
-    Freight_Agent: "Basilur",
-    Address: "",
-    ContactNumber: "+90000000000",
-    Email: "",
-    Director1_Name: "",
-    Director1_Contact_Number: "+90000000000",
-    Director1_Email: "",
-    Director2_Name: "",
-    Director2_Contact_Number: "+90000000000",
-    Director2_Email: "",
-    BRNumber: "",
-    Country: null,
-    PasswordHash: "",
-    AgentStatus: "Blacklisted",
-  },
-  {
-    AgentID: -1,
-    Freight_Agent: "Basilur",
-    Address: "",
-    ContactNumber: "+90000000000",
-    Email: "",
-    Director1_Name: "",
-    Director1_Contact_Number: "+90000000000",
-    Director1_Email: "",
-    Director2_Name: "",
-    Director2_Contact_Number: "+90000000000",
-    Director2_Email: "",
-    BRNumber: "",
-    Country: null,
-    PasswordHash: "",
-    AgentStatus: "Blacklisted",
-  },{
-    AgentID: -1,
-    Freight_Agent: "Basilur",
-    Address: "",
-    ContactNumber: "+90000000000",
-    Email: "",
-    Director1_Name: "",
-    Director1_Contact_Number: "+90000000000",
-    Director1_Email: "",
-    Director2_Name: "",
-    Director2_Contact_Number: "+90000000000",
-    Director2_Email: "",
-    BRNumber: "",
-    Country: null,
-    PasswordHash: "",
-    AgentStatus: "Blacklisted",
-  },{
-    AgentID: -1,
-    Freight_Agent: "Basilur",
-    Address: "",
-    ContactNumber: "+90000000000",
-    Email: "",
-    Director1_Name: "",
-    Director1_Contact_Number: "+90000000000",
-    Director1_Email: "",
-    Director2_Name: "",
-    Director2_Contact_Number: "+90000000000",
-    Director2_Email: "",
-    BRNumber: "",
-    Country: null,
-    PasswordHash: "",
-    AgentStatus: "Blacklisted",
-  },{
-    AgentID: -1,
-    Freight_Agent: "Basilur",
-    Address: "",
-    ContactNumber: "+90000000000",
-    Email: "",
-    Director1_Name: "",
-    Director1_Contact_Number: "+90000000000",
-    Director1_Email: "",
-    Director2_Name: "",
-    Director2_Contact_Number: "+90000000000",
-    Director2_Email: "",
-    BRNumber: "",
-    Country: null,
-    PasswordHash: "",
-    AgentStatus: "Blacklisted",
-  },{
-    AgentID: -1,
-    Freight_Agent: "Basilur",
-    Address: "",
-    ContactNumber: "+90000000000",
-    Email: "",
-    Director1_Name: "",
-    Director1_Contact_Number: "+90000000000",
-    Director1_Email: "",
-    Director2_Name: "",
-    Director2_Contact_Number: "+90000000000",
-    Director2_Email: "",
-    BRNumber: "",
-    Country: null,
-    PasswordHash: "",
-    AgentStatus: "Blacklisted",
-  },
-  {
-    AgentID: 13,
-    Freight_Agent: "Hayleys Agro",
-    Address: "Sapugaskanda",
-    ContactNumber: "+94378999789",
-    Email: "hayleysagro@gmail.com",
-    Director1_Name: "John Doe",
-    Director1_Contact_Number: "+94778899789",
-    Director1_Email: "johndoe@gmail.com",
-    Director2_Name: "David Guetta",
-    Director2_Contact_Number: "+94780002133",
-    Director2_Email: "davidguetta@gmail.com",
-    BRNumber: "HT00-98/7709-SL",
-    Country: "Sri Lanka",
-    PasswordHash: "$2a$10$N8A0rij7UfZXE4YmHg4wBu2m7G6tYZGbiDKPkLglW53lK/PbF5KLO",
-    AgentStatus: "Non Active",
-  },
-  {
-    AgentID: 11,
-    Freight_Agent: "Aroo Ltd",
-    Address: "Kandy",
-    ContactNumber: "+94778767345",
-    Email: "aroo@gmail.com",
-    Director1_Name: "Smith Holger",
-    Director1_Contact_Number: "+94761122345",
-    Director1_Email: "smith@gmail.com",
-    Director2_Name: "",
-    Director2_Contact_Number: "",
-    Director2_Email: "",
-    BRNumber: "BL09-7788-DF",
-    Country: "Sri Lanka",
-    PasswordHash: "$2a$10$JEV/CNitic1Ir6cf.DrT/eGy9XyJXuf8FiM8W5fD7MNfb3384.Msq",
-    AgentStatus: "Active",
-  },
-  {
-    AgentID: 11,
-    Freight_Agent: "Aroo Ltd",
-    Address: "Kandy",
-    ContactNumber: "+94778767345",
-    Email: "aroo@gmail.com",
-    Director1_Name: "Smith Holger",
-    Director1_Contact_Number: "+94761122345",
-    Director1_Email: "smith@gmail.com",
-    Director2_Name: "",
-    Director2_Contact_Number: "",
-    Director2_Email: "",
-    BRNumber: "BL09-7788-DF",
-    Country: "Sri Lanka",
-    PasswordHash: "$2a$10$JEV/CNitic1Ir6cf.DrT/eGy9XyJXuf8FiM8W5fD7MNfb3384.Msq",
-    AgentStatus: "Active",
-  },
-  {
-    AgentID: 11,
-    Freight_Agent: "Aroo Ltd",
-    Address: "Kandy",
-    ContactNumber: "+94778767345",
-    Email: "aroo@gmail.com",
-    Director1_Name: "Smith Holger",
-    Director1_Contact_Number: "+94761122345",
-    Director1_Email: "smith@gmail.com",
-    Director2_Name: "",
-    Director2_Contact_Number: "",
-    Director2_Email: "",
-    BRNumber: "BL09-7788-DF",
-    Country: "Sri Lanka",
-    PasswordHash: "$2a$10$JEV/CNitic1Ir6cf.DrT/eGy9XyJXuf8FiM8W5fD7MNfb3384.Msq",
-    AgentStatus: "Active",
-  },
-  
-];
-
-const coordinators = [
-  {
-    CoordinatorID: 6,
-    Coordinator_Name: "Tharaka Jayanath",
-    ContactNumber: "+94778888908",
-    Email: "tharaka@abc.com",
-    Freight_Agent: 1,
-  },
-  {
-    CoordinatorID: 8,
-    Coordinator_Name: "Jayanath Pankaja",
-    ContactNumber: "+94785647232",
-    Email: "jayanath@blueshark.com",
-    Freight_Agent: 13,
-  },
-  {
-    CoordinatorID: 8,
-    Coordinator_Name: "Jayanath Pankaja",
-    ContactNumber: "+94785647232",
-    Email: "jayanath@blueshark.com",
-    Freight_Agent: 13,
-  },
-  {
-    CoordinatorID: 7,
-    Coordinator_Name: "Kasun Sampath",
-    ContactNumber: "+94781231245",
-    Email: "sampath@arro.com",
-    Freight_Agent: 11,
-  },
-];
-
 function Dashboard() {
-  const [selectedAgent, setSelectedAgent] = useState(null);
+  const navigate = useNavigate();
+  const [selectedAgent, setSelectedAgent] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [showCoordinatorPopup, setShowCoordinatorPopup] = useState(false); // New state for coordinator popup
   const [filterStatus, setFilterStatus] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-  const [data, setData] = useState(agents);
+  const [agents, setAgents] = useState([]);
+  const [coordinators, setCoordinators] = useState([])
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Get token from localStorage
+        if (!token) {
+          navigate('/login'); // Navigate to login page
+          return;
+        }
+
+        const response = await fetch(
+          "http://localhost:5056/api/select/view-freight-agents",
+          {
+            method: "GET", // Use GET for fetching data
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Attach token
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Parse JSON response
+
+        setAgents(data.freightAgents || []); // Update state with fetched data
+      } catch (error) {
+        console.error("Error fetching freight agents:", error.message);
+        if (error.message.includes("401")) {
+          console.error("Unauthorized. Redirecting to login.");
+          navigate('/login'); // Navigate to login page
+          return;
+          // Handle unauthorized error (e.g., redirect to login page)
+        }
+      }
+    };
+
+    fetchAgents();
+  }, [navigate]);
+
+  //checking user role = 'admin'
+  useEffect(() => {
+    // Add this to your existing useEffect or create a new one
+    const checkUserRole = () => {
+      const role = localStorage.getItem("userRole"); // Assuming role is stored in localStorage
+      setIsAdmin(role === "admin");
+    };
+    
+    checkUserRole();
+  }, []);
 
   const handleRowClick = (agent) => {
     setSelectedAgent(agent);
@@ -225,18 +79,55 @@ function Dashboard() {
   };
 
   const handleStatusChange = (status) => {
+    if (!isAdmin) return;
     if (selectedAgent) {
       setSelectedAgent({ ...selectedAgent, AgentStatus: status });
     }
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (selectedAgent) {
-      setData((prevData) =>
-        prevData.map((agent) =>
-          agent.AgentID === selectedAgent.AgentID ? selectedAgent : agent
-        )
+      try {
+        const token = localStorage.getItem("token"); // Retrieve authentication token
+        const response = await fetch("http://localhost:5056/api/update/update-freight-agents/status", {
+          method: "PUT", // Use PUT or POST based on your backend implementation
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include token if required
+          },
+          body: JSON.stringify({
+            AgentID: selectedAgent.AgentID,
+            AgentStatus: selectedAgent.AgentStatus,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to update the agent status.");
+        }
+  
+        const updatedAgent = await response.json(); // Get the updated agent from the response
+  
+      // Fetch fresh data after successful update
+      const refreshResponse = await fetch(
+        "http://localhost:5056/api/select/view-freight-agents",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+
+      if (refreshResponse.ok) {
+        const refreshedData = await refreshResponse.json();
+        setAgents(refreshedData.freightAgents || []);
+      }
+  
+        console.log("Agent status updated successfully:");
+      } catch (error) {
+        console.error("Error updating agent status:", error.message);
+      }
     }
     closePopup();
   };
@@ -261,7 +152,7 @@ const closeCoordinatorPopup = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredAgents = data.filter((agent) => {
+  const filteredAgents = agents.filter((agent) => {
     const matchesStatus =
       filterStatus === "All" || agent.AgentStatus === filterStatus;
     const matchesSearch =
@@ -269,15 +160,48 @@ const closeCoordinatorPopup = () => {
     return matchesStatus && matchesSearch;
   });
 
-  const getCoordinatorsForAgent = (agentID) => {
-    return coordinators.filter((coord) => coord.Freight_Agent === agentID);
+  const getCoordinatorsForAgent = async(agentID) => {
+    if (!agentID) {
+      console.error("No agent selected.");
+      return;
+    }
+    try{
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found. Please log in.");
+      }
+
+          // Fetch coordinators for the selected agent
+    const response = await fetch(
+      `http://localhost:5056/api/select/view-freight-agents/coordinators/${agentID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch coordinators.");
+    }
+
+    const coordinatorsData = await response.json();
+    setCoordinators(coordinatorsData.freightCoordinators || []);
+    }catch (error) {
+    console.error("Error fetching coordinators:", error.message);
+    setCoordinators([]);
+  }
+    // return coordinators.filter((coord) => coord.Freight_Agent === agentID);
   };
 
   // Handle View Coordinators button click
-  const handleViewCoordinatorsClick = () => {
-    setShowCoordinatorPopup(true);
-  };
-  
+const handleViewCoordinatorsClick = async() => {
+  await getCoordinatorsForAgent(selectedAgent.AgentID);
+  setShowCoordinatorPopup(true)
+};
+
 
   return (
     <Layout>
@@ -295,7 +219,7 @@ const closeCoordinatorPopup = () => {
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
-              placeholder="Search..."
+              placeholder="Search by Agent Name"
               className="flex-grow outline-none px-4 text-sm"
             />
             <button
@@ -318,14 +242,14 @@ const closeCoordinatorPopup = () => {
                 : "border-gray-400 text-gray-500 hover:border-orange-500 hover:text-orange-500"
             }`}
           >
-            All ({data.length})
+            All ({agents.length})
           </button>
           <button
             onClick={() => handleFilterChange("Active")}
             disabled={filterStatus === "Active"}
             className={`px-4 py-2 rounded-full border-2 ${filterStatus === "Active" ? "bg-green-500 text-white border-green-500" : "border-gray-400 text-gray-500 hover:border-green-500 hover:text-green-500"}`}
           >
-            Active ({data.filter((agent) => agent.AgentStatus === "Active").length})
+            Active ({agents.filter((agent) => agent.AgentStatus === "Active").length})
           </button>
 
           <button
@@ -337,7 +261,7 @@ const closeCoordinatorPopup = () => {
             }`}
           >
             Non Active (
-            {data.filter((agent) => agent.AgentStatus === "Non Active").length}
+            {agents.filter((agent) => agent.AgentStatus === "Non Active").length}
             )
           </button>
           <button
@@ -349,7 +273,7 @@ const closeCoordinatorPopup = () => {
             }`}
           >
             Blacklisted (
-            {data.filter((agent) => agent.AgentStatus === "Blacklisted").length}
+            {agents.filter((agent) => agent.AgentStatus === "Blacklisted").length}
             )
           </button>
         </div>
@@ -367,7 +291,7 @@ const closeCoordinatorPopup = () => {
       </tr>
     </thead>
     <tbody
-      className="divide-y divide-gray-200 overflow-y-auto h-[400px]" // Added scrollable height
+      className="divide-y divide-gray-200 overflow-y-auto h-[250px]" // Added scrollable height
     >
       {filteredAgents.map((agent, index) => (
         <tr
@@ -378,8 +302,8 @@ const closeCoordinatorPopup = () => {
           <td className="px-6 py-4 text-sm font-medium text-gray-700">{agent.Freight_Agent}</td>
           <td className="px-6 py-4 text-sm text-gray-500">{agent.Email || "N/A"}</td>
           <td className="px-6 py-4 text-sm text-gray-500">{agent.ContactNumber}</td>
-          <td className="px-6 py-4 text-sm text-gray-500">
-            {getCoordinatorsForAgent(agent.AgentID).length}
+          <td className="px-6 py-4 text-sm text-gray-500">{agent.CoordinatorCount}
+            {/* {getCoordinatorsForAgent(agent.AgentID).length} */}
           </td>
           <td className="px-6 py-4 text-sm font-medium text-gray-700">
             <span
@@ -438,19 +362,24 @@ const closeCoordinatorPopup = () => {
 
       {/* Change Status Section */}
       <div className="mt-4">
-        <h3 className="font-semibold mb-2 text-gray-700">Change Status:</h3>
+        <h3 className="font-semibold mb-2 text-gray-700">
+          Status: {!isAdmin && <span className="text-sm text-gray-500">(Admin only)</span>}
+        </h3>
         <div className="flex gap-4 items-center">
           {["Active", "Non Active", "Blacklisted"].map((status) => (
-            <label
-              key={status}
-              className="flex items-center gap-2 text-sm font-medium cursor-pointer"
-            >
+          <label
+            key={status}
+            className={`flex items-center gap-2 text-sm font-medium ${
+              isAdmin ? "cursor-pointer" : "cursor-not-allowed opacity-70"
+            }`}
+          >
               <input
                 type="radio"
                 name="status"
                 value={status}
                 checked={selectedAgent.AgentStatus === status}
                 onChange={() => handleStatusChange(status)}
+                disabled={!isAdmin}
                 className="form-radio text-blue-500"
               />
               <span
@@ -546,7 +475,7 @@ const closeCoordinatorPopup = () => {
 
         >
           View Coordinators (
-          {getCoordinatorsForAgent(selectedAgent.AgentID).length})
+          {selectedAgent.CoordinatorCount})
         </button>
         <button
           onClick={saveChanges}
@@ -565,10 +494,6 @@ const closeCoordinatorPopup = () => {
   </div>
 )}
 
-
-
-
-
 {/* Popup for Coordinators */}
 {showCoordinatorPopup && (
   <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300">
@@ -585,7 +510,7 @@ const closeCoordinatorPopup = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {getCoordinatorsForAgent(selectedAgent.AgentID).map((coordinator, index) => (
+            {coordinators.map((coordinator, index) => (
               <tr key={index} className="hover:bg-orange-50 cursor-pointer transition-all duration-300">
                 <td className="px-6 py-4 text-sm font-medium text-gray-700">{coordinator.Coordinator_Name}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{coordinator.Email}</td>
