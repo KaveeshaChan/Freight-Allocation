@@ -32,9 +32,6 @@ const DocumentPage = () => {
     console.log("Shipment Type:", shipmentType);
     console.log("Other Data:", formData);
 
-    // You can perform other actions here, like saving data locally, displaying a message, etc.
-    // In this case, no API call is made.
-
     resetForm();
   };
 

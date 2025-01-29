@@ -234,6 +234,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           error={errors.cargoCBM}
         />
       </div>
+
       <InputField 
         label="&#x2022; Gross Weight (Kg)" 
         name="grossWeight" 
@@ -251,6 +252,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         error={errors.noOfPallets}
         type="number"
       />
+
       <InputField 
         label="&#x2022; Target Date" 
         name="targetDate" 
@@ -266,10 +268,20 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
   name="dueDate"
   value={formData.dueDate}
   placeholder="Enter the Due Date"
-  type="number" // Restricts input to numbers
+  type="number"
   min="1"
-  max="999" // Allows only up to 3 digits
-  onChange={handleInputChange}
+  max="99"  // Limit to 2 digits
+  step="1"   // Only allow whole numbers
+  onChange={(e) => {
+    // Ensure only whole numbers up to 2 digits
+    const value = e.target.value.replace(/\D/g, '').slice(0, 2);
+    handleInputChange({
+      target: {
+        name: 'dueDate',
+        value: value ? parseInt(value) : ''
+      }
+    });
+  }}
   error={errors.dueDate}
 />
 
