@@ -30,6 +30,7 @@ const AddFreightAgent = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [isCountrySelected, setIsCountrySelected] = useState(false); // Track if country is selected
   const [callingCode, setCallingCode] = useState(""); // Store calling code
+  const [userID, setUserID] = useState("")
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,10 +42,10 @@ const AddFreightAgent = () => {
       }
 
       const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
       if (decodedToken.roleName !== 'admin' && decodedToken.roleName !== 'mainUser') {
         navigate('/unauthorized'); // Redirect if not an admin or mainUser
       }
+      setUserID(decodedToken.userId)
     } catch (error) {
       console.error('Error decoding token or navigating:', error);
       navigate('/login'); // Handle invalid or malformed token
@@ -98,6 +99,7 @@ const AddFreightAgent = () => {
       contactNumber: cleanPhoneNumber(formData.contactNumber),
       director1ContactNumber: cleanPhoneNumber(formData.director1ContactNumber),
       director2ContactNumber: cleanPhoneNumber(formData.director2ContactNumber),
+      userID: userID
     };
 
     console.log("Cleaned Form Data in submit:", cleanedFormData); // Log cleaned data

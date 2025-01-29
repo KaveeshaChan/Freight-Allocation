@@ -15,12 +15,14 @@ const AddFreightCoordinator = () => {
     contactNumber: '',
     password: '',
     freightAgent: '',
+    userID: ''
   });
   const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [serverErrorMessage, setServerErrorMessage] = useState('');
+  const [userID, setUserID] = useState("")
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -63,10 +65,14 @@ const AddFreightCoordinator = () => {
       }
 
       const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
       if (decodedToken.roleName !== 'admin' && decodedToken.roleName !== 'mainUser') {
         navigate('/unauthorized'); // Redirect if not an admin or mainUser
       }
+      setUserID(decodedToken.userId)
+      setFormData(prev => ({
+        ...prev,
+        userID: userID
+      }));
     } catch (error) {
       console.error('Error decoding token or navigating:', error);
       navigate('/login'); // Handle invalid or malformed token
@@ -80,16 +86,6 @@ const AddFreightCoordinator = () => {
       [name]: value,
     });
   };
-
-  // const handleCountryChange = (selectedCountry) => {
-  //   const callingCode = +${getCountryCallingCode(selectedCountry.value)};
-  //   setFormData({
-  //     ...formData,
-  //     country: selectedCountry.label,
-  //     callingCode,
-  //     contactNumber: '',
-  //   });
-  // };
 
   const closeErrorPopup = () => setShowErrorPopup(false);
   const closeSuccessPopup = () => setShowSuccessPopup(false);
