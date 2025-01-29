@@ -51,6 +51,8 @@ const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
     if (!formData.type) formErrors.type = "Type is required";
     if (!formData.noOfContainers) formErrors.noOfContainers = "no.of Containers are required";
     if (!formData.targetDate) formErrors.targetDate = "Target date is required"
+    if (!formData.dueDate) formErrors.dueDate = "Due Date is required";
+
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
@@ -71,6 +73,7 @@ const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           deliveryTerm: formData.deliveryTerm,
           type: formData.type,
           numberOfContainers: formData.noOfContainers || null,
+          dueDate: formData.dueDate,
           targetDate: formData.targetDate,
           additionalNotes: formData.additionalNotes,
           fileUpload: uploadedFile,
@@ -123,7 +126,8 @@ const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
       targetDate: '',     
       additionalNotes: '',
       fileUpload: '',
-      fileName: ''
+      fileName: '',
+      dueDate: "",
       };
 
     Object.keys(resetFields).forEach((field) =>
@@ -220,6 +224,18 @@ const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         error={errors.targetDate}
         type="date"
       />
+
+<InputField
+  label="• Number of dates to fill Document "
+  name="dueDate"
+  value={formData.dueDate}
+  placeholder="Enter the Due Date"
+  type="number" // Restricts input to numbers
+  min="1"
+  max="999" // Allows only up to 3 digits
+  onChange={handleInputChange}
+  error={errors.dueDate}
+/>
 
      
 

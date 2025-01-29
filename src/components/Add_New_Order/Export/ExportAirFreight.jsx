@@ -54,6 +54,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     if (!formData.grossWeight) formErrors.grossWeight = "Gross weight is required";
     if (!formData.cargoType) formErrors.cargoType = "Cargo type is required";
     if (!formData.cargoCBM) formErrors.cargoCBM = "Cargo CBM is required";
+    if (!formData.dueDate) formErrors.dueDate = "Due Date is required";
     if (formData.cargoType === "PalletizedCargo" && !formData.noOfPallets) formErrors.noOfPallets = "Number of pallets is required";
     if (!formData.targetDate) formErrors.targetDate = "Target date is required";
     setErrors(formErrors);
@@ -76,6 +77,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           cargoType: formData.cargoType,
           numberOfPallets: formData.noOfPallets || null,
           chargeableWeight: formData.chargeableWeight,
+          dueDate: formData.dueDate,
           grossWeight: formData.grossWeight,
           cargoCBM: formData.cargoCBM,
           targetDate: formData.targetDate,
@@ -130,6 +132,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       type: "",
       grossWeight: "",
       cargoType: "",
+      dueDate: "",
       cargoCBM: "",
       noOfPallets: "",
       targetDate: "",
@@ -301,6 +304,19 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         error={errors.targetDate}
         type="date"
       />
+
+<InputField
+  label="• Number of dates to fill Document "
+  name="dueDate"
+  value={formData.dueDate}
+  placeholder="Enter the Due Date"
+  type="number" // Restricts input to numbers
+  min="1"
+  max="999" // Allows only up to 3 digits
+  onChange={handleInputChange}
+  error={errors.dueDate}
+/>
+
 
       {/* File Upload */}
       <div className="max-w-sm mb-4">

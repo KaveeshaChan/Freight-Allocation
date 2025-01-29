@@ -48,6 +48,8 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
     if (!formData.routeFrom) formErrors.routeFrom = "Route from is required";
     if (!formData.routeTo) formErrors.routeTo = "Route to is required";
     if (!formData.shipmentReadyDate) formErrors.shipmentReadyDate = "Shipment ready date is required";
+    if (!formData.dueDate) formErrors.dueDate = "Due Date is required";
+
     if (!formData.deliveryTerm) formErrors.deliveryTerm = "Delivery term is required";
     if (!formData.type) formErrors.type = "Type is required";
     if (!formData.palletCBM) formErrors.palletCBM = "Pallet CBM is required";
@@ -78,6 +80,8 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           numberOfPallets: formData.noOfPallets || null,
           palletCBM: formData.palletCBM,
           cargoCBM: formData.cargoCBM,
+          dueDate: formData.dueDate,
+
           grossWeight: formData.grossWeight,
           targetDate: formData.targetDate,
           productDescription: formData.productDescription,
@@ -132,6 +136,8 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
       grossWeight: '',
       noOfPallets: '',
       targetDate: '',
+      dueDate: "",
+
       productDescription: '',
       fileUpload: '',
       additionalNotes: '',
@@ -258,6 +264,19 @@ const ImportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         error={errors.targetDate}
         type="date"
       />
+
+<InputField
+  label="• Number of dates to fill Document "
+  name="dueDate"
+  value={formData.dueDate}
+  placeholder="Enter the Due Date"
+  type="number" // Restricts input to numbers
+  min="1"
+  max="999" // Allows only up to 3 digits
+  onChange={handleInputChange}
+  error={errors.dueDate}
+/>
+
       <InputField 
         label="&#x2022; Product Description" 
         name="productDescription" 
