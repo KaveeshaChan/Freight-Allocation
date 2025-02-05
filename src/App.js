@@ -12,6 +12,9 @@ import InProgress from './components/InProgress.jsx';
 import Completed from './components/Completed.jsx';
 import AddNewOrder from './components/Add_New_Order/AddNewOrder.jsx';
 import ViewFreightAgents from './components/ViewFreightAgents.jsx';
+import Header from './components/Freight_Forwarders/Header.jsx';
+import AddQuote from './components/Freight_Forwarders/Add_Quote.jsx'; 
+import dashboard from './components/Freight_Forwarders/dashboard.jsx'; 
 
 
 const App = () => {
@@ -30,6 +33,11 @@ const App = () => {
         <Route path="/Completed" element={<Completed />} />
         <Route path="/add-new-order" element={<AddNewOrder />} />
         <Route path="/view-freight-agents" element={<ViewFreightAgents />} />
+        <Route path="/Header" element={<Header />} />
+        <Route path="/Add_Quote" element={<AddQuote />} />
+        <Route path="/dashboard" element={<dashboard />} />
+
+        
       </Routes>
     </Router>
   );
