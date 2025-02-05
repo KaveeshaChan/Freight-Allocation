@@ -5,7 +5,7 @@ const Header = ({ userName, userEmail }) => {
   const currentPath = window.location.pathname;
 
   const navItems = [
-    { name: "Dashboard", path: "/dashboard" },
+    { name: "Dashboard", path: "/user-dashboard" },
     { name: "New Quote", path: "/Add_Quote" },
     { name: "Members", path: "/members" },
   ];

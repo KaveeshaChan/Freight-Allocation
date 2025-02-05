@@ -36,7 +36,7 @@ const App = () => {
         <Route path="/view-freight-agents" element={<ViewFreightAgents />} />
         <Route path="/Header" element={<Header />} />
         <Route path="/Add_Quote" element={<AddQuote />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/user-dashboard" element={<Dashboard />} />
         <Route path="/members" element={<Members />} />
 
       
