@@ -1,16 +1,15 @@
-// Header.js
 import React from 'react';
-import header from './Header';
+import Header from './Header';
 
-const Header = ({ children }) => {
+const dashboard = ({ children }) => {
   return (
-    <header>
+    <Header>
     <div>
       <h1>Header Section</h1>
       {children}
     </div>
-    </header>
+    </Header>
   );
 };
 
-export default Header;
+export default dashboard;
