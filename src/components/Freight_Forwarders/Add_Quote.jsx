@@ -301,7 +301,7 @@ const ShipmentForm = () => {
   return (
     <>
       <Header />
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-16">
+      <div className={`mx-auto p-6 bg-white rounded-lg shadow-md mt-16 ${showScreen ? 'max-w-8xl' : 'max-w-6xl'}`}>
         {!showScreen ? (
           <form onSubmit={handleSubmit} noValidate>
             <div className="space-y-6">

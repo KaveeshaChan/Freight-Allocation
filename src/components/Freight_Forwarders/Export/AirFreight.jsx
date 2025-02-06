@@ -1,19 +1,232 @@
-// Export/AirFreight.js
-import React from 'react';
+import React, { useState } from 'react';
+import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
 
 const ExportAirFreight = ({ order }) => {
+  const initialQuotation = {
+    netFreight: '',
+    awb: '',
+    hawb: '',
+    freightAgentName: '',
+    airLine: '',
+    transshipmentPort: '',
+    transitTime: '',
+    flightDetails: '',
+    validityDate: '',
+  };
+
+  const [currentQuotation, setCurrentQuotation] = useState(initialQuotation);
+  const [savedQuotations, setSavedQuotations] = useState([]);
+
+  const handleAddQuotation = () => {
+    if (Object.values(currentQuotation).some(value => value === '')) {
+      alert('Please fill all fields before adding a quotation');
+      return;
+    }
+    setSavedQuotations([...savedQuotations, { ...currentQuotation, id: Date.now() }]);
+    setCurrentQuotation(initialQuotation);
+  };
+
+  const removeQuotation = (id) => {
+    setSavedQuotations(savedQuotations.filter(q => q.id !== id));
+  };
+
+  const handleSubmit = () => {
+    if (savedQuotations.length === 0) {
+      alert('Please add at least one quotation before submitting');
+      return;
+    }
+    // Handle form submission here
+    console.log('Submitting quotes:', savedQuotations);
+    alert('Quotes submitted successfully!');
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentQuotation(prev => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <div>
-      <h2>Export - Air Freight</h2>
-      <p>Order Number: {order.OrderNumber}</p>
-      <p>From: {order.From}</p>
-      <p>To: {order.To}</p>
-      <p>Shipment Ready Date: {order.ShipmentReadyDate}</p>
-      <p>Target Date: {order.TargetDate}</p>
-      <p>Additional Notes: {order.AdditionalNotes}</p>
-      {/* Display other relevant order details here */}
+    <div className="p-6 max-w-7xl mx-auto">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <h2 className="text-2xl font-bold text-gray-800">Export - Air Freight</h2>
+        <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center">
+          <FiDownload className="text-xl" /> Download Documents
+        </button>
+      </header>
+
+      <div className="overflow-x-auto rounded-lg border border-gray-200 mb-8">
+        <table className="w-full table-auto">
+          <thead className="bg-gray-50">
+            <tr>
+              {[
+                'Route', 'Shipment Ready Date', 'Delivery Term',
+                'Type', 'Cargo Type', 'Pallets', 'Containers',
+                'Chargeable Weight (Kg)', 'Gross Weight (Kg)',
+                'Cargo CBM', 'Target Date'
+              ].map((header) => (
+                <th
+                  key={header}
+                  className="px-4 py-2 text-left text-sm font-semibold text-gray-700 min-w-[140px]"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {[
+                `${order.From} - ${order.To}`,
+                order.ShipmentReadyDate,
+                order.DeliveryTerm,
+                order.Type,
+                order.CargoType,
+                order.NumberOfPallets,
+                order.NumberOfContainers,
+                order.ChargeableWeight,
+                order.GrossWeight,
+                order.CargoCBM,
+                order.TargetDate
+              ].map((value, index) => (
+                <td
+                  key={index}
+                  className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap"
+                >
+                  {value}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {order.AdditionalNotes && (
+        <div className="bg-blue-50 p-5 rounded-lg mb-8 border border-blue-200">
+          <h4 className="font-semibold text-lg text-blue-800 mb-2">Additional Notes</h4>
+          <p className="text-gray-700 text-base leading-relaxed">
+            {order.AdditionalNotes}
+          </p>
+        </div>
+      )}
+
+      <section className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm mb-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-6">Add New Quotation</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { label: 'Net Freight (USD)', name: 'netFreight', type: 'number' },
+            { label: 'AWB (USD)', name: 'awb', type: 'number' },
+            { label: 'HAWB (USD)', name: 'hawb', type: 'number' },
+            { label: 'Freight Agent Name', name: 'freightAgentName' },
+            { label: 'Air Line', name: 'airLine' },
+            { label: 'Transshipment Port', name: 'transshipmentPort' },
+            { label: 'TRANSIT TIME', name: 'transitTime', placeholder: 'Days/hours' },
+            { label: 'Flight Details', name: 'flightDetails' },
+            { label: 'Validity Date', name: 'validityDate', type: 'date' },
+          ].map((field, index) => (
+            <InputField
+              key={index}
+              label={field.label}
+              placeholder={field.placeholder || `Enter ${field.label}`}
+              type={field.type || 'text'}
+              name={field.name}
+              value={currentQuotation[field.name]}
+              onChange={handleInputChange}
+            />
+          ))}
+        </div>
+        <button
+          onClick={handleAddQuotation}
+          className="mt-6 flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors w-full sm:w-auto justify-center"
+        >
+          <FiPlusCircle className="text-xl" /> Add Quotation
+        </button>
+      </section>
+
+      {savedQuotations.length > 0 && (
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Saved Quotations</h3>
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <table className="w-full table-auto">
+              <thead className="bg-gray-50">
+                <tr>
+                  {[
+                    'Net Freight', 'AWB', 'HAWB', 'Agent Name',
+                    'Air Line', 'Transship Port', 'Transit Time', 'Flight Details', 'Validity'
+                  ].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-2 text-left text-sm font-semibold text-gray-700 min-w-[120px]"
+                    >
+                      {header}
+                    </th>
+                  ))}
+                  <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {savedQuotations.map((quotation) => (
+                  <tr key={quotation.id} className="hover:bg-gray-50">
+                    {[
+                      quotation.netFreight,
+                      quotation.awb,
+                      quotation.hawb,
+                      quotation.freightAgentName,
+                      quotation.airLine,
+                      quotation.transshipmentPort,
+                      quotation.transitTime,
+                      quotation.flightDetails,
+                      quotation.validityDate,
+                    ].map((value, index) => (
+                      <td
+                        key={index}
+                        className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap"
+                      >
+                        {value || '-'}
+                      </td>
+                    ))}
+                    <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
+                      <button
+                        onClick={() => removeQuotation(quotation.id)}
+                        className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
+                      >
+                        <FiX className="text-xl" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      <div className="flex justify-end gap-4">
+        <button
+          onClick={handleSubmit}
+          className="flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Submit All Quotes
+        </button>
+      </div>
     </div>
   );
 };
+
+const InputField = ({ label, placeholder, type = 'text', name, value, onChange }) => (
+  <div className="space-y-1">
+    <label className="block text-sm font-medium text-gray-700">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+      required
+    />
+  </div>
+);
 
 export default ExportAirFreight;
