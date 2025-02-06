@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 const ExportAirFreight = ({ order }) => {
   const initialQuotation = {
-    netFreight: '',
+    netFreightPerContainer: '',
     awb: '',
     hawb: '',
     freightAgentName: '',
@@ -16,9 +17,13 @@ const ExportAirFreight = ({ order }) => {
 
   const [currentQuotation, setCurrentQuotation] = useState(initialQuotation);
   const [savedQuotations, setSavedQuotations] = useState([]);
+  const navigate = useNavigate();
 
   const handleAddQuotation = () => {
-    if (Object.values(currentQuotation).some(value => value === '')) {
+    console.log('Current Quotation:', currentQuotation);
+    const isEmptyField = Object.values(currentQuotation).some(value => value.trim() === '');
+    if (isEmptyField) {
+      console.log('One or more fields are empty.');
       alert('Please fill all fields before adding a quotation');
       return;
     }
@@ -30,14 +35,54 @@ const ExportAirFreight = ({ order }) => {
     setSavedQuotations(savedQuotations.filter(q => q.id !== id));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (savedQuotations.length === 0) {
       alert('Please add at least one quotation before submitting');
       return;
     }
-    // Handle form submission here
-    console.log('Submitting quotes:', savedQuotations);
-    alert('Quotes submitted successfully!');
+
+    const payload = savedQuotations.map(quotation => ({
+      orderNumber: order.orderNumber,
+      netFreightPerContainer: quotation.netFreightPerContainer,
+      transShipmentPort: quotation.transshipmentPort,
+      transitTime: quotation.transitTime,
+      vesselOrFlightDetails: quotation.flightDetails,
+      validityTime: quotation.validityDate,
+      airLine: quotation.airLine,
+      AWB: quotation.awb,
+      HAWB: quotation.hawb,
+      quotationCreatedDate: new Date().toISOString(),
+    }));
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login'); // Navigate to login page
+      return;
+    }
+
+    console.log('Payload to send:', payload);
+
+    try {
+      const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Quotes submitted successfully:', result);
+      alert('Quotes submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting quotes:', error);
+      alert('There was an error submitting the quotes. Please try again.');
+    }
   };
 
   const handleInputChange = (e) => {
@@ -48,7 +93,10 @@ const ExportAirFreight = ({ order }) => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h2 className="text-2xl font-bold text-gray-800">Export - Air Freight</h2>
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <h2 className="text-2xl font-bold text-gray-800">Export - Air Freight</h2>
+          <span className="text-lg font-semibold text-gray-600">{`Order Number: ${order.OrderNumber}`}</span>
+        </div>
         <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center">
           <FiDownload className="text-xl" /> Download Documents
         </button>
@@ -113,13 +161,13 @@ const ExportAirFreight = ({ order }) => {
         <h3 className="text-xl font-semibold text-gray-800 mb-6">Add New Quotation</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { label: 'Net Freight (USD)', name: 'netFreight', type: 'number' },
+            { label: 'Net Freight (USD)', name: 'netFreightPerContainer', type: 'number' },
             { label: 'AWB (USD)', name: 'awb', type: 'number' },
             { label: 'HAWB (USD)', name: 'hawb', type: 'number' },
             { label: 'Freight Agent Name', name: 'freightAgentName' },
             { label: 'Air Line', name: 'airLine' },
             { label: 'Transshipment Port', name: 'transshipmentPort' },
-            { label: 'TRANSIT TIME', name: 'transitTime', placeholder: 'Days/hours' },
+            { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
             { label: 'Flight Details', name: 'flightDetails' },
             { label: 'Validity Date', name: 'validityDate', type: 'date' },
           ].map((field, index) => (
@@ -167,7 +215,7 @@ const ExportAirFreight = ({ order }) => {
                 {savedQuotations.map((quotation) => (
                   <tr key={quotation.id} className="hover:bg-gray-50">
                     {[
-                      quotation.netFreight,
+                      quotation.netFreightPerContainer,
                       quotation.awb,
                       quotation.hawb,
                       quotation.freightAgentName,
