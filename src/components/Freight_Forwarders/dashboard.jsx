@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
+import ShipmentForm from './Add_Quote';
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
@@ -41,15 +44,19 @@ const Dashboard = ({ children }) => {
   }, []);
 
   const handleAddQuote = (order) => {
-    // Function to handle adding a quote for a specific order
-    console.log('Add quote for order:', order);
-    // Implement the logic to submit a quote for the order
+    setSelectedOrder(order);
+    setIsRedirecting(true);
   };
+
+  if (isRedirecting) {
+    return <ShipmentForm selectedOrder={selectedOrder} />;
+  }
 
   return (
     <>
     <Header />
-      <div clasName="">
+      <div>
+        
         <table>
           <thead>
             <tr>
