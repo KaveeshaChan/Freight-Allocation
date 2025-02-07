@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
+import ImportLCL from './Import/LCL'; // Import the ImportLCL component
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null); // New state to track selected order
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
@@ -41,14 +43,13 @@ const Dashboard = ({ children }) => {
   }, []);
 
   const handleAddQuote = (order) => {
-    // Function to handle adding a quote for a specific order
-    console.log('Add quote for order:', order);
-    // Implement the logic to submit a quote for the order
+    // Set the selected order
+    setSelectedOrder(order);
   };
 
   return (
     <>
-    <Header />
+      <Header />
       <div className="">
         <table>
           <thead>
@@ -74,6 +75,7 @@ const Dashboard = ({ children }) => {
             ))}
           </tbody>
         </table>
+        {selectedOrder && <ImportLCL order={selectedOrder} />} {/* Render ImportLCL with the selected order */}
         {children}
       </div>
     </>
