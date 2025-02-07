@@ -170,7 +170,7 @@ const ImportAirFreight = ({ order }) => {
             { label: 'AWB (USD)', name: 'AWB', type: 'number' },
             { label: 'Carrier', name: 'carrier' },
             { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
-            { label: 'Flight Details', name: 'flightDetails' },
+            { label: 'Flight Details', name: 'vesselOrFlightDetails' },
             { label: 'Validity Date', name: 'validityDate', type: 'date' },
           ].map((field, index) => (
             <InputField

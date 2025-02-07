@@ -208,7 +208,7 @@ const ExportLCL = ({ order }) => {
                 {savedQuotations.map((quotation) => (
                   <tr key={quotation.id} className="hover:bg-gray-50">
                     {[
-                      quotation.transshipmentPort,
+                      quotation.transShipmentPort,
                       quotation.transitTime,
                       quotation.vesselOrFlightDetails,
                       quotation.validityTime,
