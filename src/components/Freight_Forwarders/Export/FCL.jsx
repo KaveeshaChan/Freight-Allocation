@@ -45,7 +45,7 @@ const ExportFCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      orderNumber: order.orderNumber,
+      OrderNumber: order.orderNumber,
       netFreight: quotation.netFreight,
       DTHC: quotation.DTHC,
       freeTime: quotation.freeTime,
@@ -102,7 +102,7 @@ const ExportFCL = ({ order }) => {
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <h2 className="text-2xl font-bold text-gray-800">Export - FCL</h2>
-          <span className="text-lg font-semibold text-gray-600">{`Order Number: ${order.OrderNumber}`}</span>
+          <span className="text-lg font-semibold text-gray-600">{`Order Number: ${order.orderNumber}`}</span>
         </div>
         <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center">
           <FiDownload className="text-xl" /> Download Documents
@@ -129,12 +129,12 @@ const ExportFCL = ({ order }) => {
           <tbody>
             <tr>
               {[
-                `${order.From} - ${order.To}`,
-                order.ShipmentReadyDate,
-                order.DeliveryTerm,
+                `${order.from} - ${order.to}`,
+                order.shipmentReadyDate,
+                order.deliveryTerm,
                 order.Type,
-                order.NumberOfContainers,
-                order.TargetDate
+                order.numberOfContainers,
+                order.targetDate
               ].map((value, index) => (
                 <td
                   key={index}

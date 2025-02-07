@@ -40,7 +40,7 @@ const ExportLCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      OrderNumber: order.OrderNumber,
+      OrderNumber: order.orderNumber,
       transShipmentPort: quotation.transShipmentPort,
       transitTime: quotation.transitTime,
       vesselOrFlightDetails: quotation.vesselOrFlightDetails,
@@ -92,7 +92,7 @@ const ExportLCL = ({ order }) => {
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <h2 className="text-2xl font-bold text-gray-800">Export - LCL</h2>
-          <span className="text-lg font-semibold text-gray-600">{`Order Number: ${order.OrderNumber}`}</span>
+          <span className="text-lg font-semibold text-gray-600">{`Order Number: ${order.orderNumber}`}</span>
         </div>
         <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center">
           <FiDownload className="text-xl" /> Download Documents
@@ -120,15 +120,15 @@ const ExportLCL = ({ order }) => {
           <tbody>
             <tr>
               {[
-                `${order.From} - ${order.To}`,
-                order.ShipmentReadyDate,
-                order.DeliveryTerm,
+                `${order.from} - ${order.to}`,
+                order.shipmentReadyDate,
+                order.deliveryTerm,
                 order.Type,
-                order.NumberOfPallets,
-                order.PalletCBM,
-                order.CargoCBM,
-                order.GrossWeight,
-                order.TargetDate
+                order.numberOfPallets,
+                order.palletCBM,
+                order.cargoCBM,
+                order.grossWeight,
+                order.targetDate
               ].map((value, index) => (
                 <td
                   key={index}
@@ -142,11 +142,11 @@ const ExportLCL = ({ order }) => {
         </table>
       </div>
 
-      {order.AdditionalNotes && (
+      {order.additionalNotes && (
         <div className="bg-blue-50 p-5 rounded-lg mb-8 border border-blue-200">
           <h4 className="font-semibold text-lg text-blue-800 mb-2">Additional Notes</h4>
           <p className="text-gray-700 text-base leading-relaxed">
-            {order.AdditionalNotes}
+            {order.additionalNotes}
           </p>
         </div>
       )}
@@ -188,8 +188,7 @@ const ExportLCL = ({ order }) => {
               <thead className="bg-gray-50">
                 <tr>
                   {[
-                    'Transshipment Port', 
-                    'Freight Agent Name', 
+                    'Transshipment Port',  
                     'Transit Time', 
                     'Flight Details',
                     'Validity Date', 
