@@ -87,8 +87,6 @@ const ShipmentForm = () => {
     }
   }, [location.state]);
 
-  
-
   useEffect(() => {
     // Convert formData.orderType / formData.shipmentType back to the raw format used in availableOrders
     const rawOrderType = Object.keys(ORDER_TYPE_MAP).find(

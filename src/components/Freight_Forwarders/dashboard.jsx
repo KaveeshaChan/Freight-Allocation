@@ -43,7 +43,7 @@ const Dashboard = ({ children }) => {
 
   const handleAddQuote = (order) => {
     // Redirect to Add Quote page with selected order data
-    navigate('/add-quote', { state: { order } });
+    navigate('/Add_Quote', { state: { order } });
   };
 
   return (
