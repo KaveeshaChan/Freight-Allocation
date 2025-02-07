@@ -41,7 +41,7 @@ const ImportAirFreight = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      OrderNumber: order.orderNumber,
+      orderNumber: order.orderNumber,
       airFreightCost: quotation.airFreightCost,
       AWB: quotation.AWB,
       carrier: quotation.carrier,
@@ -61,7 +61,7 @@ const ImportAirFreight = ({ order }) => {
     }
 
     try {
-      const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/import-airFreight', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ const ImportAirFreight = ({ order }) => {
       alert('Quotes submitted successfully!');
     } catch (error) {
       console.error('Error submitting quotes:', error);
-      alert('There was an error submitting the quotes. Please try again.');
+      alert(error);
     }
   };
 
