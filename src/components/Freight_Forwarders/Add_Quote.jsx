@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom'; // Import useLocation to access state
 import Header from './Header';
 import ExportAirFreight from './Export/AirFreight';
 import ExportLCL from './Export/LCL';
@@ -20,6 +21,7 @@ const ORDER_TYPE_MAP = {
 };
 
 const ShipmentForm = () => {
+  const location = useLocation(); // Access location to get state
   const [formData, setFormData] = useState({
     orderType: '',
     shipmentType: '',
@@ -59,7 +61,6 @@ const ShipmentForm = () => {
         const data = await response.json();
         setAvailableOrders(data.orders || []);
         setFilteredOrders(data.orders || []);
-
       } catch (error) {
         console.error('Error fetching available orders:', error.message);
         if (error.response && error.response.status === 401) {
@@ -71,6 +72,20 @@ const ShipmentForm = () => {
   
     fetchAvailableOrders();
   }, []);
+
+  useEffect(() => {
+    // If the component is receiving order data via location.state
+    if (location.state && location.state.order) {
+      const order = location.state.order;
+      setFormData({
+        orderType: ORDER_TYPE_MAP[order.orderType] || '',
+        shipmentType: SHIPMENT_TYPE_MAP[order.shipmentType] || '',
+        orderNumber: order.orderNumber || ''
+      });
+      setSelectedOrder(order);
+      setShowScreen(true); // Show the popup screen
+    }
+  }, [location.state]);
 
   useEffect(() => {
     // Convert formData.orderType / formData.shipmentType back to the raw format used in availableOrders

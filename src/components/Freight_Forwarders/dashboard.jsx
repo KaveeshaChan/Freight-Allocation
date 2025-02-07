@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import Header from './Header';
-import ImportLCL from './Import/LCL'; 
-import ImportFCL from './Import/FCL';
-import ImportAirFreight from './Import/AirFreight';
-import ExportFCL from './Export/FCL';
-import ExportLCL from './Export/LCL';
-import ExportAirFreight from './Export/AirFreight';
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null); // New state to track selected order
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
@@ -34,7 +29,6 @@ const Dashboard = ({ children }) => {
 
         const data = await response.json();
         setAvailableOrders(data.orders || []);
-
       } catch (error) {
         console.error('Error fetching freight agents:', error.message);
         if (error.response && error.response.status === 401) {
@@ -48,8 +42,8 @@ const Dashboard = ({ children }) => {
   }, []);
 
   const handleAddQuote = (order) => {
-    // Set the selected order
-    setSelectedOrder(order);
+    // Redirect to Add Quote page with selected order data
+    navigate('/add-quote', { state: { order } });
   };
 
   return (
@@ -80,17 +74,10 @@ const Dashboard = ({ children }) => {
             ))}
           </tbody>
         </table>
-        {selectedOrder && <ImportLCL order={selectedOrder} />};
-        {selectedOrder && <ImportFCL order={selectedOrder} />};
-        {selectedOrder && <ImportAirFreight order={selectedOrder} />};
-        {selectedOrder && <ExportAirFreight order={selectedOrder} />};
-        {selectedOrder && <ExportFCL order={selectedOrder} />};
-        {selectedOrder && <ExportLCL order={selectedOrder} />};
-
         {children}
       </div>
     </>
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
