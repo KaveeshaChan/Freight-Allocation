@@ -19,7 +19,7 @@ const ORDER_TYPE_MAP = {
   import: 'Import'
 };
 
-const ShipmentForm = ({ selectedOrder }) => {
+const ShipmentForm = () => {
   const [formData, setFormData] = useState({
     orderType: '',
     shipmentType: '',
@@ -33,6 +33,7 @@ const ShipmentForm = ({ selectedOrder }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [showScreen, setShowScreen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
@@ -58,6 +59,7 @@ const ShipmentForm = ({ selectedOrder }) => {
         const data = await response.json();
         setAvailableOrders(data.orders || []);
         setFilteredOrders(data.orders || []);
+
       } catch (error) {
         console.error('Error fetching available orders:', error.message);
         if (error.response && error.response.status === 401) {
@@ -69,16 +71,6 @@ const ShipmentForm = ({ selectedOrder }) => {
   
     fetchAvailableOrders();
   }, []);
-
-  useEffect(() => {
-    if (selectedOrder) {
-      setFormData({
-        orderType: ORDER_TYPE_MAP[selectedOrder.orderType],
-        shipmentType: SHIPMENT_TYPE_MAP[selectedOrder.shipmentType],
-        orderNumber: selectedOrder.orderNumber
-      });
-    }
-  }, [selectedOrder]);
 
   useEffect(() => {
     // Convert formData.orderType / formData.shipmentType back to the raw format used in availableOrders
@@ -104,6 +96,7 @@ const ShipmentForm = ({ selectedOrder }) => {
     );
   }, [formData.orderType, formData.shipmentType, availableOrders]);
 
+  // Handle input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -116,9 +109,14 @@ const ShipmentForm = ({ selectedOrder }) => {
         setFormData((prev) => ({
           ...prev,
           orderNumber: value,
+
+          // Convert the raw data's "export"/"import" to the display text "Export"/"Import"
           orderType: ORDER_TYPE_MAP[selectedOrder.orderType] || prev.orderType,
+
+          // Convert the raw data's "airFreight"/"lcl"/"fcl" to the display text
           shipmentType: SHIPMENT_TYPE_MAP[selectedOrder.shipmentType] || prev.shipmentType
         }));
+        setSelectedOrder(selectedOrder);
       } else {
         setFormData((prev) => ({ ...prev, [name]: value }));
       }
@@ -174,96 +172,93 @@ const ShipmentForm = ({ selectedOrder }) => {
         {!showScreen ? (
           <form onSubmit={handleSubmit} noValidate>
             <div className="space-y-6">
-              {!selectedOrder && (
-                <>
-                  {/* Order Type Select */}
-                  <div className="form-group">
-                    <label htmlFor="orderType" className="block text-sm font-medium text-gray-700">
-                      Order Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="orderType"
-                      name="orderType"
-                      value={formData.orderType}
-                      onChange={handleInputChange}
-                      className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border ${
-                        errors.orderType ? 'border-red-500' : 'border-gray-300'
-                      } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}
-                      aria-describedby={errors.orderType ? 'orderType-error' : undefined}
-                    >
-                      <option value="">Select Order Type</option>
-                      {Object.values(ORDER_TYPE_MAP).map((label) => (
-                        <option key={label} value={label}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.orderType && (
-                      <p id="orderType-error" className="mt-1 text-sm text-red-500">
-                        {errors.orderType}
-                      </p>
-                    )}
-                  </div>
+              {/* Order Type Select */}
+              <div className="form-group">
+                <label htmlFor="orderType" className="block text-sm font-medium text-gray-700">
+                  Order Type <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="orderType"
+                  name="orderType"
+                  value={formData.orderType}
+                  onChange={handleInputChange}
+                  className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border ${
+                    errors.orderType ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}
+                  aria-describedby={errors.orderType ? 'orderType-error' : undefined}
+                >
+                  <option value="">Select Order Type</option>
+                  {Object.values(ORDER_TYPE_MAP).map((label) => (
+                    <option key={label} value={label}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                {errors.orderType && (
+                  <p id="orderType-error" className="mt-1 text-sm text-red-500">
+                    {errors.orderType}
+                  </p>
+                )}
+              </div>
 
-                  {/* Shipment Type Select */}
-                  <div className="form-group">
-                    <label htmlFor="shipmentType" className="block text-sm font-medium text-gray-700">
-                      Shipment Type <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="shipmentType"
-                      name="shipmentType"
-                      value={formData.shipmentType}
-                      onChange={handleInputChange}
-                      className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border ${
-                        errors.shipmentType ? 'border-red-500' : 'border-gray-300'
-                      } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}
-                      aria-describedby={errors.shipmentType ? 'shipmentType-error' : undefined}
-                    >
-                      <option value="">Select Shipment Type</option>
-                      {Object.values(SHIPMENT_TYPE_MAP).map((label) => (
-                        <option key={label} value={label}>
-                          {label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.shipmentType && (
-                      <p id="shipmentType-error" className="mt-1 text-sm text-red-500">
-                        {errors.shipmentType}
-                      </p>
-                    )}
-                  </div>
+              {/* Shipment Type Select */}
+              <div className="form-group">
+                <label htmlFor="shipmentType" className="block text-sm font-medium text-gray-700">
+                  Shipment Type <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="shipmentType"
+                  name="shipmentType"
+                  value={formData.shipmentType}
+                  onChange={handleInputChange}
+                  className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border ${
+                    errors.shipmentType ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}
+                  aria-describedby={errors.shipmentType ? 'shipmentType-error' : undefined}
+                >
+                  <option value="">Select Shipment Type</option>
+                  {Object.values(SHIPMENT_TYPE_MAP).map((label) => (
+                    <option key={label} value={label}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                {errors.shipmentType && (
+                  <p id="shipmentType-error" className="mt-1 text-sm text-red-500">
+                    {errors.shipmentType}
+                  </p>
+                )}
+              </div>
 
-                  {/* Order Number Select */}
-                  <div className="form-group">
-                    <label htmlFor="orderNumber" className="block text-sm font-medium text-gray-700">
-                      Order Number <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      id="orderNumber"
-                      name="orderNumber"
-                      value={formData.orderNumber}
-                      onChange={handleInputChange}
-                      className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border ${
-                        errors.orderNumber ? 'border-red-500' : 'border-gray-300'
-                      } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}
-                      aria-describedby={errors.orderNumber ? 'orderNumber-error' : undefined}
-                    >
-                      <option value="">Select Order Number</option>
-                      {filteredOrders.map((item) => (
-                        <option key={item.orderNumber} value={item.orderNumber}>
-                          {item.orderNumber}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.orderNumber && (
-                      <p id="orderNumber-error" className="mt-1 text-sm text-red-500">
-                        {errors.orderNumber}
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
+              {/* Order Number Select */}
+              <div className="form-group">
+                <label htmlFor="orderNumber" className="block text-sm font-medium text-gray-700">
+                  Order Number <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="orderNumber"
+                  name="orderNumber"
+                  value={formData.orderNumber}
+                  onChange={handleInputChange}
+                  className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border ${
+                    errors.orderNumber ? 'border-red-500' : 'border-gray-300'
+                  } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}
+                  aria-describedby={errors.orderNumber ? 'orderNumber-error' : undefined}
+                >
+                  <option value="">Select Order Number</option>
+                  {filteredOrders.map((item) => (
+                    <option key={item.orderNumber} value={item.orderNumber}>
+                      {item.orderNumber}
+                    </option>
+                  ))}
+                </select>
+                {errors.orderNumber && (
+                  <p id="orderNumber-error" className="mt-1 text-sm text-red-500">
+                    {errors.orderNumber}
+                  </p>
+                )}
+              </div>
+
               {/* Submit Button */}
               <div className="flex items-center justify-end">
                 <button
@@ -275,15 +270,43 @@ const ShipmentForm = ({ selectedOrder }) => {
                       : 'bg-indigo-600 hover:bg-indigo-700'
                   } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                  {isSubmitting ? (
+                    <span className="flex items-center">
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Submitting...
+                    </span>
+                  ) : (
+                    'Submit'
+                  )}
                 </button>
               </div>
+
               {/* Success Message */}
               {submitSuccess && (
                 <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
                   <p className="text-green-600">Form submitted successfully!</p>
                 </div>
               )}
+
               {/* Error Message */}
               {errors.submit && (
                 <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
@@ -293,6 +316,7 @@ const ShipmentForm = ({ selectedOrder }) => {
             </div>
           </form>
         ) : (
+          // Render the relevant screen based on orderType and shipmentType
           <>
             {formData.orderType === ORDER_TYPE_MAP.export && formData.shipmentType === SHIPMENT_TYPE_MAP.airFreight && (
               <ExportAirFreight order={selectedOrder} />
