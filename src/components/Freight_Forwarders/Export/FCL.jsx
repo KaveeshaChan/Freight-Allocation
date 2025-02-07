@@ -148,11 +148,11 @@ const ExportFCL = ({ order }) => {
         </table>
       </div>
 
-      {order.AdditionalNotes && (
+      {order.additionalNotes && (
         <div className="bg-blue-50 p-5 rounded-lg mb-8 border border-blue-200">
           <h4 className="font-semibold text-lg text-blue-800 mb-2">Additional Notes</h4>
           <p className="text-gray-700 text-base leading-relaxed">
-            {order.AdditionalNotes}
+            {order.additionalNotes}
           </p>
         </div>
       )}

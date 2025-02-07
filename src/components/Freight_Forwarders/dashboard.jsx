@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
-import ImportLCL from './Import/LCL'; // Import the ImportLCL component
+import Modal from './Modal'; // Import the Modal component
+import ShipmentForm from './Add_Quote'; // Import the ShipmentForm component
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null); // New state to track selected order
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
@@ -43,39 +45,69 @@ const Dashboard = ({ children }) => {
   }, []);
 
   const handleAddQuote = (order) => {
-    // Set the selected order
     setSelectedOrder(order);
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
   };
 
   return (
     <>
       <Header />
-      <div className="">
-        <table>
-          <thead>
-            <tr>
-              <th>Order Number</th>
-              <th>Order Type</th>
-              <th>Shipment Type</th>
-              <th>Quotation Valid Days</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {availableOrders.map((order) => (
-              <tr key={order.orderNumber}>
-                <td>{order.orderNumber}</td>
-                <td>{order.orderType}</td>
-                <td>{order.shipmentType}</td>
-                <td>{order.quotationValidDays}</td>
-                <td>
-                  <button onClick={() => handleAddQuote(order)}>Add Quote</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {selectedOrder && <ImportLCL order={selectedOrder} />} {/* Render ImportLCL with the selected order */}
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Available Orders</h1>
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Number</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shipment Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valid Days</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {availableOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                      No orders available
+                    </td>
+                  </tr>
+                ) : (
+                  availableOrders.map((order) => (
+                    <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.orderNumber}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.orderType}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.shipmentType}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.quotationValidDays}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button
+                          onClick={() => handleAddQuote(order)}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                        >
+                          Add Quote
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <div className="bg-white p-6 rounded-lg max-w-2xl w-full">
+            <h2 className="text-xl font-bold mb-4">Add Quote for Order #{selectedOrder?.orderNumber}</h2>
+            <ShipmentForm selectedOrder={selectedOrder} />
+          </div>
+        </Modal>
+
         {children}
       </div>
     </>
