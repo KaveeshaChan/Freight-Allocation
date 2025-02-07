@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'; // Import useLocation to access state
+import Select from 'react-select'; // Import react-select
 import Header from './Header';
 import ExportAirFreight from './Export/AirFreight';
 import ExportLCL from './Export/LCL';
@@ -250,23 +251,23 @@ const ShipmentForm = () => {
                 <label htmlFor="orderNumber" className="block text-sm font-medium text-gray-700">
                   Order Number <span className="text-red-500">*</span>
                 </label>
-                <select
+                <Select
                   id="orderNumber"
                   name="orderNumber"
-                  value={formData.orderNumber}
-                  onChange={handleInputChange}
+                  value={availableOrders.find(order => order.orderNumber === formData.orderNumber)}
+                  onChange={(selectedOption) => {
+                    const value = selectedOption ? selectedOption.value : '';
+                    handleInputChange({ target: { name: 'orderNumber', value } });
+                  }}
+                  options={filteredOrders.map((item) => ({
+                    value: item.orderNumber,
+                    label: `${item.orderNumber} - ${ORDER_TYPE_MAP[item.orderType]} - ${SHIPMENT_TYPE_MAP[item.shipmentType]}`
+                  }))}
                   className={`mt-1 block w-full pl-3 pr-10 py-2 text-base border ${
                     errors.orderNumber ? 'border-red-500' : 'border-gray-300'
                   } focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}
                   aria-describedby={errors.orderNumber ? 'orderNumber-error' : undefined}
-                >
-                  <option value="">Select Order Number</option>
-                  {filteredOrders.map((item) => (
-                    <option key={item.orderNumber} value={item.orderNumber}>
-                      {item.orderNumber}
-                    </option>
-                  ))}
-                </select>
+                />
                 {errors.orderNumber && (
                   <p id="orderNumber-error" className="mt-1 text-sm text-red-500">
                     {errors.orderNumber}
