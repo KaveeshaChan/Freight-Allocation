@@ -171,7 +171,7 @@ const ImportAirFreight = ({ order }) => {
             { label: 'Carrier', name: 'carrier' },
             { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
             { label: 'Flight Details', name: 'vesselOrFlightDetails' },
-            { label: 'Validity Date', name: 'validityDate', type: 'date' },
+            { label: 'Validity Date', name: 'validityTime', type: 'date' },
           ].map((field, index) => (
             <InputField
               key={index}
