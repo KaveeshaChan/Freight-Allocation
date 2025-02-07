@@ -19,177 +19,6 @@ const ORDER_TYPE_MAP = {
   import: 'Import'
 };
 
-const ordersData = [
-  {
-    "OrderID": 1019,
-    "OrderType": "export",
-    "ShipmentType": "airFreight",
-    "OrderNumber": 114456677,
-    "From": "Sri Lanka",
-    "To": "Indonesia",
-    "ShipmentReadyDate": "1/31/2025",
-    "DeliveryTerm": 40,
-    "CargoType": "LooseCargo",
-    "Type": "cgt",
-    "NumberOfPallets": null,
-    "NumberOfContainers": null,
-    "LWHWithThePallet": null,
-    "PalletCBM": null,
-    "CargoCBM": 288,
-    "GrossWeight": 213,
-    "ChargeableWeight": 500,
-    "TargetDate": "4/2/2025",
-    "AdditionalNotes": "check due date",
-    "ProductDescription": null,
-    "DocumentName": null,
-    "DocumentData": null,
-    "OrderCreatedDate": "20:50.0",
-    "OrderStatus": "active",
-    "CreatedBy": 1,
-    "DueDate": 30
-  },
-  {
-    "OrderID": 1020,
-    "OrderType": "import",
-    "ShipmentType": "lcl",
-    "OrderNumber": 59595,
-    "From": "Sri Lanka",
-    "To": "China",
-    "ShipmentReadyDate": "2/14/2025",
-    "DeliveryTerm": 40,
-    "CargoType": null,
-    "Type": "cgt",
-    "NumberOfPallets": 10,
-    "NumberOfContainers": null,
-    "LWHWithThePallet": null,
-    "PalletCBM": 95,
-    "CargoCBM": 288,
-    "GrossWeight": 798,
-    "ChargeableWeight": null,
-    "TargetDate": "4/23/2025",
-    "AdditionalNotes": "test12233",
-    "ProductDescription": "chemicals",
-    "DocumentName": null,
-    "DocumentData": null,
-    "OrderCreatedDate": "00:47.6",
-    "OrderStatus": "active",
-    "CreatedBy": 4017,
-    "DueDate": 24
-  },
-  {
-    "OrderID": 1017,
-    "OrderType": "export",
-    "ShipmentType": "lcl",
-    "OrderNumber": 9860555,
-    "From": "Sri Lanka",
-    "To": "India",
-    "ShipmentReadyDate": "1/31/2025",
-    "DeliveryTerm": 40,
-    "CargoType": null,
-    "Type": "skm",
-    "NumberOfPallets": 10,
-    "NumberOfContainers": null,
-    "LWHWithThePallet": null,
-    "PalletCBM": 95,
-    "CargoCBM": 288,
-    "GrossWeight": 91,
-    "ChargeableWeight": null,
-    "TargetDate": "3/25/2025",
-    "AdditionalNotes": "kjbjh",
-    "ProductDescription": null,
-    "DocumentName": "NZ1-001-25",
-    "DocumentData": null,
-    "OrderCreatedDate": "36:40.0",
-    "OrderStatus": "active",
-    "CreatedBy": 1,
-    "DueDate": 25
-  },
-  {
-    "OrderID": 6,
-    "OrderType": "export",
-    "ShipmentType": "fcl",
-    "OrderNumber": 88605,
-    "From": "Sri Lanka",
-    "To": "Canada",
-    "ShipmentReadyDate": "1/25/2025",
-    "DeliveryTerm": 20,
-    "CargoType": null,
-    "Type": "skm",
-    "NumberOfPallets": null,
-    "NumberOfContainers": 1,
-    "LWHWithThePallet": null,
-    "PalletCBM": null,
-    "CargoCBM": null,
-    "GrossWeight": null,
-    "ChargeableWeight": null,
-    "TargetDate": "1/25/2025",
-    "AdditionalNotes": "test11",
-    "ProductDescription": null,
-    "DocumentName": "NZ1-001-25",
-    "DocumentData": null,
-    "OrderCreatedDate": "28:17.6",
-    "OrderStatus": "active",
-    "CreatedBy": 1,
-    "DueDate": 22
-  },
-  {
-    "OrderID": 15,
-    "OrderType": "import",
-    "ShipmentType": "fcl",
-    "OrderNumber": 98605301,
-    "From": "Sri Lanka",
-    "To": "China",
-    "ShipmentReadyDate": "1/25/2025",
-    "DeliveryTerm": 40,
-    "CargoType": null,
-    "Type": "cgt",
-    "NumberOfPallets": null,
-    "NumberOfContainers": 1,
-    "LWHWithThePallet": null,
-    "PalletCBM": null,
-    "CargoCBM": null,
-    "GrossWeight": null,
-    "ChargeableWeight": null,
-    "TargetDate": "2/13/2025",
-    "AdditionalNotes": "test order status",
-    "ProductDescription": "newly",
-    "DocumentName": null,
-    "DocumentData": null,
-    "OrderCreatedDate": "55:55.6",
-    "OrderStatus": "active",
-    "CreatedBy": 1,
-    "DueDate": 24
-  },
-  {
-    "OrderID": 10,
-    "OrderType": "import",
-    "ShipmentType": "airFreight",
-    "OrderNumber": 986053,
-    "From": "Sri Lanka",
-    "To": "Canada",
-    "ShipmentReadyDate": "1/25/2025",
-    "DeliveryTerm": 20,
-    "CargoType": "PalletizedCargo",
-    "Type": "skm",
-    "NumberOfPallets": 5,
-    "NumberOfContainers": null,
-    "LWHWithThePallet": "150x148x150",
-    "PalletCBM": null,
-    "CargoCBM": 288,
-    "GrossWeight": 550,
-    "ChargeableWeight": 500,
-    "TargetDate": "3/27/2025",
-    "AdditionalNotes": "test air freight import",
-    "ProductDescription": "emergency",
-    "DocumentName": "NZ1-001-25",
-    "DocumentData": null,
-    "OrderCreatedDate": "55:55.6",
-    "OrderStatus": "active",
-    "CreatedBy": 1,
-    "DueDate": 20
-  }
-];
-
 const ShipmentForm = () => {
   const [formData, setFormData] = useState({
     orderType: '',
@@ -200,13 +29,51 @@ const ShipmentForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Filtered orders for the dropdown
-  const [filteredOrders, setFilteredOrders] = useState(ordersData);
+  // State to store available orders
+  const [availableOrders, setAvailableOrders] = useState([]);
+  const [filteredOrders, setFilteredOrders] = useState([]);
   const [showScreen, setShowScreen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
-    // Convert formData.orderType / formData.shipmentType back to the raw format used in ordersData
+    const fetchAvailableOrders = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found. Please log in again.');
+        }
+        const response = await fetch(
+          "http://localhost:5056/api/select/view-orders-agents/", 
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setAvailableOrders(data.orders || []);
+        setFilteredOrders(data.orders || []);
+
+      } catch (error) {
+        console.error('Error fetching available orders:', error.message);
+        if (error.response && error.response.status === 401) {
+          console.error('Unauthorized. Redirecting to login.');
+          // Handle unauthorized error (e.g., redirect to login page)
+        }
+      }
+    };
+  
+    fetchAvailableOrders();
+  }, []);
+
+  useEffect(() => {
+    // Convert formData.orderType / formData.shipmentType back to the raw format used in availableOrders
     const rawOrderType = Object.keys(ORDER_TYPE_MAP).find(
       (key) => ORDER_TYPE_MAP[key] === formData.orderType
     );
@@ -215,19 +82,19 @@ const ShipmentForm = () => {
     );
 
     setFilteredOrders(
-      ordersData.filter((item) => {
+      availableOrders.filter((item) => {
         // If formData.orderType is selected, check rawOrderType matches item.OrderType
         const matchOrderType = !rawOrderType
-          || item.OrderType.toLowerCase() === rawOrderType.toLowerCase();
+          || item.orderType.toLowerCase() === rawOrderType.toLowerCase();
 
         // If formData.shipmentType is selected, check rawShipmentType matches item.ShipmentType
         const matchShipmentType = !rawShipmentType
-          || item.ShipmentType.toLowerCase() === rawShipmentType.toLowerCase();
+          || item.shipmentType.toLowerCase() === rawShipmentType.toLowerCase();
 
         return matchOrderType && matchShipmentType;
       })
     );
-  }, [formData.orderType, formData.shipmentType]);
+  }, [formData.orderType, formData.shipmentType, availableOrders]);
 
   // Handle input changes
   const handleInputChange = (event) => {
@@ -235,8 +102,8 @@ const ShipmentForm = () => {
 
     // If user selects an orderNumber first, we auto-fill orderType and shipmentType
     if (name === 'orderNumber') {
-      const selectedOrder = ordersData.find(
-        (item) => item.OrderNumber.toString() === value
+      const selectedOrder = availableOrders.find(
+        (item) => item.orderNumber.toString() === value
       );
       if (selectedOrder) {
         setFormData((prev) => ({
@@ -244,10 +111,10 @@ const ShipmentForm = () => {
           orderNumber: value,
 
           // Convert the raw data's "export"/"import" to the display text "Export"/"Import"
-          orderType: ORDER_TYPE_MAP[selectedOrder.OrderType] || prev.orderType,
+          orderType: ORDER_TYPE_MAP[selectedOrder.orderType] || prev.orderType,
 
           // Convert the raw data's "airFreight"/"lcl"/"fcl" to the display text
-          shipmentType: SHIPMENT_TYPE_MAP[selectedOrder.ShipmentType] || prev.shipmentType
+          shipmentType: SHIPMENT_TYPE_MAP[selectedOrder.shipmentType] || prev.shipmentType
         }));
         setSelectedOrder(selectedOrder);
       } else {
@@ -380,8 +247,8 @@ const ShipmentForm = () => {
                 >
                   <option value="">Select Order Number</option>
                   {filteredOrders.map((item) => (
-                    <option key={item.OrderNumber} value={item.OrderNumber}>
-                      {item.OrderNumber}
+                    <option key={item.orderNumber} value={item.orderNumber}>
+                      {item.orderNumber}
                     </option>
                   ))}
                 </select>

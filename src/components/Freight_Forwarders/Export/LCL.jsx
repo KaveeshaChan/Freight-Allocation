@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+
 const ExportLCL = ({ order }) => {
   const initialQuotation = {
     transShipmentPort: '',
     transitTime: '',
     vesselOrFlightDetails: '',
     validityTime: '',
-    netFreightPerContainer: '',
+    netFreight: '',
   };
 
   const [currentQuotation, setCurrentQuotation] = useState(initialQuotation);
   const [savedQuotations, setSavedQuotations] = useState([]);
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+  
 
   const handleAddQuotation = () => {
     console.log('Current Quotation:', currentQuotation);
@@ -38,14 +40,17 @@ const ExportLCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      orderNumber: order.orderNumber,
+      OrderNumber: order.OrderNumber,
       transShipmentPort: quotation.transShipmentPort,
       transitTime: quotation.transitTime,
       vesselOrFlightDetails: quotation.vesselOrFlightDetails,
       validityTime: quotation.validityTime,
-      netFreightPerContainer: quotation.netFreightPerContainer,
-      quotationCreatedDate: new Date().toISOString(),
+      netFreight: quotation.netFreight,
     }));
+
+    
+
+    console.log('Payload to send:', payload);
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -53,14 +58,13 @@ const ExportLCL = ({ order }) => {
       return;
     }
 
-    console.log('Payload to send:', payload);
-
     try {
       const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+
         },
         body: JSON.stringify(payload),
       });
@@ -101,7 +105,7 @@ const ExportLCL = ({ order }) => {
             <tr>
               {[
                 'Route', 'Shipment Ready Date', 'Delivery Term',
-                'Type', 'Pallets', 'Pallet CBM',
+                'Type', 'Number of Pallets', 'Pallet CBM',
                 'Cargo CBM', 'Gross Weight (Kg)', 'Target Date'
               ].map((header) => (
                 <th
@@ -155,7 +159,7 @@ const ExportLCL = ({ order }) => {
             { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
             { label: 'Vessel Or Flight Details', name: 'vesselOrFlightDetails' },
             { label: 'Validity Date', name: 'validityTime', type: 'date' },
-            { label: 'Net Freight per Container (USD)', name: 'netFreightPerContainer', type: 'number' },
+            { label: 'Net Freight (USD)', name: 'netFreight', type: 'number' },
           ].map((field, index) => (
             <InputField
               key={index}
@@ -184,8 +188,12 @@ const ExportLCL = ({ order }) => {
               <thead className="bg-gray-50">
                 <tr>
                   {[
-                    'Transshipment Port', 'Freight Agent Name', 'TRANSIT TIME', 'Flight Details',
-                    'Validity Date', 'Net Freight (USD)'
+                    'Transshipment Port', 
+                    'Freight Agent Name', 
+                    'Transit Time', 
+                    'Flight Details',
+                    'Validity Date', 
+                    'Net Freight (USD)'
                   ].map((header) => (
                     <th
                       key={header}
@@ -202,11 +210,10 @@ const ExportLCL = ({ order }) => {
                   <tr key={quotation.id} className="hover:bg-gray-50">
                     {[
                       quotation.transshipmentPort,
-                      
                       quotation.transitTime,
-                      quotation.flightDetails,
-                      quotation.validityDate,
-                      quotation.netFreightPerContainer,
+                      quotation.vesselOrFlightDetails,
+                      quotation.validityTime,
+                      quotation.netFreight,
                     ].map((value, index) => (
                       <td
                         key={index}

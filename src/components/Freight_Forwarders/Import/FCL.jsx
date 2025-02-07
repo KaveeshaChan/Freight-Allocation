@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+
 const ImportFCL = ({ order }) => {
   const initialQuotation = {
-    netFreightPerContainer: '',
+    netFreight: '',
+    DOFee: '',
     transShipmentPort: '',
+    freeTime: '',
+    carrier:'',
     transitTime: '',
     vesselOrFlightDetails: '',
-    freeTime: '',
-    DOFee: '',
     validityTime: '',
   };
 
@@ -40,16 +42,19 @@ const ImportFCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      orderNumber: order.orderNumber,
-      netFreightPerContainer: quotation.netFreightPerContainer,
-      transShipmentPort: quotation.transShipmentPort,
-      transitTime: quotation.transitTime,
-      vesselOrFlightDetails: quotation.vesselOrFlightDetails,
-      freeTime: quotation.freeTime,
+      OrderNumber: order.OrderNumber,
+      netFreight: quotation.netFreight,
       DOFee: quotation.DOFee,
+      transShipmentPort: quotation.transShipmentPort,
+      freeTime: quotation.freeTime,
+      carrier: quotation.carrier,
+      transitTime: quotation.transitTime,
       validityTime: quotation.validityTime,
-      quotationCreatedDate: new Date().toISOString(),
     }));
+
+    
+
+    console.log('Payload to send:', payload);
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -57,14 +62,13 @@ const ImportFCL = ({ order }) => {
       return;
     }
 
-    console.log('Payload to send:', payload);
-
     try {
       const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+
         },
         body: JSON.stringify(payload),
       });
@@ -105,7 +109,7 @@ const ImportFCL = ({ order }) => {
             <tr>
               {[
                 'Route', 'Shipment Ready Date', 'Delivery Term',
-                'Type', 'Number of Pallets', 'Pallet CBM', 'Gross Weight (Kg)', 'Target Date'
+                'Type', 'Number of Containers', 'Target Date'
               ].map((header) => (
                 <th
                   key={header}
@@ -123,11 +127,8 @@ const ImportFCL = ({ order }) => {
                 order.ShipmentReadyDate,
                 order.DeliveryTerm,
                 order.Type,
-                order.NumberOfPallets,
-                order.PalletCBM,
-                order.CargoCBM,
-                order.GrossWeight,
-                order.TargetDate
+                order.NumberOfContainers,
+                order.TargetDate,
               ].map((value, index) => (
                 <td
                   key={index}
@@ -154,12 +155,13 @@ const ImportFCL = ({ order }) => {
         <h3 className="text-xl font-semibold text-gray-800 mb-6">Add New Quotation</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { label: 'Net Freight Per Container (USD)', name: 'netFreightPerContainer', type: 'number' },
-            { label: 'Transshipment Port', name: 'transShipmentPort' },
+            { label: 'Net Freight (USD)', name: 'netFreight', type: 'number' },
+            { label: 'DO Fee', name: 'DOFee', type: 'number' },
+            { label: 'Transshipment Port', name: 'transShipmentPort' },            
+            { label: 'Free Time', name: 'freeTime' },
+            { label: 'Carrier', name: 'carrier' },
             { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
             { label: 'Flight Details', name: 'vesselOrFlightDetails' },
-            { label: 'Free Time', name: 'freeTime' },
-            { label: 'DO Fee', name: 'DOFee', type: 'number' },
             { label: 'Validity Date', name: 'validityTime', type: 'date' },
           ].map((field, index) => (
             <InputField
@@ -189,7 +191,14 @@ const ImportFCL = ({ order }) => {
               <thead className="bg-gray-50">
                 <tr>
                   {[
-                    'Net Freight Per Container(USD)', 'Transshipment Port', 'Transit Time', 'Flight Details','Free Time', 'DO Fee', 'Validity'
+                    'Net Freight (USD)', 
+                    'DO Fee', 
+                    'Transshipment Port', 
+                    'Free Time', 
+                    'Carrier',
+                    'Transit Time',
+                     'Flight Details',
+                     'Validity Date'
                   ].map((header) => (
                     <th
                       key={header}
@@ -205,12 +214,13 @@ const ImportFCL = ({ order }) => {
                 {savedQuotations.map((quotation) => (
                   <tr key={quotation.id} className="hover:bg-gray-50">
                     {[
-                      quotation.netFreightPerContainer,
+                      quotation.netFreight,
+                      quotation.DOFee,
                       quotation.transShipmentPort,
+                      quotation.freeTime,
+                      quotation.carrier,
                       quotation.transitTime,
                       quotation.vesselOrFlightDetails,
-                      quotation.freeTime,
-                      quotation.DOFee,
                       quotation.validityTime,
                     ].map((value, index) => (
                       <td

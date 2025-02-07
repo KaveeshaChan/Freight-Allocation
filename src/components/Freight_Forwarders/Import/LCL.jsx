@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+
 const ImportLCL = ({ order }) => {
   const initialQuotation = {
-    netFreightPerContainer: '',
+    netFreight: '',
     DOFee: '',
     transShipmentPort: '',
     freeTime: '',
-    carrier: '',
     transitTime: '',
     vesselOrFlightDetails: '',
     validityTime: '',
@@ -17,6 +17,7 @@ const ImportLCL = ({ order }) => {
   const [currentQuotation, setCurrentQuotation] = useState(initialQuotation);
   const [savedQuotations, setSavedQuotations] = useState([]);
   const navigate = useNavigate();
+  
 
   const handleAddQuotation = () => {
     console.log('Current Quotation:', currentQuotation);
@@ -41,17 +42,17 @@ const ImportLCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      orderNumber: order.orderNumber,
-      netFreightPerContainer: quotation.netFreightPerContainer,
-      DOFee: quotation.DOFee,
+      OrderNumber: order.OrderNumber,
+      netFreight: quotation.netFreight,
       transShipmentPort: quotation.transShipmentPort,
-      freeTime: quotation.freeTime,
-      carrier: quotation.carrier,
       transitTime: quotation.transitTime,
       vesselOrFlightDetails: quotation.vesselOrFlightDetails,
+      freeTime: quotation.freeTime,
+      DOFee: quotation.DOFee,
       validityTime: quotation.validityTime,
-      quotationCreatedDate: new Date().toISOString(),
     }));
+
+    console.log('Payload to send:', payload);
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -59,14 +60,13 @@ const ImportLCL = ({ order }) => {
       return;
     }
 
-    console.log('Payload to send:', payload);
-
     try {
       const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+
         },
         body: JSON.stringify(payload),
       });
@@ -153,14 +153,13 @@ const ImportLCL = ({ order }) => {
         <h3 className="text-xl font-semibold text-gray-800 mb-6">Add New Quotation</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { label: 'Net Freight per Container (USD)', name: 'netFreightPerContainer', type: 'number' },
-            { label: 'DO Fee', name: 'DOFee', type: 'number' },
+            { label: 'Net Freight (USD)', name: 'netFreight', type: 'number' },
             { label: 'Transshipment Port', name: 'transShipmentPort' },
-            { label: 'Free Time', name: 'freeTime' },
-            { label: 'Carrier', name: 'carrier' },
             { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
-            { label: 'Flight Details', name: 'vesselOrFlightDetails' },
-            { label: 'Validity Date', name: 'validityTime', type: 'date' },
+            { label: 'Vessel or Flight Details', name: 'vesselOrFlightDetails' },
+            { label: 'Free Time', name: 'freeTime' },
+            { label: 'DO Fee', name: 'DOFee', type: 'number' },
+            { label: 'Validity Date', name: 'validityTime', type: 'date' },  
           ].map((field, index) => (
             <InputField
               key={index}
@@ -188,9 +187,9 @@ const ImportLCL = ({ order }) => {
             <table className="w-full table-auto">
               <thead className="bg-gray-50">
                 <tr>
-                  {[
-                    'Transshipment Port', 'Freight Agent Name', 'TRANSIT TIME', 'Flight Details',
-                    'Validity Date', 'Net Freight (USD)'
+                  {['Net Freight (USD)', 
+                    'Transshipment Port', 'Transit Time', 'Vessel or Flight Details', 'Free Time', 'DO Fee',
+                    'Validity Date', 
                   ].map((header) => (
                     <th
                       key={header}
@@ -206,15 +205,13 @@ const ImportLCL = ({ order }) => {
                 {savedQuotations.map((quotation) => (
                   <tr key={quotation.id} className="hover:bg-gray-50">
                     {[
-                      quotation.netFreightPerContainer,
-                      quotation.DOFee,
-                      quotation.transshipmentPort,
-                      quotation.freeTime,
-                      quotation.carrier,
+                      quotation.netFreight,
+                      quotation.transShipmentPort,
                       quotation.transitTime,
-                      quotation.flightDetails,
-                      quotation.validityDate,
-                      
+                      quotation.vesselOrFlightDetails,
+                      quotation.freeTime,
+                      quotation.DOFee,
+                      quotation.validityTime, 
                     ].map((value, index) => (
                       <td
                         key={index}

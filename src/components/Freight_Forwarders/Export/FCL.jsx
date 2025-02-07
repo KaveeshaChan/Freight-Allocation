@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+
+
 const ExportFCL = ({ order }) => {
   const initialQuotation = {
-    netFreightPerContainer: '',
+    netFreight: '',
     DTHC: '',
     freeTime: '',
     transShipmentPort: '',
@@ -17,6 +19,8 @@ const ExportFCL = ({ order }) => {
   const [currentQuotation, setCurrentQuotation] = useState(initialQuotation);
   const [savedQuotations, setSavedQuotations] = useState([]);
   const navigate = useNavigate();
+
+  
 
   const handleAddQuotation = () => {
     console.log('Current Quotation:', currentQuotation);
@@ -42,15 +46,20 @@ const ExportFCL = ({ order }) => {
 
     const payload = savedQuotations.map(quotation => ({
       orderNumber: order.orderNumber,
-      netFreightPerContainer: quotation.netFreightPerContainer,
+      netFreight: quotation.netFreight,
       DTHC: quotation.DTHC,
       freeTime: quotation.freeTime,
       transShipmentPort: quotation.transShipmentPort,
+      carrier: quotation.carrier,
+
       transitTime: quotation.transitTime,
       vesselOrFlightDetails: quotation.vesselOrFlightDetails,
       validityTime: quotation.validityTime,
-      quotationCreatedDate: new Date().toISOString(),
     }));
+
+   
+
+    console.log('Payload to send:', payload);
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -58,14 +67,14 @@ const ExportFCL = ({ order }) => {
       return;
     }
 
-    console.log('Payload to send:', payload);
-
     try {
       const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+
+          
         },
         body: JSON.stringify(payload),
       });
@@ -152,7 +161,7 @@ const ExportFCL = ({ order }) => {
         <h3 className="text-xl font-semibold text-gray-800 mb-6">Add New Quotation</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { label: 'Net Freight Per Container (USD)', name: 'netFreightPerContainer', type: 'number' },
+            { label: 'Net Freight (USD)', name: 'netFreight', type: 'number' },
             { label: 'DTHC (USD)', name: 'DTHC', type: 'number' },
             { label: 'Free Time', name: 'freeTime' },
             { label: 'Transshipment Port', name: 'transShipmentPort' },
@@ -188,7 +197,13 @@ const ExportFCL = ({ order }) => {
               <thead className="bg-gray-50">
                 <tr>
                   {[
-                    'Net Freight (USD)', 'DTHC (USD)', 'Free Time', 'Transshipment Port', 'Carrier', 'Transit Time', 'Vessel Or Flight Details', 'Validity'
+                    'Net Freight (USD)', 
+                    'DTHC (USD)', 
+                    'Free Time',
+                    'Transshipment Port', 
+                    'Carrier', 
+                    'Transit Time', 
+                    'Vessel Or Flight Details', 'Validity Date'
                   ].map((header) => (
                     <th
                       key={header}
@@ -204,7 +219,7 @@ const ExportFCL = ({ order }) => {
                 {savedQuotations.map((quotation) => (
                   <tr key={quotation.id} className="hover:bg-gray-50">
                     {[
-                      quotation.netFreightPerContainer,
+                      quotation.netFreight,
                       quotation.DTHC,
                       quotation.freeTime,
                       quotation.transShipmentPort,

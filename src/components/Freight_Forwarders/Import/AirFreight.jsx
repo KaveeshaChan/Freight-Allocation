@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
+
 const ImportAirFreight = ({ order }) => {
   const initialQuotation = {
     airFreightCost: '',
@@ -15,6 +16,7 @@ const ImportAirFreight = ({ order }) => {
   const [currentQuotation, setCurrentQuotation] = useState(initialQuotation);
   const [savedQuotations, setSavedQuotations] = useState([]);
   const navigate = useNavigate();
+
 
   const handleAddQuotation = () => {
     console.log('Current Quotation:', currentQuotation);
@@ -39,15 +41,18 @@ const ImportAirFreight = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      orderNumber: order.orderNumber,
+      OrderNumber: order.OrderNumber,
       airFreightCost: quotation.airFreightCost,
       AWB: quotation.AWB,
       carrier: quotation.carrier,
       transitTime: quotation.transitTime,
       vesselOrFlightDetails: quotation.vesselOrFlightDetails,
       validityTime: quotation.validityTime,
-      quotationCreatedDate: new Date().toISOString(),
     }));
+
+    
+
+    console.log('Payload to send:', payload);
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -55,14 +60,13 @@ const ImportAirFreight = ({ order }) => {
       return;
     }
 
-    console.log('Payload to send:', payload);
-
     try {
       const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+
         },
         body: JSON.stringify(payload),
       });
@@ -102,8 +106,16 @@ const ImportAirFreight = ({ order }) => {
           <thead className="bg-gray-50">
             <tr>
               {[
-                'Route', 'Shipment Ready Date', 'Delivery Term',
-                'Type', 'Cargo Type', 'Pallets', 'Chargeable Weight (Kg)', 'Cargo CBM', 'L*W*H with the pallet', 'Target Date'
+                'Route', 
+                'Shipment Ready Date', 
+                'Delivery Term',
+                'Type', 'Cargo Type', 
+                'Pallets', 
+                'Chargeable Weight (Kg)', 
+                'Gross Weight', 
+                'Cargo CBM', 
+                'L*W*H with the pallet', 
+                'Target Date'
               ].map((header) => (
                 <th
                   key={header}
@@ -124,6 +136,7 @@ const ImportAirFreight = ({ order }) => {
                 order.CargoType,
                 order.NumberOfPallets,
                 order.ChargeableWeight,
+                order.GrossWeight,
                 order.CargoCBM,
                 order.LWHWithThePallet,
                 order.TargetDate
