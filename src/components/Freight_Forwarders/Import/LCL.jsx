@@ -104,7 +104,7 @@ const ImportLCL = ({ order }) => {
             <tr>
               {[
                 'Route', 'Shipment Ready Date', 'Delivery Term',
-                'Type', 'Number of Containers', 'Target Date'
+                'Type', 'Number of Pallets', 'Target Date'
               ].map((header) => (
                 <th
                   key={header}
@@ -119,11 +119,11 @@ const ImportLCL = ({ order }) => {
             <tr>
               {[
                 `${order.from} - ${order.to}`,
-                order.ShipmentReadyDate,
-                order.DeliveryTerm,
+                order.shipmentReadyDate,
+                order.deliveryTerm,
                 order.Type,
-                order.NumberOfContainers,
-                order.TargetDate
+                order.numberOfPallets,
+                order.targetDate
               ].map((value, index) => (
                 <td
                   key={index}
