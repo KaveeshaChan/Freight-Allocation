@@ -119,11 +119,11 @@ const ImportLCL = ({ order }) => {
             <tr>
               {[
                 `${order.from} - ${order.to}`,
-                order.shipmentReadyDate,
-                order.deliveryTerm,
-                order.type,
-                order.numberOfContainers,
-                order.targetDate
+                order.ShipmentReadyDate,
+                order.DeliveryTerm,
+                order.Type,
+                order.NumberOfContainers,
+                order.TargetDate
               ].map((value, index) => (
                 <td
                   key={index}
