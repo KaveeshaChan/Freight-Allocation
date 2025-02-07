@@ -34,7 +34,7 @@ const ShipmentForm = () => {
   // State to store available orders
   const [availableOrders, setAvailableOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [showScreen, setShowScreen] = useState(false);
+  const [showScreen, setShowScreen] = useState(Boolean(location.state?.order));
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const ShipmentForm = () => {
 
   useEffect(() => {
     // If the component is receiving order data via location.state
-    if (location.state && location.state.order) {
+    if (location.state?.order) {
       const order = location.state.order;
       setFormData({
         orderType: ORDER_TYPE_MAP[order.orderType] || '',
@@ -86,6 +86,8 @@ const ShipmentForm = () => {
       setShowScreen(true); // Show the popup screen
     }
   }, [location.state]);
+
+  
 
   useEffect(() => {
     // Convert formData.orderType / formData.shipmentType back to the raw format used in availableOrders
