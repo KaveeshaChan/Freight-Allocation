@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
-import ImportLCL from './Import/LCL'; // Import the ImportLCL component
+import Modal from './Modal'; // Import the Modal component
+import ShipmentForm from './Add_Quote'; // Import the ShipmentForm component
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null); // New state to track selected order
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
@@ -43,8 +45,13 @@ const Dashboard = ({ children }) => {
   }, []);
 
   const handleAddQuote = (order) => {
-    // Set the selected order
     setSelectedOrder(order);
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
   };
 
   return (
@@ -75,7 +82,9 @@ const Dashboard = ({ children }) => {
             ))}
           </tbody>
         </table>
-        {selectedOrder && <ImportLCL order={selectedOrder} />} {/* Render ImportLCL with the selected order */}
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <ShipmentForm selectedOrder={selectedOrder} />
+        </Modal>
         {children}
       </div>
     </>
