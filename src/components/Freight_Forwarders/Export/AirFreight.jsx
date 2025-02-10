@@ -9,7 +9,6 @@ const ExportAirFreight = ({ order }) => {
     netFreight: '',
     awb: '',
     hawb: '',
-    freightAgentName: '',
     airLine: '',
     transshipmentPort: '',
     transitTime: '',
@@ -46,7 +45,7 @@ const ExportAirFreight = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      OrderNumber: order.orderNumber,
+      orderNumber: order.orderNumber,
       netFreight: quotation.netFreight,
       AWB: quotation.awb,
       HAWB: quotation.hawb,
@@ -69,13 +68,12 @@ const ExportAirFreight = ({ order }) => {
 
 
     try {
-      const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/export-airFreight', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
 
-          
         },
         body: JSON.stringify(payload),
       });
@@ -89,7 +87,7 @@ const ExportAirFreight = ({ order }) => {
       alert('Quotes submitted successfully!');
     } catch (error) {
       console.error('Error submitting quotes:', error);
-      alert('There was an error submitting the quotes. Please try again.');
+      alert(error);
     }
   };
 
@@ -171,7 +169,6 @@ const ExportAirFreight = ({ order }) => {
             { label: 'Net Freight (USD)', name: 'netFreight', type: 'number' },
             { label: 'AWB (USD)', name: 'awb', type: 'number' },
             { label: 'HAWB (USD)', name: 'hawb', type: 'number' },
-            { label: 'Freight Agent Name', name: 'freightAgentName' },
             { label: 'Air Line', name: 'airLine' },
             { label: 'Transshipment Port', name: 'transshipmentPort' },
             { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
@@ -205,7 +202,7 @@ const ExportAirFreight = ({ order }) => {
               <thead className="bg-gray-50">
                 <tr>
                   {[
-                    'Net Freight', 'AWB', 'HAWB', 'Agent Name',
+                    'Net Freight', 'AWB', 'HAWB',
                     'Air Line', 'Transship Port', 'Transit Time', 'Flight Details', 'Validity'
                   ].map((header) => (
                     <th
@@ -225,7 +222,6 @@ const ExportAirFreight = ({ order }) => {
                       quotation.netFreight,
                       quotation.awb,
                       quotation.hawb,
-                      quotation.freightAgentName,
                       quotation.airLine,
                       quotation.transshipmentPort,
                       quotation.transitTime,

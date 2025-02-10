@@ -45,7 +45,7 @@ const ExportFCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      OrderNumber: order.orderNumber,
+      orderNumber: order.orderNumber,
       netFreight: quotation.netFreight,
       DTHC: quotation.DTHC,
       freeTime: quotation.freeTime,
@@ -68,13 +68,12 @@ const ExportFCL = ({ order }) => {
     }
 
     try {
-      const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/export-fcl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
 
-          
         },
         body: JSON.stringify(payload),
       });
@@ -88,7 +87,7 @@ const ExportFCL = ({ order }) => {
       alert('Quotes submitted successfully!');
     } catch (error) {
       console.error('Error submitting quotes:', error);
-      alert('There was an error submitting the quotes. Please try again.');
+      alert(error);
     }
   };
 

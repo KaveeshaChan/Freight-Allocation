@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FiDownload, FiPlusCircle, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
-
 const ImportFCL = ({ order }) => {
   const initialQuotation = {
     netFreight: '',
@@ -10,7 +9,7 @@ const ImportFCL = ({ order }) => {
     transShipmentPort: '',
     freeTime: '',
     carrier:'',
-    transitTime: '',
+    transitTime: 14, // Set initial value to 14
     vesselOrFlightDetails: '',
     validityTime: '',
   };
@@ -21,7 +20,7 @@ const ImportFCL = ({ order }) => {
 
   const handleAddQuotation = () => {
     console.log('Current Quotation:', currentQuotation);
-    const isEmptyField = Object.values(currentQuotation).some(value => value.trim() === '');
+    const isEmptyField = Object.values(currentQuotation).some(value => value.toString().trim() === '');
     if (isEmptyField) {
       console.log('One or more fields are empty.');
       alert('Please fill all fields before adding a quotation');
@@ -42,7 +41,7 @@ const ImportFCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      OrderNumber: order.orderNumber,
+      orderNumber: order.orderNumber,
       netFreight: quotation.netFreight,
       DOFee: quotation.DOFee,
       transShipmentPort: quotation.transShipmentPort,
@@ -51,8 +50,6 @@ const ImportFCL = ({ order }) => {
       transitTime: quotation.transitTime,
       validityTime: quotation.validityTime,
     }));
-
-    
 
     console.log('Payload to send:', payload);
 
@@ -63,12 +60,11 @@ const ImportFCL = ({ order }) => {
     }
 
     try {
-      const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/import-fcl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
-
         },
         body: JSON.stringify(payload),
       });
@@ -82,20 +78,31 @@ const ImportFCL = ({ order }) => {
       alert('Quotes submitted successfully!');
     } catch (error) {
       console.error('Error submitting quotes:', error);
-      alert('There was an error submitting the quotes. Please try again.');
+      alert(error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCurrentQuotation(prev => ({ ...prev, [name]: value }));
+
+    // Validate transitTime as integer without decimal and minimum value of 14
+    if (name === 'transitTime') {
+      const intValue = parseInt(value, 10);
+      if (isNaN(intValue) || intValue < 14) {
+        setCurrentQuotation(prev => ({ ...prev, [name]: 14 }));
+      } else {
+        setCurrentQuotation(prev => ({ ...prev, [name]: intValue }));
+      }
+    } else {
+      setCurrentQuotation(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <h2 className="text-2xl font-bold text-gray-800">Export - Air Freight</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Import - FCL</h2>
           <span className="text-lg font-semibold text-gray-600">{`Order Number: ${order.orderNumber}`}</span>
         </div>
         <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center">
@@ -160,7 +167,12 @@ const ImportFCL = ({ order }) => {
             { label: 'Transshipment Port', name: 'transShipmentPort' },            
             { label: 'Free Time', name: 'freeTime' },
             { label: 'Carrier', name: 'carrier' },
-            { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
+            { label: (
+              <>
+                Transit Time
+                <span className="text-red-500 italic text-xs"> (14 days free time is must)</span>
+              </>
+            ), name: 'transitTime', type: 'number', min: 14 }, // Set minimum value to 14
             { label: 'Flight Details', name: 'vesselOrFlightDetails' },
             { label: 'Validity Date', name: 'validityTime', type: 'date' },
           ].map((field, index) => (
@@ -172,6 +184,7 @@ const ImportFCL = ({ order }) => {
               name={field.name}
               value={currentQuotation[field.name]}
               onChange={handleInputChange}
+              min={field.min || undefined} // Add min attribute if exists
             />
           ))}
         </div>
@@ -197,8 +210,8 @@ const ImportFCL = ({ order }) => {
                     'Free Time', 
                     'Carrier',
                     'Transit Time',
-                     'Flight Details',
-                     'Validity Date'
+                    'Flight Details',
+                    'Validity Date'
                   ].map((header) => (
                     <th
                       key={header}
@@ -258,7 +271,7 @@ const ImportFCL = ({ order }) => {
   );
 };
 
-const InputField = ({ label, placeholder, type = 'text', name, value, onChange }) => (
+const InputField = ({ label, placeholder, type = 'text', name, value, onChange, min }) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">
       {label}
@@ -271,6 +284,7 @@ const InputField = ({ label, placeholder, type = 'text', name, value, onChange }
       placeholder={placeholder}
       className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
       required
+      min={min} // Add min attribute if exists
     />
   </div>
 );

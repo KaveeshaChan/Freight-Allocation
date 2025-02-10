@@ -40,7 +40,7 @@ const ImportLCL = ({ order }) => {
     }
 
     const payload = savedQuotations.map(quotation => ({
-      OrderNumber: order.orderNumber,
+      orderNumber: order.orderNumber,
       netFreight: quotation.netFreight,
       transShipmentPort: quotation.transShipmentPort,
       transitTime: quotation.transitTime,
@@ -59,11 +59,12 @@ const ImportLCL = ({ order }) => {
     }
 
     try {
-      const response = await fetch('https://your-backend-endpoint.com/api/quotations', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/import-lcl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+
         },
         body: JSON.stringify(payload),
       });
@@ -77,7 +78,7 @@ const ImportLCL = ({ order }) => {
       alert('Quotes submitted successfully!');
     } catch (error) {
       console.error('Error submitting quotes:', error);
-      alert('There was an error submitting the quotes. Please try again.');
+      alert(error);
     }
   };
 
