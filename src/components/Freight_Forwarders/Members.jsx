@@ -8,17 +8,37 @@ const MembersPage = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found. Please log in again.');
+        }
         const agentID = localStorage.getItem('agentID');
-        const response = await fetch(`http://localhost:5056/api/select/view-freight-agents/coordinators/${agentID}`);
+        const response = await fetch(
+          `http://localhost:5056/api/select/view-freight-agents/coordinators/${agentID}`, 
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
         const data = await response.json();
-
-        if (Array.isArray(data)) {
-          setMembers(data);
+        if (data && Array.isArray(data.freightCoordinators)) {
+          setMembers(data.freightCoordinators);
         } else {
           console.error('Fetched data is not an array:', data);
         }
       } catch (error) {
-        console.error('Error fetching members:', error);
+        console.error('Error fetching members:', error.message);
+        if (error.response && error.response.status === 401) {
+          console.error('Unauthorized. Redirecting to login.');
+          // Handle unauthorized error (e.g., redirect to login page)
+        }
       }
     };
 
@@ -43,13 +63,12 @@ const MembersPage = () => {
         />
         <div className="bg-gray-100 rounded-md p-4">
           {filteredMembers.map((member) => (
-            <div key={member.CoordinatorID} className="flex justify-between items-center p-3 bg-white shadow-sm rounded-lg mb-2">
+            <div key={member.CoordinatorID} className="flex justify-between items-center p-3 bg-white shadow-sm rounded-lg mb-2 hover:bg-blue-50 transition duration-200 ease-in-out">
               <div>
-                <p className="font-semibold text-gray-900">{member.Coordinator_Name}</p>
+                <p className="font-semibold text-gray-900 text-lg">{member.Coordinator_Name}</p>
                 <p className="text-gray-600 text-sm">{member.Email}</p>
                 <p className="text-gray-600 text-sm">{member.ContactNumber}</p>
               </div>
-              <span className="text-sm font-medium text-blue-600">Freight Agent: {member.Freight_Agent}</span>
             </div>
           ))}
         </div>
