@@ -85,6 +85,13 @@ const ExportAirFreight = ({ order }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Enforce integer-only input for transitTime field
+    if (name === 'transitTime' && !/^\d*$/.test(value)) {
+      alert('Transit Time should only contain integers');
+      return;
+    }
+
     setCurrentQuotation(prev => ({ ...prev, [name]: value }));
   };
 
@@ -99,7 +106,7 @@ const ExportAirFreight = ({ order }) => {
               </span>
               Export - Air Freight
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-m text-gray-500 mt-4">
               Order Number: {order.orderNumber}
             </p>
           </div>
