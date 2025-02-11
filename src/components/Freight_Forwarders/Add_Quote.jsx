@@ -254,7 +254,12 @@ const ShipmentForm = () => {
                 <Select
                   id="orderNumber"
                   name="orderNumber"
-                  value={availableOrders.find(order => order.orderNumber === formData.orderNumber)}
+                  value={filteredOrders.find(order => 
+                    order.orderNumber?.toString() === formData.orderNumber
+                  ) ? { 
+                    value: formData.orderNumber,
+                    label: `${formData.orderNumber} - ${formData.orderType} - ${formData.shipmentType}`
+                  } : null}
                   onChange={(selectedOption) => {
                     const value = selectedOption ? selectedOption.value : '';
                     handleInputChange({ target: { name: 'orderNumber', value } });
