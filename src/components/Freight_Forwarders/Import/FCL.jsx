@@ -1,8 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiDownload, FiPlusCircle, FiInfo, FiTrash2, FiSave } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { exportToExcel } from '../utils/fileDownloadHandler';
 
 const ImportFCL = ({ order }) => {
+  const [hasDocument, setHasDocument] = useState(false);
+  const [documentData, setDocumentData] = useState(null);
+  const [documentName, setDocumentName] = useState(null);
+
+  useEffect(() => {
+    const fetchDocumentData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('No token found. Please log in again.');
+
+        const response = await fetch("http://localhost:5056/api/select/view-orders-agents/documentData", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ orderNumber: order.orderNumber })
+        });
+
+        if (response.status === 404) {
+          setHasDocument(false);
+          return;
+        }
+
+        if (!response.ok) {
+          alert("Request failed");
+          return;
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.documentData) {
+          const decodedData = JSON.parse(atob(data.documentData));
+          setDocumentData(decodedData);
+          setDocumentName(data.documentName);
+          setHasDocument(true);
+          // exportToExcel(decodedData, data.documentName);
+        } else {
+          alert("No data available to export.");
+          setHasDocument(false);
+        }
+
+        // setAvailableOrders(data.orders || []);
+      } catch (error) {
+        console.error('Error fetching orders:', error.message);
+        setHasDocument(false);
+      }
+    };
+    fetchDocumentData();
+  }, []);
+
+  const handleDownload = () => {
+    if (documentData && documentName) {
+      exportToExcel(documentData, documentName);
+    }
+  };
+  
   const initialQuotation = {
     netFreight: '',
     DOFee: '',
@@ -115,10 +174,15 @@ const ImportFCL = ({ order }) => {
             </p>
           </div>
         </div>
-        <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center shadow-sm hover:shadow-md">
-          <FiDownload className="text-xl" />
-          Download Documents
-        </button>
+        {hasDocument && (
+          <button 
+            onClick={handleDownload}
+            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center shadow-sm hover:shadow-md"
+          >
+            <FiDownload className="text-xl" />
+            Download Documents
+          </button>
+        )}
       </header>
 
       {/* Order Details Table */}
