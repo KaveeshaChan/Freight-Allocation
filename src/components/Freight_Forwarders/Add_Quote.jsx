@@ -182,8 +182,9 @@ const ShipmentForm = () => {
   };
 
   return (
-    <>
+    <div>
       <Header />
+      <main className="mt-32">
       <div className={`mx-auto p-6 bg-white rounded-lg shadow-md mt-16 ${showScreen ? 'max-w-8xl' : 'max-w-6xl'}`}>
         {!showScreen ? (
           <form onSubmit={handleSubmit} noValidate>
@@ -360,7 +361,8 @@ const ShipmentForm = () => {
           </>
         )}
       </div>
-    </>
+      </main>
+      </div>
   );
 };
 

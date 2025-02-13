@@ -1,227 +1,101 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import logo from '../../assests/CargoLogo.png';
-import { FaCaretDown } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import logo from "../../assests/CargoLogo.png";
 
-const Layout = ({ children }) => {
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [isHovered, setHovered] = useState(false);
-  const hideTimeout = useRef(null);
-  const location = useLocation(); // Get the current route
-  const currentPage = location.pathname;
-  // Retrieve the role from localStorage
-  const userRole = localStorage.getItem("userRole");
-
-
-  const handleMouseEnter = () => {
-    clearTimeout(hideTimeout.current);
-    setHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    hideTimeout.current = setTimeout(() => setHovered(false), 200);
-  };
-
-  const handleClickOutside = (e) => {
-    if (!e.target.closest('.dropdown-container')) {
-      setDropdownVisible(false);
-    }
-  };
+const Header = () => {
+  const currentPath = window.location.pathname;
+  const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [isAddUserDropdownOpen, setAddUserDropdownOpen] = useState(false);
+  const [isViewUserDropdownOpen, setViewUserDropdownOpen] = useState(false);
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-      clearTimeout(hideTimeout.current);
-    };
+    // Get user role from local storage
+    const role = localStorage.getItem('userRole');
+    setUserRole(role);
   }, []);
 
+  const navItems = [
+    { name: "All Orders", path: "/All-Orders" },
+    { name: "Add New Order", path: "/add-new-order" },
+  ];
+
+  const handleUserDropdown = () => {
+    setUserDropdownOpen(!isUserDropdownOpen);
+  };
+
+  const handleAddUserDropdown = () => {
+    setAddUserDropdownOpen(!isAddUserDropdownOpen);
+  };
+
+  const handleViewUserDropdown = () => {
+    setViewUserDropdownOpen(!isViewUserDropdownOpen);
+  };
+
   return (
-    <div
-      className="font-sans min-h-screen flex flex-col"
-      style={{
-        backgroundColor: '#FFFFFF',
-        margin: 0,
-        padding: 0,
-      }}
-    >
-      <div
-        className="sticky top-0 z-50"
-        style={{
-          backgroundColor: '#FFFFFF',
-          boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
-          paddingBottom: '20px',
-        }}
-      >
-        <header
-          className="flex items-center justify-center p-2 mx-auto"
-          style={{
-            backgroundColor: '#191919',
-            color: '#FFFFFF',
-            borderRadius: '30px',
-            height: '50px',
-            width: '85%',
-            marginTop: '20px',
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-            paddingTop: '5px',
-            paddingBottom: '5px',
-          }}
-        >
-          <img
-            src={logo}
-            alt="Logo"
-            className="mr-4"
-            style={{
-              width: '40px',
-              height: '40px',
-              objectFit: 'contain',
-            }}
-          />
-          <h1
-            className="text-lg font-bold flex-1 text-center"
-            style={{
-              color: '#FFFFFF',
-            }}
-          >
-            Cargo Connect
-          </h1>
-        </header>
+    <header className="bg-white shadow-md border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+      <div className="container mx-auto flex justify-between items-center py-3 px-6">
+        {/* Logo */}
+        <div className="flex items-center space-x-2">
+          <img src={logo} alt="CargoConnect Logo" className="h-8 w-8" />
+          <span className="text-lg font-bold text-gray-900 tracking-tighter">
+            CargoConnect
+          </span>
+        </div>
 
-        <nav
-          className="w-85%"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: '20px',
-          }}
-        >
-          <ul className="flex space-x-4 justify-center items-center flex-grow">
-            <li
-              className="relative dropdown-container"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+        {/* Navigation */}
+        <nav className="flex space-x-6">
+          {navItems.map((item) => (
+            <a 
+              key={item.path} 
+              href={item.path} 
+              className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 group
+                ${currentPath === item.path ? "bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white shadow-lg" : "text-gray-700 hover:bg-gradient-to-r hover:from-[#0534F0] hover:to-[#98009E] hover:text-white"}`}
             >
-              <button
-                className="text-lg font-medium text-black hover:text-orange-500 hover:underline flex items-center"
-                style={{
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                In Progress <FaCaretDown className="ml-2" />
-              </button>
-              {(isHovered || isDropdownVisible) && (
-                <div
-                  className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg"
-                  style={{
-                    zIndex: 10,
-                  }}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <ul>
-                    <li
-                      className={
-                        currentPage === '/In-Progress' ? 'blur text-gray-400' : ''
-                      }
-                    >
-                      <Link
-                        to="/In-Progress"
-                        className="block px-4 py-2 text-black hover:bg-orange-500"
-                      >
-                        In Progress
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/completed"
-                        className="block px-4 py-2 text-black hover:bg-orange-500"
-                      >
-                        Completed
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/add-new-order"
-                        className="block px-4 py-2 text-black hover:bg-orange-500"
-                      >
-                        Add New Order
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/view-freight-agents"
-                        className="block px-4 py-2 text-black hover:bg-orange-500"
-                      >
-                        View Freight Agents
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </li>
-            <span className="text-orange-500">|</span>
-            <li>
-              <Link to="/add-freight-agent">
-                <button
-                  className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                  style={{
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  Add Freight Agent
-                </button>
-              </Link>
-            </li>
-            <span className="text-orange-500">|</span>
-            <li>
-              <Link to="/add-freight-coordinator">
-                <button
-                  className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                  style={{
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  Add Freight Coordinator
-                </button>
-              </Link>
-            </li>
-            {userRole === 'admin' && (
-              <>
-                <span className="text-orange-500">|</span>
-                <li>
-                  <Link to="/add-main-user">
-                    <button
-                      className="text-lg font-medium text-black hover:text-orange-500 hover:underline"
-                      style={{
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      Add Main User
-                    </button>
-                  </Link>
-                </li>
-              </>
+              {item.name}
+            </a>
+          ))}
+          <div className="relative">
+            <button
+              onClick={handleUserDropdown}
+              className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 group
+                ${isUserDropdownOpen ? "bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white shadow-lg" : "text-gray-700 hover:bg-gradient-to-r hover:from-[#0534F0] hover:to-[#98009E] hover:text-white"}`}
+            >
+              Users
+            </button>
+            {isUserDropdownOpen && (
+              <div className="absolute mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                <button onClick={handleAddUserDropdown} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">Add User</button>
+                {isAddUserDropdownOpen && (
+                  <div className="pl-4">
+                    {userRole === 'admin' && (
+                      <a href="/add-main-user" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Main User</a>
+                    )}
+                    <a href="/add-freight-agent" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Freight Agent</a>
+                    <a href="/add-freight-coordinator" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Add Freight Coordinator</a>
+                  </div>
+                )}
+                <button onClick={handleViewUserDropdown} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">View User</button>
+                {isViewUserDropdownOpen && (
+                  <div className="pl-4">
+                    <a href="/View_Main_User" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Main User</a>
+                    <a href="/view-freight-agents" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Freight Agents</a>
+                  </div>
+                )}
+              </div>
             )}
-          </ul>
+          </div>
         </nav>
+
+        {/* Logout Button */}
+        <a 
+          href="/logout" 
+          className="px-4 py-2 border border-gray-400 rounded-full text-gray-900 font-medium hover:bg-gradient-to-r hover:from-[#0534F0] hover:to-[#98009E] hover:text-white transition-all"
+        >
+          Log Out
+        </a>
       </div>
-
-      <main className="flex-grow">{children}</main>
-
-      <footer
-        className="p-4 text-center mt-auto"
-        style={{
-          backgroundColor: 'transparent',
-          color: '#191919',
-          fontSize: '14px',
-          marginTop: '20px',
-        }}
-      >
-        © {new Date().getFullYear()} Freight Allocation. All Rights Reserved.
-      </footer>
-    </div>
+    </header>
   );
 };
 
-export default Layout;
+export default Header;

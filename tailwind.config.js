@@ -12,6 +12,17 @@ module.exports = {
         lightOliveGreen: '#A3B18A',
         lightBeige: '#DAD7CD',
       },
+      animation: {
+        spin: "spin 1s linear infinite",
+        "spin-reverse": "spin 1.5s linear infinite reverse",
+        progress: "progress 2s ease-in-out infinite",
+      },
+      keyframes: {
+        progress: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+      },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'], // Use Poppins as the default sans font
       },

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import Layout from '../Layouts/Main_Layout';
+import Header from '../../Layouts/Main_Layout';
 import { getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
@@ -215,7 +215,9 @@ if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
   };
 
   return (
-    <Layout>
+    <div>
+      <Header />
+      <main className="mt-32">
     <div
       className="font-sans min-h-screen flex flex-col justify-center items-center"
       style={{
@@ -615,7 +617,8 @@ if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
       </main>
 
     </div>
-    </Layout>
+    </main>
+    </div>
   );
 };
 

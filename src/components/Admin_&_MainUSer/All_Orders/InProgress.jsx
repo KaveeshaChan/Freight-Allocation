@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
-import { FiSearch, FiFilter, FiPlusCircle, FiRefreshCw } from 'react-icons/fi';
+import Header from '../../Layouts/Main_Layout';
+import { FiSearch, FiPlusCircle, FiRefreshCw } from 'react-icons/fi';
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
@@ -16,7 +16,7 @@ const Dashboard = ({ children }) => {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found. Please log in again.');
 
-        const response = await fetch("http://localhost:5056/api/select/view-orders/", {
+        const response = await fetch("http://localhost:5056/api/select/view-orders/exporter", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -37,7 +37,7 @@ const Dashboard = ({ children }) => {
   console.log(availableOrders);
 
   const handleAddQuote = (order) => {
-    navigate('/Add_Quote', { state: { order } });
+    navigate('/Order-Ammendments', { state: { order } });
   };
 
   const handleSearch = (e) => {
@@ -149,7 +149,7 @@ const Dashboard = ({ children }) => {
                             className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2 ml-auto"
                           >
                             <FiPlusCircle className="text-lg" />
-                            Add Quote
+                            Ammendment
                           </button>
                         </td>
                       </tr>

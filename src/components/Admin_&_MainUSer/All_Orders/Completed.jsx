@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Layout from '../Layouts/Main_Layout';
+import Layout from '../../Layouts/Main_Layout';
 import { FaSearch } from 'react-icons/fa';
 
 const InProgress = () => {

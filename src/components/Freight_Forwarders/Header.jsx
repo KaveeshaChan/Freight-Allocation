@@ -11,7 +11,7 @@ const Header = ({ userName, userEmail }) => {
   ];
 
   return (
-    <header className="bg-white shadow-md border-b border-gray-200">
+    <header className="bg-white shadow-md border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto flex justify-between items-center py-3 px-6">
         {/* Logo */}
         <div className="flex items-center space-x-2">

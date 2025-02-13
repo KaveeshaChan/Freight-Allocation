@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Select from 'react-select';
 import { getCountryCallingCode, isValidPhoneNumber } from 'libphonenumber-js';
-import Layout from '../Layouts/Main_Layout';
+import Header from '../../Layouts/Main_Layout';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
@@ -154,7 +154,9 @@ const AddFreightCoordinator = () => {
   };
 
   return (
-    <Layout>
+    <div>
+      <Header />
+      <main className="mt-32">
       <main className="flex-1 flex justify-center items-center mt-8">
         <div
           className="p-6 rounded-lg shadow-lg"
@@ -345,7 +347,8 @@ const AddFreightCoordinator = () => {
           </div>
         </div>
       )}
-    </Layout>
+    </main>
+    </div>
   );
 };
 

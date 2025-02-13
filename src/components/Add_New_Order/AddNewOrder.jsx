@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../Layouts/Main_Layout";
+import Header from "../Layouts/Main_Layout";
 import ExportAirFreight from "./Export/ExportAirFreight";
 import ExportLCL from "./Export/ExportLCL";
 import ExportFCL from "./Export/ExportFCL";
@@ -36,7 +36,9 @@ const DocumentPage = () => {
   };
 
   return (
-    <Layout>
+    <div>
+      <Header />
+      <main className="mt-32">
       <div className="p-4 mt-8">
         <div className="flex items-center space-x-6 mb-6">
           <form onSubmit={handleFormSubmit}>
@@ -119,7 +121,8 @@ const DocumentPage = () => {
           )}
         </div>
       </div>
-    </Layout>
+    </main>
+    </div>
   );
 };
 

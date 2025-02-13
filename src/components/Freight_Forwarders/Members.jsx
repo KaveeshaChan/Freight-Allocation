@@ -50,30 +50,32 @@ const MembersPage = () => {
   );
 
   return (
-    <>
+    <div>
       <Header />
-      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-16">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Members</h2>
-        <input
-          type="text"
-          placeholder="Search members..."
-          className="w-full p-2 border rounded-md mb-4"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <div className="bg-gray-100 rounded-md p-4">
-          {filteredMembers.map((member) => (
-            <div key={member.CoordinatorID} className="flex justify-between items-center p-3 bg-white shadow-sm rounded-lg mb-2 hover:bg-blue-50 transition duration-200 ease-in-out">
-              <div>
-                <p className="font-semibold text-gray-900 text-lg">{member.Coordinator_Name}</p>
-                <p className="text-gray-600 text-sm">{member.Email}</p>
-                <p className="text-gray-600 text-sm">{member.ContactNumber}</p>
+      <main className="mt-32 ">
+        <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Members</h2>
+          <input
+            type="text"
+            placeholder="Search members..."
+            className="w-full p-2 border rounded-md mb-4"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="bg-gray-100 rounded-md p-4">
+            {filteredMembers.map((member) => (
+              <div key={member.CoordinatorID} className="flex justify-between items-center p-3 bg-white shadow-sm rounded-lg mb-2 hover:bg-blue-50 transition duration-200 ease-in-out">
+                <div>
+                  <p className="font-semibold text-gray-900 text-lg">{member.Coordinator_Name}</p>
+                  <p className="text-gray-600 text-sm">{member.Email}</p>
+                  <p className="text-gray-600 text-sm">{member.ContactNumber}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 // Import necessary libraries
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from '../Layouts/Main_Layout';
+import Header from '../Layouts/Main_Layout';
 import { FaSearch } from 'react-icons/fa';
 import '../../assests/table.css';
 
@@ -204,7 +204,9 @@ const handleViewCoordinatorsClick = async() => {
 
 
   return (
-    <Layout>
+    <div>
+      <Header />
+      <main className="mt-32">
       <div className="p-4 mt-8">
         <div className="flex items-center justify-between mb-6">
           <span className="px-4 py-2 border-2 border-orange-500 text-orange-500 bg-transparent rounded-md">
@@ -536,7 +538,8 @@ const handleViewCoordinatorsClick = async() => {
 
 
       </div>
-    </Layout>
+    </main>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';  
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
-import Layout from '../Layouts/Main_Layout';
+import Header from '../../Layouts/Main_Layout';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
@@ -117,7 +117,9 @@ const AddMainUser = () => {
   };
 
   return (
-    <Layout>
+    <div>
+      <Header />
+      <main className="mt-32">
       {/* Main Content */}
       <main className="flex-1 flex justify-center items-center mt-8">
         <div
@@ -308,7 +310,8 @@ const AddMainUser = () => {
   </div>
 )}
 
-    </Layout>
+    </main>
+    </div>
   );
 };
 
