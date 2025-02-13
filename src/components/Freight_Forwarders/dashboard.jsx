@@ -34,6 +34,7 @@ const Dashboard = ({ children }) => {
     };
     fetchAvailableOrders();
   }, []);
+  console.log(availableOrders);
 
   const handleAddQuote = (order) => {
     navigate('/Add_Quote', { state: { order } });
@@ -47,6 +48,7 @@ const Dashboard = ({ children }) => {
     const matchesSearch = order.orderNumber.toString().toLowerCase().includes(searchTerm.toLowerCase());
     const matchesOrderType = orderType ? order.orderType.toLowerCase() === orderType.toLowerCase() : true;
     const matchesShipmentType = shipmentType ? order.shipmentType.toLowerCase() === shipmentType.toLowerCase() : true;
+    // const matchesRemainingDays = daysRemaining ? order.shipmentType.toLowerCase() === shipmentType.toLowerCase() : true;
     
     return matchesSearch && matchesOrderType && matchesShipmentType;
   });
@@ -138,7 +140,7 @@ const Dashboard = ({ children }) => {
                         <td className="py-4 px-6 text-gray-600">{order.shipmentType}</td>
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-2">
-                            <span className="text-gray-600">{order.quotationValidDays}</span>
+                            <span className="text-gray-600">{order.daysRemaining}</span>
                             <span className="text-sm text-gray-400">days</span>
                           </div>
                         </td>
