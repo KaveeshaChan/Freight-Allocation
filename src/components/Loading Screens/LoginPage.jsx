@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../assests/basilurlogo.png';
+import logo from '../../assests/CargoLogo.png';
 import { jwtDecode } from 'jwt-decode';
 
 const LoginPage = () => {
@@ -47,9 +47,9 @@ const LoginPage = () => {
 
       // Redirect based on role
       if (roleName === "admin") {
-        window.location.href = "/Home"; // Redirect to admin page
+        window.location.href = "/In-Progress"; // Redirect to admin page
       } else if (roleName === "mainUser") {
-        window.location.href = "/Home"; // Redirect to main user page
+        window.location.href = "/In-Progress"; // Redirect to main user page
       } else if (roleName === "commonUser") {
         window.location.href = "/user-dashboard"; // Redirect to common user page
       } else {
@@ -105,7 +105,7 @@ const LoginPage = () => {
             color: '#FFFFFF', // White text color
           }}
         >
-          Freight Allocation
+          Cargo Connect
         </h1>
       </header>
 

@@ -1,9 +1,9 @@
 // Import necessary libraries
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from './Layouts/Main_Layout';
+import Layout from '../Layouts/Main_Layout';
 import { FaSearch } from 'react-icons/fa';
-import '../assests/table.css';
+import '../../assests/table.css';
 
 function Dashboard() {
   const navigate = useNavigate();
