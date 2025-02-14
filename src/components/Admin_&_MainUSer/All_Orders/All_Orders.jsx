@@ -4,6 +4,7 @@ import PendingOrders from './Pending';
 import CompletedOrders from './Pending';
 import OrderSummary from './Summary';
 import Header from '../../Layouts/Main_Layout';
+import CancelOrder from './Cancelled_Orders';
 
 const OrderTabs = () => {
   const [activeTab, setActiveTab] = useState('inProgress');
@@ -18,6 +19,8 @@ const OrderTabs = () => {
         return <CompletedOrders />;
       case 'orderSummary':
         return <OrderSummary />;
+        case 'cancelOrder':
+        return <CancelOrder />;
       default:
         return null;
     }
@@ -58,6 +61,16 @@ const OrderTabs = () => {
           onClick={() => setActiveTab('completedOrders')}
         >
           Completed Orders
+        </button>
+        <button
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+            activeTab === 'cancelOrder'
+              ? 'bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white shadow-lg'
+              : 'text-gray-700 hover:bg-gradient-to-r hover:from-[#0534F0] hover:to-[#98009E] hover:text-white'
+          }`}
+          onClick={() => setActiveTab('cancelOrder')}
+        >
+          Cancelled Orders
         </button>
         <button
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${

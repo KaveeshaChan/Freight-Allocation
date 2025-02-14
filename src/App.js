@@ -18,6 +18,7 @@ import AllOrders from './components/Admin_&_MainUSer/All_Orders/All_Orders.jsx';
 import Summary from './components/Admin_&_MainUSer/All_Orders/Summary.jsx';
 import Pending from './components/Admin_&_MainUSer/All_Orders/Pending.jsx';
 import OrderAmmends from './components/Admin_&_MainUSer/Order_Ammendments.jsx';
+import Cancel from './components/Admin_&_MainUSer/All_Orders/Cancelled_Orders.jsx';
 
 const App = () => {
   return (
@@ -41,8 +42,7 @@ const App = () => {
         <Route path="/Summary" element={<Summary />} />
         <Route path="/Pending" element={<Pending />} />
         <Route path="/Order-Ammendments" element={<OrderAmmends />} />
-
-
+        <Route path="/Cancelled-orders" element={<Cancel />} />
       </Routes>
     </Router>
   );

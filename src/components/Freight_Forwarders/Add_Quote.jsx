@@ -46,7 +46,7 @@ const ShipmentForm = () => {
           throw new Error('No token found. Please log in again.');
         }
         const response = await fetch(
-          "http://localhost:5056/api/select/view-orders-agents/", 
+          "http://localhost:5056/api/select/view-orders/", 
           {
             method: "GET",
             headers: {
