@@ -6,7 +6,9 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); // To store error message
   const [email, setEmail] = useState(""); // To store email input
-  const [password, setPassword] = useState(""); // To store password input
+  const [password, setPassword] = useState(""); 
+  const [showPassword, setShowPassword] = useState(false);
+  // To store password input
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -67,174 +69,128 @@ const LoginPage = () => {
   
 
   return (
-    <div
-      className="font-sans min-h-screen flex flex-col justify-between"
-      style={{
-        backgroundColor: '#FFFFFF', // White background for the body
-      }}
-    >
-      {/* Header */}
-      <header
-        className="flex items-center justify-center p-2 mx-auto"
-        style={{
-          backgroundColor: '#191919', // Black header background
-          color: '#FFFFFF', // White font color
-          borderRadius: '30px', // Rounded corners
-          height: '50px', // Smaller header height
-          width: '85%', // Narrower width
-          marginTop: '20px', // Space from top
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow
-        }}
-      >
-        {/* Logo inside the header */}
-        <img
-          src={logo}
-          alt="Logo"
-          className="mr-4"
-          style={{
-            width: '40px', // Reduced logo size
-            height: '40px',
-            objectFit: 'contain',
-          }}
-        />
+    <div className="font-sans min-h-screen flex flex-col bg-[#F4F4F4]">
+      {/* Gradient Header */}
+      <header className="flex items-center justify-center p-4 relative">
+  {/* Rounded rectangle background for the header */}
+  <div className="w-full max-w-2xl bg-gradient-to-r from-[#0534F0] to-[#98009E] rounded-full p-4 flex items-center justify-center relative">
+    {/* Circle for logo */}
+    <div className="absolute left-4 bg-white rounded-full p-1 h-12 w-12 flex items-center justify-center shadow-lg">
+      <img src={logo} alt="Logo" className="h-10 w-10 object-contain" />
+    </div>
 
-        {/* Title centered in the header */}
-        <h1
-          className="text-lg font-bold flex-1 text-center"
-          style={{
-            color: '#FFFFFF', // White text color
-          }}
-        >
-          Cargo Connect
-        </h1>
-      </header>
+    {/* Title "Cargo Connect" */}
+    <h1 className="text-2xl font-bold text-white">
+      Cargo Connect
+    </h1>
+  </div>
+</header>
+
 
       {/* Main Content */}
-      <main className="flex-1 flex justify-center items-center">
-        <div
-          className="p-8 rounded-lg shadow-lg w-96"
-          style={{
-            background: '#FFFFFF', // Solid white background
-            borderRadius: '16px', // Rounded corners
-            border: '1px solid rgba(25, 25, 25, 0.1)', // Subtle border
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow
-          }}
-        >
-          <h2
-            className="text-2xl mb-6 font-semibold"
-            style={{
-              color: '#191919', // Black text for the title
-              textAlign: 'center',
-            }}
-          >
-            Login
-          </h2>
-          {errorMessage && (
-            <div
-              className="bg-red-500 text-white text-center p-3 rounded-md mb-4"
-              style={{
-                backgroundColor: '#FF0000', // Red background for error
-              }}
-            >
-              {errorMessage} {/* Display the error message */}
-            </div>
-          )}
-          <form className="flex flex-col" onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label
-                htmlFor="Email"
-                className="block mb-2 text-sm"
-                style={{ color: '#191919' }}
-              >
-                Email:
-              </label>
-              <input
-                type="email"
-                id="Email"
-                name="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)} // Handle email input
-                className="w-full p-3 border rounded-md text-sm"
-                style={{
-                  borderColor: '#191919', // Black border
-                  backgroundColor: '#FFFFFF', // White input background
-                  color: '#191919', // Black input text
-                }}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block mb-2 text-sm"
-                style={{ color: '#191919' }}
-              >
-                Password:
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)} // Handle password input
-                className="w-full p-3 border rounded-md text-sm"
-                style={{
-                  borderColor: '#191919', // Black border
-                  backgroundColor: '#FFFFFF', // White input background
-                  color: '#191919', // Black input text
-                }}
-              />
-            </div>
-            <button
-              type="submit"
-              className="p-3 rounded-md text-lg cursor-pointer border-2"
-              style={{
-                borderColor: '#FF4D00', // Orange border
-                backgroundColor: '#FF4D00', // Orange background
-                color: '#FFFFFF', // White text
-                transition: 'background-color 0.3s ease, color 0.3s ease',
-              }}
-              onMouseOver={(e) => {
-                if (!isLoading) {
-                  e.target.style.backgroundColor = '#FFFFFF'; // White background on hover
-                  e.target.style.color = '#FF4D00'; // Orange text on hover
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!isLoading) {
-                  e.target.style.backgroundColor = '#FF4D00'; // Orange background
-                  e.target.style.color = '#FFFFFF'; // White text
-                }
-              }}
-              disabled={isLoading} // Disable the button while loading
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div
-                    className="w-4 h-4 border-2 border-t-2 border-solid border-white rounded-full animate-spin"
-                    style={{ borderColor: 'white', borderTopColor: '#FF4D00' }}
-                  ></div>
-                  <span className="ml-2">Please wait...</span>
+      <main className="flex-1 flex justify-center items-center px-4">
+        <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 hover:shadow-3xl">
+          <div className="p-8">
+            <h2 className="text-3xl font-bold text-[#2C2C2C] mb-8 relative">
+              Welcome
+              
+            </h2>
+
+            {errorMessage && (
+              <div className="flex items-center bg-[#E63946]/10 text-[#E63946] px-4 py-3 rounded-lg mb-6 text-sm border border-[#E63946]/20">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {errorMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-[#2C2C2C] mb-2 flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-[#00B8D9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                  </svg>
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-[#2C2C2C]/20 focus:ring-2 focus:ring-[#0534F0] focus:border-transparent placeholder-[#2C2C2C]/50"
+                  placeholder="name@company.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#2C2C2C] mb-2 flex items-center">
+                  <svg className="w-5 h-5 mr-2 text-[#00B8D9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border border-[#2C2C2C]/20 focus:ring-2 focus:ring-[#0534F0] focus:border-transparent placeholder-[#2C2C2C]/50 pr-12"
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#2C2C2C]/50 hover:text-[#0534F0] transition-colors"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {showPassword ? (
+                        <>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </>
+                      ) : (
+                        <>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        </>
+                      )}
+                    </svg>
+                  </button>
                 </div>
-              ) : (
-                'Login'
-              )}
-            </button>
-          </form>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="flex items-center space-x-2 text-sm text-[#2C2C2C]">
+                  <input
+                    type="checkbox"
+                    className="rounded border-[#2C2C2C]/30 text-[#0534F0] focus:ring-[#0534F0]"
+                  />
+                  <span>Remember me</span>
+                </label>
+              </div>
+
+              <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3.5 px-6 rounded-lg bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white font-semibold 
+                            hover:from-[#5F72F3] hover:to-[#C057CB] transition-all duration-300 
+                            disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
+                >
+                  <span className="relative z-10">
+                    {isLoading ? (
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Signing In...</span>
+                      </div>
+                    ) : (
+                      'Sign In →'
+                    )}
+                  </span>
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+            </form>
+          </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer
-        className="p-4 text-center"
-        style={{
-          backgroundColor: 'transparent', // Transparent background
-          color: '#191919', // Black text color
-          fontSize: '14px',
-          marginTop: '20px',
-        }}
-      >
-        © {new Date().getFullYear()} Freight Allocation. All Rights Reserved.
-      </footer>
     </div>
   );
 };

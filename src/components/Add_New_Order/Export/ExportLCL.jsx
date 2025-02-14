@@ -361,5 +361,3 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
 };
 
 export default ExportLCL;
-
-

@@ -26,9 +26,9 @@ const OrderTabs = () => {
   return (
     <div>
       <Header />
-      <main className="mt-32">
+      <main className="mt-24">
     <div className="container mx-auto p-4">
-      <div className="flex justify-center space-x-4 mb-4">
+      <div className="flex justify-left space-x-4 ml-5">
         <button
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
             activeTab === 'inProgress'
