@@ -11,6 +11,10 @@ const Dashboard = ({ children }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showCancelReason, setShowCancelReason] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const closeErrorPopup = () => {setShowErrorPopup(false)};
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const closeSuccessPopup = () => {setShowSuccessPopup(false)};
   const navigate = useNavigate();
 
   const fetchAvailableOrders = async () => {
@@ -31,6 +35,7 @@ const Dashboard = ({ children }) => {
       setAvailableOrders(data.orders || []);
     } catch (error) {
       console.error('Error fetching orders:', error.message);
+      setShowErrorPopup(true)
     }
   };
 
@@ -38,23 +43,28 @@ const Dashboard = ({ children }) => {
     fetchAvailableOrders();
   }, []);
 
-  const handlePendingOrder = async (order) => {
+  const handlePendingOrder = async (OrderID) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5056/api/update/status/`, {
-        method: 'PUT',
+      const response = await fetch("http://localhost:5056/api/update/order-status", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,  // Ensure token is included
         },
+        body: JSON.stringify({
+          OrderID: OrderID,
+          status: "pending"
+        })
       });
 
-      if (!response.ok) throw new Error('Failed to mark as pending');
+      if (!response.ok)
+        throw new Error('Failed to mark as pending');
       await fetchAvailableOrders();
-      navigate('/pending-orders');
       closePopup();
     } catch (error) {
       console.error('Error marking as pending:', error);
+      setShowSuccessPopup(true);
     }
   };
 
@@ -317,7 +327,7 @@ const Dashboard = ({ children }) => {
 
             <div className="flex justify-end gap-3 mt-6">
               <button
-                onClick={() => handlePendingOrder(selectedOrder)}
+                onClick={() => handlePendingOrder(selectedOrder.OrderID)}
                 className="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg transition-colors flex items-center gap-2"
               >
                 <FiClock className="shrink-0" />
@@ -363,6 +373,52 @@ const Dashboard = ({ children }) => {
                 </button>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Popup */}
+      {showErrorPopup && (
+        <div
+          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-lg w-96"
+          >
+            <h2 className="text-lg font-semibold mb-4 text-red-600">Error</h2>
+            <ul className="list-disc ml-5 text-sm text-gray-700">
+              {/* {Object.values(errors).map((error, index) => (
+                <li key={index}>{error}</li>
+              ))} */}
+            </ul>
+            <button
+              onClick={closeErrorPopup}
+              className="mt-4 p-2 w-full rounded-md bg-red-500 text-white hover:bg-red-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div
+          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-lg w-96"
+          >
+            <h2 className="text-lg font-semibold mb-4 text-green-600">Success</h2>
+            <p className="text-sm text-gray-700">
+              Order added to pending orders list.
+            </p>
+            <button
+              onClick={closeSuccessPopup}
+              className="mt-4 p-2 w-full rounded-md bg-green-500 text-white hover:bg-green-600"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
