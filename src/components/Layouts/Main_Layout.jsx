@@ -40,6 +40,7 @@ const Header = () => {
           <span className="text-lg font-bold text-gray-900 tracking-tighter">
             CargoConnect
           </span>
+          <span className="text-sm text-blue-700">  Main Portal</span>
         </div>
 
         {/* Navigation */}

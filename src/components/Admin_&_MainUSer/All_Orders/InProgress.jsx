@@ -15,6 +15,8 @@ const Dashboard = ({ children }) => {
   const closeErrorPopup = () => {setShowErrorPopup(false)};
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const closeSuccessPopup = () => {setShowSuccessPopup(false)};
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const fetchAvailableOrders = async () => {
@@ -30,11 +32,20 @@ const Dashboard = ({ children }) => {
         },
       });
 
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+      if (response.status === 401) {
+        navigate('/login');
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      }
+
       const data = await response.json();
       setAvailableOrders(data.orders || []);
     } catch (error) {
-      console.error('Error fetching orders:', error.message);
+      setErrorMessage('Error fetching orders:', error);
       setShowErrorPopup(true)
     }
   };
@@ -62,9 +73,11 @@ const Dashboard = ({ children }) => {
         throw new Error('Failed to mark as pending');
       await fetchAvailableOrders();
       closePopup();
-    } catch (error) {
-      console.error('Error marking as pending:', error);
+      setSuccessMessage("Order added to the pending orders list.")
       setShowSuccessPopup(true);
+    } catch (error) {
+      setErrorMessage('Error marking as pending:', error);
+      setShowErrorPopup(true)
     }
   };
 
@@ -199,11 +212,11 @@ const Dashboard = ({ children }) => {
       <Header />
       <main className="mt-4">
         <div className="container mx-auto p-6">
-          <div className="mb-8">
+          <div className="mb-4 flex">
             <h1 className="text-3xl font-bold text-gray-800 mb-2 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
               InProgess Orders
             </h1>
-            <p className="text-gray-500 font-medium">{filteredOrders.length} orders found</p>
+            <p className="ml-2 mt-2 text-gray-500 font-medium">({filteredOrders.length} orders found)</p>
           </div>
 
           {/* Enhanced Filters Section */}
@@ -253,45 +266,53 @@ const Dashboard = ({ children }) => {
 
           {/* Enhanced Table Section */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gradient-to-r from-blue-50 to-blue-100">
-                  <tr className="text-left text-sm font-semibold text-gray-600">
-                    <th className="py-5 px-6">Order Number</th>
-                    <th className="py-5 px-6">Type</th>
-                    <th className="py-5 px-6">Shipment</th>
-                    <th className="py-5 px-6">Valid Days</th>
-                    <th className="py-5 px-6 text-right">Number of Quotes</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filteredOrders.map((order) => (
-                    <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
-                      <td className="py-4 px-6 font-medium text-gray-800">#{order.orderNumber}</td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
-                          ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                          {order.orderType}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
-                          ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
-                            order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
-                          {order.shipmentType}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-800">{order.daysRemaining}</span>
-                          <span className="text-sm text-gray-400">days</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6 text-right font-medium text-gray-800">{order.quotationCount}</td>
+            <div className="relative max-h-[600px]">
+              <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-left text-sm font-semibold text-gray-600 text-center">
+                      <th className="py-5 px-4 w-[20%]">Order Number</th>
+                      <th className="py-5 px-4 w-[20%]">Type</th>
+                      <th className="py-5 px-4 w-[20%]">Shipment</th>
+                      <th className="py-5 px-4 w-[20%]">Valid Days</th>
+                      <th className="py-5 px-4 w-[20%]">Number of Quotes</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                </table>
+              </div>
+
+              {/* Scrollable body */}
+              <div className="overflow-y-auto max-h-[600px]">
+                <table className="w-full">
+                  <tbody className="divide-y divide-gray-100">
+                    {filteredOrders.map((order) => (
+                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
+                        <td className="py-4 px-4 font-medium text-gray-800 w-[20%] text-center">#{order.orderNumber}</td>
+                        <td className="py-4 px-4 w-[20%] text-center">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
+                            ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            {order.orderType}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 w-[20%] text-center">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
+                            ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
+                              order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                            {order.shipmentType}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 pl-20 w-[20%]">
+                          <div className="flex items-center ">
+                            <span className="font-medium text-gray-800">{order.daysRemaining}</span>
+                            <span className="text-sm text-gray-400">days</span>
+                          </div>
+                        </td>
+                        <td className="py-4 px-4 font-medium text-gray-800 w-[20%] text-center">{order.quotationCount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
               {filteredOrders.length === 0 && (
                 <div className="text-center py-16">
@@ -379,49 +400,64 @@ const Dashboard = ({ children }) => {
 
       {/* Error Popup */}
       {showErrorPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
-            <h2 className="text-lg font-semibold mb-4 text-red-600">Error</h2>
-            <ul className="list-disc ml-5 text-sm text-gray-700">
-              {/* {Object.values(errors).map((error, index) => (
-                <li key={index}>{error}</li>
-              ))} */}
-            </ul>
-            <button
-              onClick={closeErrorPopup}
-              className="mt-4 p-2 w-full rounded-md bg-red-500 text-white hover:bg-red-600"
-            >
-              Close
-            </button>
-          </div>
+      <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+    <div className="bg-red-100 p-6 rounded-lg shadow-lg w-96 text-center">
+      
+      {/* Red Cross Icon */}
+      <div className="flex justify-center">
+        <div className="w-16 h-16 flex items-center justify-center bg-red-500 rounded-full">
+          <span className="text-white text-3xl font-bold">✖</span>
         </div>
-      )}
+      </div>
+
+      {/* Error Title */}
+      <h2 className="text-xl font-semibold my-3 text-gray-800">Oops</h2>
+
+      {/* Error Message */}
+      <p className="text-gray-700 text-sm">{errorMessage || "Something went wrong. Let’s try one more time."}</p>
+
+      {/* Try Again Button */}
+      <button
+        onClick={closeErrorPopup}
+        className="mt-4 p-2 w-full rounded-md bg-red-500 text-white font-semibold hover:bg-red-600"
+      >
+        TRY AGAIN
+          </button>
+        </div>
+      </div>
+)}
 
       {/* Success Popup */}
       {showSuccessPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
-            <h2 className="text-lg font-semibold mb-4 text-green-600">Success</h2>
-            <p className="text-sm text-gray-700">
-              Order added to pending orders list.
-            </p>
-            <button
-              onClick={closeSuccessPopup}
-              className="mt-4 p-2 w-full rounded-md bg-green-500 text-white hover:bg-green-600"
-            >
-              Close
-            </button>
-          </div>
+  <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+    <div className="bg-green-100 p-6 rounded-lg shadow-lg w-96 text-center">
+      
+      {/* Green Checkmark Icon */}
+      <div className="flex justify-center">
+        <div className="w-16 h-16 flex items-center justify-center bg-green-500 rounded-full">
+          <span className="text-white text-3xl font-bold">✔</span>
         </div>
-      )}
+      </div>
+
+      {/* Success Title */}
+      <h2 className="text-xl font-semibold my-3 text-gray-800">Success</h2>
+
+      {/* Success Message */}
+      <p className="text-gray-700 text-sm">
+        {successMessage}
+      </p>
+
+      {/* Close Button */}
+      <button
+        onClick={closeSuccessPopup}
+        className="mt-4 p-2 w-full rounded-md bg-green-500 text-white font-semibold hover:bg-green-600"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
