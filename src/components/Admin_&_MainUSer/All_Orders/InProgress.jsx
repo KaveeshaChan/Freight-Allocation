@@ -208,11 +208,11 @@ const Dashboard = ({ children }) => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-100">
       <Header />
-      <main className="mt-4">
+      <main className="mt-6">
         <div className="container mx-auto p-6">
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
+        <div className="rounded-xl mb-8 border border-gray-100">
   <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
     {/* Left Section - Heading */}
     <div className="space-y-1">
@@ -251,7 +251,7 @@ const Dashboard = ({ children }) => {
         </select>
 
         <select
-          className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+          className="px- py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
           value={shipmentType}
           onChange={(e) => setShipmentType(e.target.value)}
         >
@@ -266,7 +266,7 @@ const Dashboard = ({ children }) => {
           className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-200 whitespace-nowrap"
         >
           <FiRefreshCw className="shrink-0" />
-          Reset Filters
+          
         </button>
       </div>
     </div>
@@ -279,7 +279,7 @@ const Dashboard = ({ children }) => {
               <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
                 <table className="w-full">
                   <thead>
-                    <tr className="text-left text-sm font-semibold text-gray-600 text-center">
+                    <tr className="text-sm font-semibold text-gray-600 text-center">
                       <th className="py-5 px-4 w-[20%]">Order Number</th>
                       <th className="py-5 px-4 w-[20%]">Type</th>
                       <th className="py-5 px-4 w-[20%]">Shipment</th>
@@ -291,32 +291,32 @@ const Dashboard = ({ children }) => {
               </div>
 
               {/* Scrollable body */}
-              <div className="overflow-y-auto max-h-[600px]">
+              <div className="overflow-y-auto max-h-[400px]">
                 <table className="w-full">
                   <tbody className="divide-y divide-gray-100">
                     {filteredOrders.map((order) => (
                       <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
-                        <td className="py-4 px-4 font-medium text-gray-800 w-[20%] text-center">#{order.orderNumber}</td>
-                        <td className="py-4 px-4 w-[20%] text-center">
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[20%] text-center">{order.orderNumber}</td>
+                        <td className="py-5 px-4 w-[20%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
                             ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                             {order.orderType}
                           </span>
                         </td>
-                        <td className="py-4 px-4 w-[20%] text-center">
+                        <td className="py-5 px-4 w-[20%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
                             ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
                               order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
                             {order.shipmentType}
                           </span>
                         </td>
-                        <td className="py-4 px-4 pl-20 w-[20%]">
-                          <div className="flex items-center ">
+                        <td className="py-5 px-4 w-[20%] text-center">
+                          
                             <span className="font-medium text-gray-800">{order.daysRemaining}</span>
-                            <span className="text-sm text-gray-400">days</span>
-                          </div>
+                            <span className="text-sm text-gray-400"> &nbsp; days</span>
+                          
                         </td>
-                        <td className="py-4 px-4 font-medium text-gray-800 w-[20%] text-center">{order.quotationCount}</td>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[20%] text-center">{order.quotationCount}</td>
                       </tr>
                     ))}
                   </tbody>

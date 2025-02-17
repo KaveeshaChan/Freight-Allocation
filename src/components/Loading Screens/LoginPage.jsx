@@ -75,7 +75,7 @@ const LoginPage = () => {
   {/* Rounded rectangle background for the header */}
   <div className="w-full max-w-2xl bg-gradient-to-r from-[#0534F0] to-[#98009E] rounded-full p-4 flex items-center justify-center relative">
     {/* Circle for logo */}
-    <div className="absolute left-4 bg-white rounded-full p-1 h-12 w-12 flex items-center justify-center shadow-lg">
+    <div className="absolute left-2 bg-white rounded-full p-1 h-12 w-12 flex items-center justify-center shadow-lg">
       <img src={logo} alt="Logo" className="h-10 w-10 object-contain" />
     </div>
 
