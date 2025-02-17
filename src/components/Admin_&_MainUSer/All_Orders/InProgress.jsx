@@ -212,57 +212,66 @@ const Dashboard = ({ children }) => {
       <Header />
       <main className="mt-4">
         <div className="container mx-auto p-6">
-          <div className="mb-4 flex">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-              InProgess Orders
-            </h1>
-            <p className="ml-2 mt-2 text-gray-500 font-medium">({filteredOrders.length} orders found)</p>
-          </div>
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
+  <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+    {/* Left Section - Heading */}
+    <div className="space-y-1">
+      <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+        InProgress Orders
+      </h1>
+      <p className="text-gray-500 font-medium text-sm">
+        {filteredOrders.length} orders found
+      </p>
+    </div>
 
-          {/* Enhanced Filters Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              <div className="relative md:col-span-2">
-                <input
-                  type="text"
-                  placeholder="Search orders..."
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                />
-                <FiSearch className="absolute left-3 top-4 text-gray-400 text-lg" />
-              </div>
+    {/* Right Section - Filters */}
+    <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 flex-grow max-w-4xl">
+      {/* Search Input */}
+      <div className="relative flex-grow">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <FiSearch className="absolute left-3 top-3.5 text-gray-400 text-lg" />
+      </div>
 
-              <select
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500"
-                value={orderType}
-                onChange={(e) => setOrderType(e.target.value)}
-              >
-                <option value="">All Types</option>
-                <option value="Export">Export</option>
-                <option value="Import">Import</option>
-              </select>
+      {/* Filters Group */}
+      <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+        <select
+          className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+          value={orderType}
+          onChange={(e) => setOrderType(e.target.value)}
+        >
+          <option value="">All Types</option>
+          <option value="Export">Export</option>
+          <option value="Import">Import</option>
+        </select>
 
-              <select
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500"
-                value={shipmentType}
-                onChange={(e) => setShipmentType(e.target.value)}
-              >
-                <option value="">All Shipments</option>
-                <option value="airFreight">Air Freight</option>
-                <option value="LCL">LCL</option>
-                <option value="FCL">FCL</option>
-              </select>
+        <select
+          className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+          value={shipmentType}
+          onChange={(e) => setShipmentType(e.target.value)}
+        >
+          <option value="">All Shipments</option>
+          <option value="airFreight">Air Freight</option>
+          <option value="LCL">LCL</option>
+          <option value="FCL">FCL</option>
+        </select>
 
-              <button
-                onClick={clearFilters}
-                className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-200"
-              >
-                <FiRefreshCw className="shrink-0" />
-                <span className="truncate">Reset Filters</span>
-              </button>
-            </div>
-          </div>
+        <button
+          onClick={clearFilters}
+          className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-200 whitespace-nowrap"
+        >
+          <FiRefreshCw className="shrink-0" />
+          Reset Filters
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
           {/* Enhanced Table Section */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">

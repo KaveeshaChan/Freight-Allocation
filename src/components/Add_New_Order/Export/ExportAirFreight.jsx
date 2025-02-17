@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { handleFileUpload } from '../fileUploadHandler';
 
 const InputField = ({ label, name, value, placeholder, onChange, error, type = "text", disabled = false, style = {} }) => (
-  <div className="mb-4">
-    <label htmlFor={name} className="block text-sm font-medium mb-1 text-black">
+  <div className="mb-6">
+    <label htmlFor={name} className="block text-sm font-medium mb-2 text-[#2C2C2C]">
       {label}
     </label>
     <input
@@ -15,10 +15,12 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
       id={name}
       disabled={disabled}
       style={style}
-      className={`py-2 px-3 block w-full ${disabled ? "bg-gray-400 text-gray-600" : "bg-gray-200 text-black"} placeholder-white border-gray-400 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500`}
+      className={`w-full px-4 py-3 rounded-lg border border-[#F4F4F4] focus:border-[#0534F0] focus:ring-2 focus:ring-[#0534F0]/20 transition-colors ${
+        disabled ? "bg-[#F4F4F4] text-[#2C2C2C]/50" : "bg-white text-[#2C2C2C]"
+      } placeholder-[#2C2C2C]/50`}
       placeholder={placeholder}
     />
-    {error && <p className="text-red-500 text-xs">{error}</p>}
+    {error && <p className="text-[#E63946] text-sm mt-1">{error}</p>}
   </div>
 );
 
@@ -160,23 +162,23 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className="max-w-xl mx-auto p-4">
+    <form onSubmit={handleFormSubmit} className="max-w-2xl mx-auto p-8 bg-white rounded-2xl shadow-lg">
+      <h2 className="text-2xl font-bold text-[#2C2C2C] mb-8">Export Air Freight Details</h2>
+
       {/* Order Number */}
       <InputField
-        label="&#x2022; Order Number"
+        label="Order Number"
         name="orderNumber"
         value={formData.orderNumber}
-        placeholder="Enter the order number"
+        placeholder="Enter order number"
         onChange={handleInputChange}
         error={errors.orderNumber}
       />
 
       {/* Route */}
-      <div className="mb-4">
-        <label htmlFor="route" className="block text-sm font-medium mb-1 text-black">
-          &#x2022; Route
-        </label>
-        <div className="flex space-x-3">
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-2 text-[#2C2C2C]">Route</label>
+        <div className="grid grid-cols-2 gap-4">
           <InputField
             name="routeFrom"
             value={formData.routeFrom}
@@ -184,7 +186,6 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
             onChange={handleInputChange}
             error={errors.routeFrom}
           />
-          <span className="text-sm text-black my-auto">-</span>
           <InputField
             name="routeTo"
             value={formData.routeTo}
@@ -195,29 +196,29 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         </div>
       </div>
 
-      {/* Shipment Ready Date, Delivery Term, and Type */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      {/* Date and Term Section */}
+      <div className="grid grid-cols-2 gap-6 mb-6">
         <InputField
-          label="&#x2022; Shipment Ready Date"
+          label="Shipment Ready Date"
           name="shipmentReadyDate"
           value={formData.shipmentReadyDate}
-          placeholder="DD/MM/YYYY"
+          type="date"
           onChange={handleInputChange}
           error={errors.shipmentReadyDate}
-          type="date"
         />
         <InputField
-          label="&#x2022; Delivery Term"
+          label="Delivery Term"
           name="deliveryTerm"
           value={formData.deliveryTerm}
-          placeholder="Enter the Delivery Term"
+          placeholder="Enter delivery term"
           onChange={handleInputChange}
           error={errors.deliveryTerm}
         />
       </div>
 
+      {/* Type */}
       <InputField
-        label="&#x2022; Type"
+        label="Type"
         name="type"
         value={formData.type}
         placeholder="Enter the type"
@@ -226,61 +227,64 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       />
 
       {/* Cargo Type */}
-      <div className="w-full mb-4 mt-4">
-        <label htmlFor="cargoType" className="block text-sm font-medium mb-1 text-black">
-          &#x2022; Cargo Type
-        </label>
-        <div className="flex space-x-4">
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="PalletizedCargo"
-              name="cargoType"
-              value="PalletizedCargo"
-              checked={formData.cargoType === 'PalletizedCargo'}
-              onChange={handleCargoTypeChange}
-              className="mr-2"
-            />
-            <label htmlFor="PalletizedCargo" className="text-sm text-black">Palletized Cargo</label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="radio"
-              id="LooseCargo"
-              name="cargoType"
-              value="LooseCargo"
-              checked={formData.cargoType === 'LooseCargo'}
-              onChange={handleCargoTypeChange}
-              className="mr-2"
-            />
-            <label htmlFor="LooseCargo" className="text-sm text-black">Loose Cargo</label>
-          </div>
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-2 text-[#2C2C2C]">Cargo Type</label>
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={() => handleCargoTypeChange({ target: { name: 'cargoType', value: 'PalletizedCargo' } })}
+            className={`p-3 rounded-lg border-2 transition-colors ${
+              formData.cargoType === 'PalletizedCargo' 
+                ? 'border-[#98009E] bg-[#98009E]/10' 
+                : 'border-[#F4F4F4] hover:border-[#98009E]/30'
+            }`}
+          >
+            <span className={`font-medium ${
+              formData.cargoType === 'PalletizedCargo' ? 'text-[#98009E]' : 'text-[#2C2C2C]'
+            }`}>Palletized Cargo</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleCargoTypeChange({ target: { name: 'cargoType', value: 'LooseCargo' } })}
+            className={`p-3 rounded-lg border-2 transition-colors ${
+              formData.cargoType === 'LooseCargo' 
+                ? 'border-[#5F72F3] bg-[#5F72F3]/10' 
+                : 'border-[#F4F4F4] hover:border-[#5F72F3]/30'
+            }`}
+          >
+            <span className={`font-medium ${
+              formData.cargoType === 'LooseCargo' ? 'text-[#5F72F3]' : 'text-[#2C2C2C]'
+            }`}>Loose Cargo</span>
+          </button>
         </div>
-        {errors.cargoType && <p className="text-red-500 italic text-xs">{errors.cargoType}</p>}
+        {errors.cargoType && <p className="text-[#E63946] text-sm mt-1">{errors.cargoType}</p>}
       </div>
 
-      {/* Chargeable Weight, Gross Weight, Cargo CBM */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      {/* Weights Section */}
+      <div className="grid grid-cols-2 gap-6 mb-6">
         <InputField
-          label="&#x2022; Chargeable Weight (Kg)"
+          label="Chargeable Weight (Kg)"
           name="chargeableWeight"
           value={formData.chargeableWeight}
-          placeholder="Enter the Chargeable Weight (Kg)"
+          placeholder="Enter weight"
           onChange={handleInputChange}
           error={errors.chargeableWeight}
+          type="number"
         />
         <InputField
-          label="&#x2022; Gross Weight (Kg)"
+          label="Gross Weight (Kg)"
           name="grossWeight"
           value={formData.grossWeight}
-          placeholder="Enter the Gross Weight"
+          placeholder="Enter weight"
           onChange={handleInputChange}
           error={errors.grossWeight}
+          type="number"
         />
       </div>
 
+      {/* Cargo CBM */}
       <InputField
-        label="&#x2022; Cargo CBM"
+        label="Cargo CBM"
         name="cargoCBM"
         value={formData.cargoCBM}
         placeholder="Enter the Cargo CBM"
@@ -290,7 +294,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 
       {/* Number of Pallets */}
       <InputField
-        label="&#x2022; Number of Pallets"
+        label="Number of Pallets"
         name="noOfPallets"
         value={formData.noOfPallets}
         placeholder="Enter the number of pallets"
@@ -303,7 +307,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 
       {/* Target Date */}
       <InputField
-        label="&#x2022; Target Date"
+        label="Target Date"
         name="targetDate"
         value={formData.targetDate}
         placeholder="DD/MM/YYYY"
@@ -312,46 +316,57 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         type="date"
       />
 
-<InputField
-  label="• Number of dates to fill Document "
-  name="dueDate"
-  value={formData.dueDate}
-  placeholder="Enter the Due Date"
-  type="number"
-  min="1"
-  max="99"  // Limit to 2 digits
-  step="1"   // Only allow whole numbers
-  onChange={(e) => {
-    // Ensure only whole numbers up to 2 digits
-    const value = e.target.value.replace(/\D/g, '').slice(0, 2);
-    handleInputChange({
-      target: {
-        name: 'dueDate',
-        value: value ? parseInt(value) : ''
-      }
-    });
-  }}
-  error={errors.dueDate}
-/>
-
+      {/* Due Date */}
+      <InputField
+        label="• Number of dates to fill Document "
+        name="dueDate"
+        value={formData.dueDate}
+        placeholder="Enter the Due Date"
+        type="number"
+        min="1"
+        max="99"  // Limit to 2 digits
+        step="1"   // Only allow whole numbers
+        onChange={(e) => {
+          // Ensure only whole numbers up to 2 digits
+          const value = e.target.value.replace(/\D/g, '').slice(0, 2);
+          handleInputChange({
+            target: {
+              name: 'dueDate',
+              value: value ? parseInt(value) : ''
+            }
+          });
+        }}
+        error={errors.dueDate}
+      />
 
       {/* File Upload */}
-      <div className="max-w-sm mb-4">
-        <label htmlFor="fileUpload" className="block text-sm font-medium mb-1 text-black">
-          &#x2022; Upload File
-        </label>
-        <input
-          name="fileUpload"
-          type="file"
-          accept=".xls, .xlsx"
-          onChange={onFileUpload}
-          value={formData.uploadedFile || ""}
-          id="fileUpload"
-          className="block w-full text-sm text-gray-500 file:me-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
-        />
+      <div className="mb-6">
+        <label className="block text-sm font-medium mb-2 text-[#2C2C2C]">Upload File</label>
+        <div className="flex items-center justify-center w-full">
+          <label className="flex flex-col w-full border-2 border-dashed border-[#F4F4F4] hover:border-[#0534F0] rounded-lg transition-colors cursor-pointer">
+            <div className="p-6 text-center">
+              <svg className="mx-auto h-12 w-12 text-[#0534F0]" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <p className="text-sm text-[#2C2C2C]">
+                <span className="text-[#0534F0] font-medium">Click to upload</span> or drag and drop
+              </p>
+              <p className="text-xs text-[#2C2C2C]/50 mt-1">XLS, XLSX (MAX. 5MB)</p>
+            </div>
+            <input 
+              type="file" 
+              className="hidden"
+              onChange={onFileUpload}
+              accept=".xls, .xlsx"
+            />
+          </label>
+        </div>
         {uploadedFile && (
-          <div className="mt-2 text-sm text-gray-600">
-            <strong>Selected file:</strong> {fileName}
+          <div className="mt-2 text-sm text-[#2C2C2C] flex items-center">
+            <svg className="h-4 w-4 mr-2 text-[#00B8D9]" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+            </svg>
+            {fileName}
           </div>
         )}
       </div>
@@ -359,7 +374,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       {/* Additional Notes */}
       <div className="w-full mb-4">
         <label htmlFor="additionalNotes" className="block text-sm font-medium mb-1 text-black">
-          &#x2022; Additional Notes
+          Additional Notes
         </label>
         <textarea
           name="additionalNotes"
@@ -373,22 +388,30 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       </div>
 
       {/* Submit Button */}
-      <div className="w-full mb-4">
-        <button
-          type="submit"
-          className="py-2 px-4 bg-orange-500 text-white rounded-lg text-sm hover:bg-orange-600 w-full"
-        >
-          Submit
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="w-full py-3 px-6 bg-gradient-to-r from-[#0534F0] to-[#98009E] hover:from-[#5F72F3] hover:to-[#C057CB] text-white rounded-lg font-medium transition-all transform hover:scale-[1.01]"
+      >
+        Create Order
+      </button>
 
-      {showErrorPopup && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
-            <h2 className="text-lg text-red-500 font-semibold">
-              {errorMessage}
-            </h2>
-            <button onClick={() => setShowErrorPopup(false)} className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg">
+       {/* Popups remain similar with updated colors */}
+       {showErrorPopup && (
+        <div className="fixed inset-0 bg-[#2C2C2C]/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+            <div className="flex items-center mb-4">
+              <div className="bg-[#E63946]/10 p-2 rounded-full mr-3">
+                <svg className="w-6 h-6 text-[#E63946]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-[#2C2C2C]">Validation Error</h3>
+            </div>
+            <p className="text-[#2C2C2C]/70 mb-6">{errorMessage}</p>
+            <button
+              onClick={() => setShowErrorPopup(false)}
+              className="w-full py-2 px-4 bg-[#F4F4F4] hover:bg-[#E63946]/10 text-[#E63946] rounded-lg transition-colors"
+            >
               Close
             </button>
           </div>
@@ -396,13 +419,22 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       )}
 
       {showSuccessPopup && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 text-center">
-            <h2 className="text-lg text-green-500 font-semibold">
-              New Order Added Successfully!
-            </h2>
-            <button onClick={() => setShowSuccessPopup(false)} className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg">
-              Close
+        <div className="fixed inset-0 bg-[#2C2C2C]/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+            <div className="flex items-center mb-4">
+              <div className="bg-[#38B000]/10 p-2 rounded-full mr-3">
+                <svg className="w-6 h-6 text-[#38B000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-[#2C2C2C]">Order Created!</h3>
+            </div>
+            <p className="text-[#2C2C2C]/70 mb-6">Your order has been successfully submitted.</p>
+            <button
+              onClick={() => setShowSuccessPopup(false)}
+              className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors"
+            >
+              Continue
             </button>
           </div>
         </div>
