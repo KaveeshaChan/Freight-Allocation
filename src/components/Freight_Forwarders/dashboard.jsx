@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import InProgress from './New_Orders';
 import CompletedOrders from './Complted';
-import Header from '../../components/Layouts/Main_Layout';
+import Header from '../Layouts/Main_Layout';
 
 const OrderTabs = () => {
   const [activeTab, setActiveTab] = useState('inProgress');

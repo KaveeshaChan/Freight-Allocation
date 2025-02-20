@@ -55,26 +55,33 @@ const ExportAirFreight = ({ order }) => {
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found. Please log in again.');
-
-        
-        const response = await fetch("http://localhost:5056/api/select/view-quotes/", {
-          method: "POST",
+    
+        const response = await fetch(`http://localhost:5056/api/select/view-quotes/?orderNumber=${order.orderNumber}`, {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ orderNumber: order.orderNumber })
         });
+    
         if (!response.ok) {
           throw new Error('Failed to fetch freight quotes');
         }
-        const quotes = await response.json();
-        setFreightQuotes(quotes);
+    
+        const data = await response.json();
+    
+        // Extract the 'quotes' array from the response object
+        if (Array.isArray(data.quotes)) {
+          setFreightQuotes(data.quotes);
+        } else {
+          console.error("Unexpected API response format:", data);
+          setFreightQuotes([]); // Fallback to prevent errors
+        }
       } catch (error) {
         console.error('Error fetching freight quotes:', error);
+        setFreightQuotes([]); // Ensure state remains an array
       }
     };
-
     fetchDocumentData();
     fetchFreightQuotes();
   }, [order.orderNumber]);
