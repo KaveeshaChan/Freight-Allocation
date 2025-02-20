@@ -80,7 +80,7 @@ const OrderTabs = () => {
           }`}
           onClick={() => setActiveTab('orderSummary')}
         >
-          Order Summary
+          Select Freight Forwarder
         </button>
       </div>
       <div className="tab-content">{renderTabContent()}</div>

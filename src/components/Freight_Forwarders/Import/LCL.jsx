@@ -191,7 +191,7 @@ const ImportLCL = ({ order }) => {
               <tr>
                 {[
                   'Route', 'Shipment Ready Date', 'Delivery Term',
-                  'Type', 'Number of Pallets', 'Target Date'
+                  'Type', 'Number of Pallets', 'Pallet CBM', 'Cargo CBM', 'Gross Weight (KG)', 'Target Date'
                 ].map((header) => (
                   <th
                     key={header}
@@ -210,6 +210,9 @@ const ImportLCL = ({ order }) => {
                   order.deliveryTerm,
                   order.Type,
                   order.numberOfPallets,
+                  order.palletCBM,
+                  order.cargoCBM,
+                  order.grossWeight,
                   new Date(order.targetDate).toISOString().split('T')[0]
                 ].map((value, index) => (
                   <td

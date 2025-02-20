@@ -52,7 +52,9 @@ const LoginPage = () => {
         window.location.href = "/All-Orders"; // Redirect to admin page
       } else if (roleName === "mainUser") {
         window.location.href = "/All-Orders"; // Redirect to main user page
-      } else if (roleName === "commonUser") {
+      } else if (roleName === "freightAgent") {
+        window.location.href = "/user-dashboard";
+      } else if (roleName === "coordinator") {
         window.location.href = "/user-dashboard"; // Redirect to common user page
       } else {
         throw new Error("Unknown role");
