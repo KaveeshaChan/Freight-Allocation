@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import InProgress from './InProgress';
 import PendingOrders from './Pending';
-import CompletedOrders from './Pending';
+import CompletedOrders from './Completed';
 import OrderSummary from './Summary';
 import Header from '../../Layouts/Main_Layout';
 import CancelOrder from './Cancelled_Orders';

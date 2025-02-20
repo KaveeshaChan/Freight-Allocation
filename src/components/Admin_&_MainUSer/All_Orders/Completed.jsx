@@ -18,7 +18,7 @@ const InProgress = () => {
 
   return (
     <Layout>
-    <div className="p-4 mt-8">
+    <div className="p-4 mt-40">
       <div className="flex items-center justify-between mb-6">
               <span className="px-4 py-2 border-2 border-orange-500 text-orange-500 bg-transparent rounded-md">
         Completed
