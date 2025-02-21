@@ -4,7 +4,7 @@ import { handleFileUpload } from '../fileUploadHandler';
 
 const InputField = ({ label, name, value, placeholder, onChange, error, type = "text", disabled = false, style = {} }) => (
   <div className={`mb-6 ${disabled ? "opacity-50" : ""}`}>
-    <label htmlFor={name} className="block text-sm font-medium mb-2 text-gray-800">
+    <label htmlFor={name} className="block text-xs font-medium mb-2 text-gray-800">
       {label}
     </label>
     <input
@@ -15,7 +15,7 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
       id={name}
       disabled={disabled}
       style={style}
-      className={`w-full px-4 py-3 rounded-lg border transition-colors ${
+      className={`w-full px-4 py-2 rounded-lg border transition-colors ${
         disabled ? "bg-gray-100 text-gray-500" : "bg-white text-gray-800"
       } ${error ? "border-red-500 focus:border-red-600 focus:ring-red-200" : "border-gray-300 focus:border-blue-500 focus:ring-blue-200"} placeholder-gray-400`}
       placeholder={placeholder}
@@ -162,236 +162,279 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
-  {/* Order Number */}
-  <InputField
-    label="Order Number"
-    name="orderNumber"
-    value={formData.orderNumber}
-    placeholder="Enter order number"
-    onChange={handleInputChange}
-    error={errors.orderNumber}
-  />
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <form onSubmit={handleFormSubmit} className="max-w-8xl mx-auto p-8 bg-white rounded-2xl shadow-lg space-y-8">
+       
 
-      {/* Route */}
-      <div className="mb-4">
-    <label className="block text-sm font-medium mb-2 text-gray-800">Route</label>
-    <div className="grid grid-cols-2 gap-3">
-      <InputField
-        name="routeFrom"
-        value={formData.routeFrom}
-        placeholder="From"
-        onChange={handleInputChange}
-        error={errors.routeFrom}
-      />
-      <InputField
-        name="routeTo"
-        value={formData.routeTo}
-        placeholder="To"
-        onChange={handleInputChange}
-        error={errors.routeTo}
-      />
-    </div>
-  </div>
+        {/* Main Form Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Core Information */}
+          <div className="space-y-6">
+            <div className="bg-gray-50 p-5 rounded-xl">
+              <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Route Details
+              </h3>
+              <InputField
+                label="Order Number"
+                name="orderNumber"
+                value={formData.orderNumber}
+                onChange={handleInputChange}
+                error={errors.orderNumber}
+                icon="📌"
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <InputField
+                  name="routeFrom"
+                  value={formData.routeFrom}
+                  placeholder="Origin"
+                  onChange={handleInputChange}
+                  error={errors.routeFrom}
+                  icon="🛫"
+                />
+                <InputField
+                  name="routeTo"
+                  value={formData.routeTo}
+                  placeholder="Destination"
+                  onChange={handleInputChange}
+                  error={errors.routeTo}
+                  icon="🛬"
+                />
+              </div>
 
-      {/* Date and Term Section */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-    <InputField
-      label="Shipment Ready Date"
-      name="shipmentReadyDate"
-      value={formData.shipmentReadyDate}
-      type="date"
-      onChange={handleInputChange}
-      error={errors.shipmentReadyDate}
-    />
-    <InputField
-      label="Delivery Term"
-      name="deliveryTerm"
-      value={formData.deliveryTerm}
-      placeholder="Enter delivery term"
-      onChange={handleInputChange}
-      error={errors.deliveryTerm}
-    />
-  </div>
-
-      {/* Type */}
-      <InputField
-    label="Type"
-    name="type"
-    value={formData.type}
-    placeholder="Enter the type"
-    onChange={handleInputChange}
-    error={errors.type}
-  />
-
-      {/* Cargo Type */}
-      <div className="mb-4">
-    <label className="block text-sm font-medium mb-2 text-gray-800">Cargo Type</label>
-    <div className="grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => handleCargoTypeChange({ target: { name: 'cargoType', value: 'PalletizedCargo' } })}
-            className={`p-3 rounded-lg border-2 transition-colors ${
-              formData.cargoType === 'PalletizedCargo' 
-                ? 'border-purple-600 bg-purple-100' 
-                : 'border-gray-300 hover:border-purple-600'
-            }`}
-          >
-            <span className={`font-medium ${
-              formData.cargoType === 'PalletizedCargo' ? 'text-purple-600' : 'text-gray-800'
-            }`}>Palletized Cargo</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleCargoTypeChange({ target: { name: 'cargoType', value: 'LooseCargo' } })}
-            className={`p-3 rounded-lg border-2 transition-colors ${
-              formData.cargoType === 'LooseCargo' 
-                ? 'border-blue-600 bg-blue-100' 
-                : 'border-gray-300 hover:border-blue-600'
-            }`}
-          >
-            <span className={`font-medium ${
-              formData.cargoType === 'LooseCargo' ? 'text-blue-600' : 'text-gray-800'
-            }`}>Loose Cargo</span>
-          </button>
-          </div>
-    {errors.cargoType && <p className="text-red-500 text-sm mt-1">{errors.cargoType}</p>}
-  </div>
-
-      {/* Weights Section */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-    <InputField
-      label="Chargeable Weight (Kg)"
-      name="chargeableWeight"
-      value={formData.chargeableWeight}
-      placeholder="Enter weight"
-      onChange={handleInputChange}
-      error={errors.chargeableWeight}
-      type="number"
-    />
-    <InputField
-      label="Gross Weight (Kg)"
-      name="grossWeight"
-      value={formData.grossWeight}
-      placeholder="Enter weight"
-      onChange={handleInputChange}
-      error={errors.grossWeight}
-      type="number"
-    />
-  </div>
-
-      {/* Cargo CBM */}
-      <InputField
-    label="Cargo CBM"
-    name="cargoCBM"
-    value={formData.cargoCBM}
-    placeholder="Enter the Cargo CBM"
-    onChange={handleInputChange}
-    error={errors.cargoCBM}
-  />
-
-      {/* Number of Pallets */}
-      <div className="mt-4">
-    <InputField
-      label="Number of Pallets"
-      name="noOfPallets"
-      value={formData.noOfPallets}
-      placeholder="Enter the number of pallets"
-      onChange={handleInputChange}
-      error={errors.noOfPallets}
-      disabled={formData.cargoType === "LooseCargo"}
-      style={formData.cargoType === "LooseCargo" ? { backgroundColor: '#E5E7EB' } : {}}
-      type="number"
-    />
-  </div>
-
-      {/* Target Date */}
-      <InputField
-    label="Target Date"
-    name="targetDate"
-    value={formData.targetDate}
-    onChange={handleInputChange}
-    error={errors.targetDate}
-    type="date"
-  />
-
-      {/* Due Date */}
-      <InputField
-    label="Due Date (Days)"
-    name="dueDate"
-    value={formData.dueDate}
-    placeholder="Enter days"
-    type="number"
-    min="1"
-    max="99"
-    step="1"
-    onChange={(e) => {
-      const value = e.target.value.replace(/\D/g, '').slice(0, 2);
-      handleInputChange({
-        target: {
-          name: 'dueDate',
-          value: value ? parseInt(value) : ''
-        }
-      });
-    }}
-    error={errors.dueDate}
-  />
-
-      {/* File Upload */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2 text-gray-800">Upload File</label>
-        <div className="flex items-center justify-center w-full">
-          <label className="flex flex-col w-full border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-lg transition-colors cursor-pointer">
-            <div className="p-6 text-center">
-              <svg className="mx-auto h-12 w-12 text-blue-500" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <p className="text-sm text-gray-800">
-                <span className="text-blue-500 font-medium">Click to upload</span> or drag and drop
-              </p>
-              <p className="text-xs text-gray-400 mt-1">XLS, XLSX (MAX. 5MB)</p>
-            </div>
-            <input 
-              type="file" 
-              className="hidden"
-              onChange={onFileUpload}
-              accept=".xls, .xlsx"
+<InputField
+              label="Type"
+              name="type"
+              value={formData.type}
+              placeholder="Enter the type"
+              onChange={handleInputChange}
+              error={errors.type}
             />
-          </label>
-        </div>
-        {uploadedFile && (
-          <div className="mt-2 text-sm text-gray-800 flex items-center">
-            <svg className="h-4 w-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-            </svg>
-            {fileName}
+            </div>
+
+            <div className="bg-gray-50 p-5 rounded-xl">
+              <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Timeline
+              </h3>
+              <InputField
+                label="Shipment Ready Date"
+                name="shipmentReadyDate"
+                type="date"
+                value={formData.shipmentReadyDate}
+                onChange={handleInputChange}
+                error={errors.shipmentReadyDate}
+              />
+              <InputField
+                label="Target Date"
+                name="targetDate"
+                type="date"
+                value={formData.targetDate}
+                onChange={handleInputChange}
+                error={errors.targetDate}
+              />
+            </div>
           </div>
-        )}
-      </div>
 
-      {/* Additional Notes */}
-      <div className="w-full mb-4">
-    <textarea
-      name="additionalNotes"
-      id="additionalNotes"
-      value={formData.additionalNotes || ""}
-      onChange={handleInputChange}
-      className="w-full px-4 py-2.5 rounded-lg border-2 border-[#EDF2F7] focus:border-[#0534F0] focus:ring-2 focus:ring-[#0534F0]/10 transition-all placeholder-[#A0AEC0]"
-      placeholder="Enter any additional notes here..."
-      rows="3"
+          {/* Middle Column - Cargo Details */}
+          <div className="space-y-6">
+            <div className="bg-gray-50 p-5 rounded-xl">
+              <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+                Cargo Specifications
+              </h3>
+              
+              {/* Enhanced Cargo Type Selector */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3">Cargo Type</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleCargoTypeChange({ target: { name: 'cargoType', value: 'PalletizedCargo' } })}
+                    className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                      formData.cargoType === 'PalletizedCargo' 
+                        ? 'border-purple-500 bg-purple-50 shadow-md' 
+                        : 'border-gray-200 hover:border-purple-300 bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        formData.cargoType === 'PalletizedCargo' 
+                          ? 'bg-purple-500 text-white' 
+                          : 'bg-gray-100 text-gray-500'
+                      }`}>
+                        📦
+                      </div>
+                      <div className="text-left">
+                        <p className={`font-medium ${
+                          formData.cargoType === 'PalletizedCargo' 
+                            ? 'text-purple-600' 
+                            : 'text-gray-600'
+                        }`}>Palletized</p>
+                        
+                      </div>
+                    </div>
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => handleCargoTypeChange({ target: { name: 'cargoType', value: 'LooseCargo' } })}
+                    className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                      formData.cargoType === 'LooseCargo' 
+                        ? 'border-blue-500 bg-blue-50 shadow-md' 
+                        : 'border-gray-200 hover:border-blue-300 bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        formData.cargoType === 'LooseCargo' 
+                          ? 'bg-blue-500 text-white' 
+                          : 'bg-gray-100 text-gray-500'
+                      }`}>
+                        🧳
+                      </div>
+                      <div className="text-left">
+                        <p className={`font-medium ${
+                          formData.cargoType === 'LooseCargo' 
+                            ? 'text-blue-600' 
+                            : 'text-gray-600'
+                        }`}>Loose</p>
+                        
+                      </div>
+                    </div>
+                  </button>
+                </div>
+                {errors.cargoType && <p className="text-red-500 text-sm mt-2">{errors.cargoType}</p>}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <InputField
+                  label="Gross Weight (kg)"
+                  name="grossWeight"
+                  value={formData.grossWeight}
+                  onChange={handleInputChange}
+                  error={errors.grossWeight}
+                  icon="⚖️"
+                />
+                <InputField
+                  label="Chargeable Weight"
+                  name="chargeableWeight"
+                  value={formData.chargeableWeight}
+                  onChange={handleInputChange}
+                  error={errors.chargeableWeight}
+                  icon="🏷️"
+                />
+              </div>
+              
+              <InputField
+                label="Cargo CBM"
+                name="cargoCBM"
+                value={formData.cargoCBM}
+                onChange={handleInputChange}
+                error={errors.cargoCBM}
+                icon="📏"
+              />
+              
+              <InputField
+                label="Pallets Count"
+                name="noOfPallets"
+                value={formData.noOfPallets}
+                onChange={handleInputChange}
+                error={errors.noOfPallets}
+                disabled={formData.cargoType === "LooseCargo"}
+                icon="🛢️"
+              />
+            </div>
+          </div>
+
+          {/* Right Column - Additional Info */}
+          <div className="space-y-6">
+            <div className="bg-gray-50 p-5 rounded-xl">
+              <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Additional Details
+              </h3>
+              
+              <InputField
+                label="Delivery Terms"
+                name="deliveryTerm"
+                value={formData.deliveryTerm}
+                onChange={handleInputChange}
+                error={errors.deliveryTerm}
+                icon="📑"
+              />
+              
+              <InputField
+                label="Due Date (Days)"
+                name="dueDate"
+                value={formData.dueDate}
+                onChange={handleInputChange}
+                error={errors.dueDate}
+                icon="⏳"
+              />
+              
+              {/* Attachments Field */}
+<div className="mt-6">
+  <label className="block text-sm font-medium text-gray-700 mb-3">Attachments</label>
+  <div className="flex items-center justify-center w-full border-2 border-dashed border-gray-300 rounded-xl p-6 transition-colors hover:border-blue-400">
+    <input 
+      type="file" 
+      className="hidden"
+      id="file-upload"
+      onChange={onFileUpload}
+      accept=".xls, .xlsx"
     />
+    <label htmlFor="file-upload" className="cursor-pointer">
+      <div className="text-center">
+        <div className="text-4xl mb-2">📎</div>
+        <p className="text-sm text-gray-600">
+          {fileName || "Drag & drop files or click to upload"}
+        </p>
+        <p className="text-xs text-gray-400 mt-1">XLS, XLSX (Max 5MB)</p>
+      </div>
+    </label>
   </div>
+</div>
+            </div>
 
-      {/* Submit Button */}
-      <button
-    type="submit"
-    className="w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-lg font-medium transition-all"
-  >
-    Create Order
-  </button>
+            <div className="bg-gray-50 p-5 rounded-xl">
+              <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                </svg>
+                Additional Notes
+              </h3>
+              <textarea
+                name="additionalNotes"
+                value={formData.additionalNotes || ""}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all"
+                placeholder="Enter any special instructions..."
+                rows="4"
+              />
+            </div>
+          </div>
+        </div>
 
-  
-       {/* Popups remain similar with updated colors */}
+        {/* Submit Section */}
+        <div className="pt-6 border-t border-gray-200">
+          <button
+            type="submit"
+            className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95"
+          >
+            🚀 Create Air Freight Order
+          </button>
+          </div>
+
+        {/* Popups remain similar with updated colors */}
        {showErrorPopup && (
         <div className="fixed inset-0 bg-gray-800/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
@@ -436,6 +479,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         </div>
       )}
     </form>
+    </div>
   );
 };
 

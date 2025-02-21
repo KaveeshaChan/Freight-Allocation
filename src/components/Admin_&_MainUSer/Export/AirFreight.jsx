@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { FiDownload, FiInfo } from 'react-icons/fi';
+import { FiDownload, FiInfo, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandler';
+import PDFGenerator from '../PDFGenerator'; // Import the PDFGenerator component
 
-const ExportAirFreight = ({ order }) => {
+const ImportAirFreight = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);
   const [documentData, setDocumentData] = useState(null);
   const [documentName, setDocumentName] = useState(null);
   const [freightQuotes, setFreightQuotes] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
   useEffect(() => {
     const fetchDocumentData = async () => {
@@ -94,6 +96,30 @@ const ExportAirFreight = ({ order }) => {
 
   const cheapestQuote = freightQuotes.reduce((min, quote) => quote.totalFreight < min.totalFreight ? quote : min, freightQuotes[0] || { totalFreight: Infinity });
 
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedQuotes = React.useMemo(() => {
+    let sortableQuotes = [...freightQuotes];
+    if (sortConfig.key !== null) {
+      sortableQuotes.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableQuotes;
+  }, [freightQuotes, sortConfig]);
+
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -110,15 +136,18 @@ const ExportAirFreight = ({ order }) => {
             </p>
           </div>
         </div>
-        {hasDocument && (
-          <button 
-            onClick={handleDownload}
-            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center shadow-sm hover:shadow-md"
-          >
-            <FiDownload className="text-xl" />
-            Download Documents
-          </button>
-        )}
+        <div className="flex gap-4">
+          {hasDocument && (
+            <button 
+              onClick={handleDownload}
+              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center shadow-sm hover:shadow-md"
+            >
+              <FiDownload className="text-xl" />
+              Download Documents
+            </button>
+          )}
+          <PDFGenerator order={order} documentData={documentData} freightQuotes={freightQuotes} />
+        </div>
       </header>
 
       {/* Order Details Table */}
@@ -198,27 +227,47 @@ const ExportAirFreight = ({ order }) => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                {[
-                  'Freight Agent Details', 'Net Freight', 'AWB($)', 'HAWB($)',
-                  'Air Line', 'Trans Shipment Port', 'Transit Time',
-                  'Flight/Vessel Details', 'Total Freight ($)', 'Validity time'
-                ].map((header) => (
-                  <th
-                    key={header}
-                    className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                  >
-                    {header}
-                  </th>
-                ))}
-              </tr>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Freight Agent Details</th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('netFreight')}>
+                Net Freight {sortConfig.key === 'netFreight' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                </th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('AWB')}>
+                  AWB($) {sortConfig.key === 'AWB' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                </th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('HAWB')}>
+                  HAWB($) {sortConfig.key === 'HAWB' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                </th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Air Line</th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Trans Shipment Port</th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('transitTime')}>
+                  Transit Time {sortConfig.key === 'transitTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                </th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Flight/Vessel Details</th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('totalFreight')}>
+                  Total Freight {sortConfig.key === 'totalFreight' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                </th>
+
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('validityTime')}>
+                Validity Time {sortConfig.key === 'validityTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                </th>
+
+                </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {freightQuotes.map((quote, index) => (
+              {sortedQuotes.map((quote, index) => (
                 <tr
                   key={index}
                   className={quote.totalFreight === cheapestQuote.totalFreight ? 'bg-green-100' : ''}
                 >
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
+                 <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
                     <span className="font-medium text-gray-900">{quote.Agent}</span>
                     <span className="block text-gray-500">{quote.createdUser}</span>
                   </td>
@@ -230,7 +279,7 @@ const ExportAirFreight = ({ order }) => {
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.totalFreight}</td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.validityTime}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
                 </tr>
               ))}
             </tbody>
@@ -238,9 +287,8 @@ const ExportAirFreight = ({ order }) => {
         </div>
       </div>
 
-      
     </div>
   );
 };
 
-export default ExportAirFreight;
+export default ImportAirFreight;
