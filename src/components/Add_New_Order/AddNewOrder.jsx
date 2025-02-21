@@ -53,7 +53,7 @@ const DocumentPage = () => {
                   <h1 className="text-2xl font-bold text-white">
                     {orderType.charAt(0).toUpperCase() + orderType.slice(1)} Documentation
                   </h1>
-                  <p className="text-orange-100">Manage your {orderType} shipments</p>
+                  <p className="text-gray-300">Manage your {orderType} shipments</p>
                 </div>
               </div>
               
@@ -80,9 +80,9 @@ const DocumentPage = () => {
                     value={shipmentType}
                     className="appearance-none bg-white/20 backdrop-blur-sm pl-4 pr-8 py-2 rounded-lg border border-white/30 text-white focus:ring-2 focus:ring-white/50 focus:border-white transition-all"
                   >
-                    <option value="airFreight" className="bg-orange-500">Air Freight</option>
-                    <option value="lcl" className="bg-orange-500">LCL</option>
-                    <option value="fcl" className="bg-orange-500">FCL</option>
+                    <option value="airFreight" className="bg-[#0534F0]">Air Freight</option>
+                    <option value="lcl" className="bg-[#0534F0]">LCL</option>
+                    <option value="fcl" className="bg-[#0534F0]">FCL</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

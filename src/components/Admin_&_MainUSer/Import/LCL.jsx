@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiDownload, FiInfo, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandler';
-import PDFGenerator from '../PDFGenerator'; // Import the PDFGenerator component
+import PDFGenerator from '../All_Orders/PDF/PdfExAir'; // Import the PDFGenerator component
 
 const ImportFCL = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);

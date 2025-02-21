@@ -59,63 +59,73 @@ const Dashboard = ({ children }) => {
   };
 
   return (
-    <div>
+    <div className="bg-gray-100">
       <Header />
-      <main className="mt-16">
-        <div className="min-h-screen bg-gray-50">
-          <div className="container mx-auto p-6">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">Available Orders</h1>
-              <p className="text-gray-600">{filteredOrders.length} orders found</p>
+      <main className="mt-6">
+      <div className="container mx-auto p-6">
+              <div className="rounded-xl mb-8 border border-gray-100">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+          {/* Left Section - Heading */}
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              Available Orders
+            </h1>
+            <p className="text-gray-500 font-medium text-sm">
+              {filteredOrders.length} orders found
+            </p>
+          </div>
+      
+          {/* Right Section - Filters */}
+          <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 flex-grow max-w-4xl">
+            {/* Search Input */}
+            <div className="relative flex-grow">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <FiSearch className="absolute left-3 top-3.5 text-gray-400 text-lg" />
             </div>
-
-            {/* Search and Filters Section */}
-            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search orders..."
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                    value={searchTerm}
-                    onChange={handleSearch}
-                  />
-                  <FiSearch className="absolute left-3 top-3.5 text-gray-400 text-lg" />
-                </div>
-
-                <select
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                  value={orderType}
-                  onChange={(e) => setOrderType(e.target.value)}
-                >
-                  <option value="">All Order Types</option>
-                  <option value="Export">Export</option>
-                  <option value="Import">Import</option>
-                </select>
-
-                <select
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                  value={shipmentType}
-                  onChange={(e) => setShipmentType(e.target.value)}
-                >
-                  <option value="">All Shipment Types</option>
-                  <option value="airFreight">Air Freight</option>
-                  <option value="LCL">LCL</option>
-                  <option value="FCL">FCL</option>
-                </select>
-
-                <button
-                  onClick={clearFilters}
-                  className="w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors flex items-center justify-center gap-2"
-                >
-                  <FiRefreshCw />
-                  Clear Filters
-                </button>
-              </div>
+      
+            {/* Filters Group */}
+            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+              <select
+                className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                value={orderType}
+                onChange={(e) => setOrderType(e.target.value)}
+              >
+                <option value="">All Types</option>
+                <option value="Export">Export</option>
+                <option value="Import">Import</option>
+              </select>
+      
+              <select
+                className="px- py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                value={shipmentType}
+                onChange={(e) => setShipmentType(e.target.value)}
+              >
+                <option value="">All Shipments</option>
+                <option value="airFreight">Air Freight</option>
+                <option value="LCL">LCL</option>
+                <option value="FCL">FCL</option>
+              </select>
+      
+              <button
+                onClick={clearFilters}
+                className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-200 whitespace-nowrap"
+              >
+                <FiRefreshCw className="shrink-0" />
+                
+              </button>
             </div>
+          </div>
+        </div>
+      
 
             {/* Orders Table */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden mt-4">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50">
