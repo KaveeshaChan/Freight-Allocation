@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiDownload, FiInfo, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandler';
 import PDFGenerator from '../All_Orders/PDF/PdfExAir'; // Import the PDFGenerator component
+import QuoteDetailsPopup from '../PopupForSelectAgent/ExportFCL';
 
 const ExportFCL = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);
@@ -9,6 +10,44 @@ const ExportFCL = ({ order }) => {
   const [documentName, setDocumentName] = useState(null);
   const [freightQuotes, setFreightQuotes] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [selectedQuote, setSelectedQuote] = useState(null);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  const handleRowSelect = (quote) => {
+    setSelectedQuote(quote);
+    setIsPopupVisible(true);
+  };
+
+  const handleSelectAgent = async () => {
+    if (!selectedQuote) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found. Please log in again.');
+
+      const response = await fetch("http://localhost:5056/api/orderhandling/select-best-quote/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          orderNumber: order.orderNumber,
+          OrderQuoteID: selectedQuote.OrderQuoteID,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to select agent');
+      }
+
+      alert('Agent selected successfully!');
+      setIsPopupVisible(false);
+    } catch (error) {
+      console.error('Error selecting agent:', error);
+      alert('Failed to select agent. Please try again.');
+    }
+  };
 
   useEffect(() => {
     const fetchDocumentData = async () => {
@@ -57,7 +96,7 @@ const ExportFCL = ({ order }) => {
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found. Please log in again.');
-    
+
         const response = await fetch(`http://localhost:5056/api/select/view-quotes/?orderNumber=${order.orderNumber}`, {
           method: "GET",
           headers: {
@@ -65,13 +104,13 @@ const ExportFCL = ({ order }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-    
+
         if (!response.ok) {
           throw new Error('Failed to fetch freight quotes');
         }
-    
+
         const data = await response.json();
-    
+
         // Extract the 'quotes' array from the response object
         if (Array.isArray(data.quotes)) {
           setFreightQuotes(data.quotes);
@@ -161,7 +200,7 @@ const ExportFCL = ({ order }) => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-              {[
+                {[
                   'Route', 'Shipment Ready Date', 'Delivery Term',
                   'Type', 'Containers', 'Target Date'
                 ].map((header) => (
@@ -176,7 +215,7 @@ const ExportFCL = ({ order }) => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               <tr>
-              {[
+                {[
                   `${order.from} - ${order.to}`,
                   new Date(order.shipmentReadyDate).toISOString().split('T')[0],
                   order.deliveryTerm,
@@ -220,7 +259,7 @@ const ExportFCL = ({ order }) => {
         <div className="overflow-x-auto p-4">
           <table className="w-full">
             <thead className="bg-gray-50">
-              <tr>
+             <tr>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Freight Agent Details</th>
 
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('netFreight')}>
@@ -252,19 +291,21 @@ const ExportFCL = ({ order }) => {
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('validityTime')}>
                 Validity Time {sortConfig.key === 'validityTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
                 </th>
+
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {sortedQuotes.map((quote, index) => (
                 <tr
                   key={index}
-                  className={quote.totalFreight === cheapestQuote.totalFreight ? 'bg-green-100' : ''}
+                  className={`${quote.totalFreight === cheapestQuote.totalFreight ? 'bg-green-100' : ''} cursor-pointer hover:bg-gray-50`}
+                  onClick={() => handleRowSelect(quote)}
                 >
-                <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
                     <span className="font-medium text-gray-900">{quote.Agent}</span>
                     <span className="block text-gray-500">{quote.createdUser}</span>
                   </td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.netFreight}</td>
+                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.netFreight}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.DTHC}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.freeTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transShipmentPort}</td>
@@ -272,15 +313,23 @@ const ExportFCL = ({ order }) => {
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.totalFreight}</td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.validityTime}</td>
-                </tr>
-
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
+                  </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
 
+      {/* Popup for Quote Details */}
+      {isPopupVisible && (
+        <QuoteDetailsPopup
+          quote={selectedQuote}
+          order={order} // Pass the order prop here
+          onClose={() => setIsPopupVisible(false)}
+          onSelectAgent={handleSelectAgent}
+        />
+      )}
     </div>
   );
 };

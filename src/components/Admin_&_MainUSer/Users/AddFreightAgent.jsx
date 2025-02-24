@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaUser, FaBuilding, FaIdCard, FaGlobe, FaPhone, FaEnvelope, FaKey } from 'react-icons/fa';
 import Header from '../../Layouts/Main_Layout';
 import { getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js';
 import { jwtDecode } from 'jwt-decode';
@@ -214,410 +214,339 @@ if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
     setShowSuccessPopup(false);
   };
 
+
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="mt-32">
-    <div
-      className="font-sans min-h-screen flex flex-col justify-center items-center"
-      style={{
-        backgroundColor: '#FFFFFF',
-      }}
-    >
-      {/* Error Popup */}
-      {showErrorPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
-            <h2 className="text-lg font-semibold mb-4 text-red-600">Error</h2>
-            <ul className="list-disc ml-5 text-sm text-gray-700">
-              {Object.values(errors).map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-            <button
-              onClick={closeErrorPopup}
-              className="mt-4 p-2 w-full rounded-md bg-red-500 text-white hover:bg-red-600"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Success Popup */}
-      {showSuccessPopup && (
-        <div
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50"
-        >
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-96"
-          >
-            <h2 className="text-lg font-semibold mb-4 text-green-600">Success</h2>
-            <p className="text-sm text-gray-700">
-              Username and Password sent to {formData.name} successfully.
-            </p>
-            <button
-              onClick={closeSuccessPopup}
-              className="mt-4 p-2 w-full rounded-md bg-green-500 text-white hover:bg-green-600"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-     
-
-      {/* Main Content */}
-      <main className="flex justify-center items-center mt-8">
-        <div
-          className="p-6 rounded-lg shadow-lg"
-          style={{
-            background: '#FFFFFF', // Solid white background
-            borderRadius: '16px', // Rounded corners
-            border: '1px solid rgba(25, 25, 25, 0.1)', // Subtle border
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)', // Subtle shadow
-            width: '700px', // Custom width for the box
-          }}
-        >
-          <h2
-            className="text-2xl mb-4 font-semibold"
-            style={{
-              color: '#191919', // Black text for the title
-              textAlign: 'center',
-            }}
-          >
-            Add Freight Agent
-          </h2>
-          <form onSubmit={handleSubmit} className="flex flex-col">
-            {/* company name */}
-            <div className="mb-3">
-              <label
-                htmlFor="name"
-                className="block mb-1 text-sm"
-                style={{ color: '#191919' }}
+      <main className="pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+        {/* Error Popup */}
+        {showErrorPopup && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+              <h2 className="text-xl font-bold text-red-600 mb-4 flex items-center gap-2">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
+                </svg>
+                Validation Errors
+              </h2>
+              <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                {Object.values(errors).map((error, index) => (
+                  <li key={index} className="text-sm">{error}</li>
+                ))}
+              </ul>
+              <button
+                onClick={closeErrorPopup}
+                className="mt-6 w-full py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors"
               >
-                Company Name:
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="w-full p-2 border rounded-md text-sm"
-                style={{
-                  borderColor: '#191919',
-                  backgroundColor: '#FFFFFF',
-                  color: '#191919',
-                }}
-                value={formData.name}
-                onChange={handleChange}
-              />
-              {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+                Close
+              </button>
             </div>
+          </div>
+        )}
 
-            {/* BRN & country */}
-            <div className="mb-3 flex space-x-4">
-                <div className="w-1/2">
-                  <label
-                    htmlFor="BRN"
-                    className="block mb-1 text-sm"
-                    style={{ color: '#191919' }}
-                  >
-                    Business Registration Number:
+        {/* Success Popup */}
+        {showSuccessPopup && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+              <h2 className="text-xl font-bold text-green-600 mb-4 flex items-center gap-2">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                </svg>
+                Success!
+              </h2>
+              <p className="text-gray-700 mb-4">
+                Credentials sent to <span className="font-semibold">{formData.name}</span> successfully.
+              </p>
+              <button
+                onClick={closeSuccessPopup}
+                className="w-full py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-colors"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Main Form */}
+        <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <FaBuilding className="text-[#0534F0]" />
+            Add New Freight Agent
+          </h1>
+
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Company Details Section */}
+            <div className="space-y-6">
+              <h2 className="text-xl font-semibold text-gray-900 border-b pb-3 flex items-center gap-2">
+                <FaBuilding className="text-[#98009E]" />
+                Company Information
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Company Name */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <FaBuilding className="text-[#0534F0]" />
+                    Company Name
                   </label>
                   <input
                     type="text"
-                    id="BRN"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                    placeholder="Enter company name"
+                  />
+                  {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                </div>
+
+                {/* BRN */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <FaIdCard className="text-[#98009E]" />
+                    Business Registration Number
+                  </label>
+                  <input
+                    type="text"
                     name="BRN"
-                    className="w-full p-2 border rounded-md text-sm"
-                    style={{
-                      borderColor: '#191919',
-                      backgroundColor: '#FFFFFF',
-                      color: '#191919',
-                    }}
                     value={formData.BRN}
                     onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                    placeholder="BRN-XXXX-XXXX"
                   />
-                  {errors.BRN && <p className="text-red-500 text-xs">{errors.BRN}</p>}
+                  {errors.BRN && <p className="text-red-500 text-sm">{errors.BRN}</p>}
                 </div>
-                <div className="w-1/2">
-                  <label
-                    htmlFor="country"
-                    className="block mb-1 text-sm"
-                    style={{ color: '#191919' }}
-                  >
-                    Country:
+
+                {/* Country */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <FaGlobe className="text-[#0534F0]" />
+                    Country
                   </label>
                   <Select
                     options={options}
                     value={options.find((option) => option.value === formData.country)}
                     onChange={handleCountryChange}
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        minHeight: '44px',
+                        borderRadius: '0.5rem',
+                        borderColor: '#D1D5DB',
+                        '&:hover': { borderColor: '#9CA3AF' },
+                        '&:focus-within': {
+                          borderColor: '#0534F0',
+                          boxShadow: '0 0 0 2px rgba(5, 52, 240, 0.1)'
+                        }
+                      })
+                    }}
                   />
-                  {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
+                  {errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
+                </div>
+
+                {/* Address */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <FaBuilding className="text-[#98009E]" />
+                    Company Address
+                  </label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                    placeholder="Full company address"
+                  />
+                  {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+                </div>
+
+                {/* Contact Number */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <FaPhone className="text-[#0534F0]" />
+                    Contact Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="contactNumber"
+                      value={callingCode + formData.contactNumber.slice(callingCode.length)}
+                      onChange={handleChange}
+                      className="w-full pl-14 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                      placeholder="Contact number"
+                    />
+                    <span className="absolute left-4 top-3 text-gray-500">{callingCode}</span>
+                  </div>
+                  {errors.contactNumber && <p className="text-red-500 text-sm">{errors.contactNumber}</p>}
+                </div>
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <FaEnvelope className="text-[#98009E]" />
+                    Company Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                    placeholder="company@email.com"
+                  />
+                  {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                </div>
+
+                {/* Password */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <FaKey className="text-[#0534F0]" />
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={passwordVisible ? 'text' : 'password'}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent pr-12"
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-4 top-3.5 text-gray-500 hover:text-[#0534F0]"
+                    >
+                      {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </div>
+                  {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+                </div>
+              </div>
+            </div>
+
+            {/* Directors Section */}
+            <div className="space-y-8">
+              {/* Director 1 */}
+              <div className="bg-gray-50 p-6 rounded-xl">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                  <FaUser className="text-[#98009E]" />
+                  Director 1 Details
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Name */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input
+                      type="text"
+                      name="director1Name"
+                      value={formData.director1Name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                      placeholder="Director's full name"
+                    />
+                    {errors.director1Name && <p className="text-red-500 text-sm">{errors.director1Name}</p>}
+                  </div>
+
+                  {/* Contact */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Contact Number</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="director1ContactNumber"
+                        value={callingCode + formData.director1ContactNumber.slice(callingCode.length)}
+                        onChange={handleChange}
+                        className="w-full pl-14 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                        placeholder="Contact number"
+                      />
+                      <span className="absolute left-4 top-3 text-gray-500">{callingCode}</span>
+                    </div>
+                    {errors.director1ContactNumber && <p className="text-red-500 text-sm">{errors.director1ContactNumber}</p>}
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input
+                      type="email"
+                      name="director1Email"
+                      value={formData.director1Email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                      placeholder="director@email.com"
+                    />
+                    {errors.director1Email && <p className="text-red-500 text-sm">{errors.director1Email}</p>}
+                  </div>
                 </div>
               </div>
 
+              {/* Director 2 */}
+              <div className="bg-gray-50 p-6 rounded-xl">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                  <FaUser className="text-[#0534F0]" />
+                  Director 2 Details (Optional)
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Name */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input
+                      type="text"
+                      name="director2Name"
+                      value={formData.director2Name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                      placeholder="Director's full name"
+                    />
+                    {errors.director2Name && <p className="text-red-500 text-sm">{errors.director2Name}</p>}
+                  </div>
 
-            {/* Address */}
-            <div className="mb-3">
-              <label
-                htmlFor="address"
-                className="block mb-1 text-sm"
-                style={{ color: '#191919' }}
-              >
-                Company Address:
-              </label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                className="w-full p-2 border rounded-md text-sm"
-                style={{
-                  borderColor: '#191919',
-                  backgroundColor: '#FFFFFF',
-                  color: '#191919',
-                }}
-                value={formData.address}
-                onChange={handleChange}
-              />
-              {errors.address && <p className="text-red-500 text-xs">{errors.address}</p>}
-            </div>
+                  {/* Contact */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Contact Number</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="director2ContactNumber"
+                        value={callingCode + formData.director2ContactNumber.slice(callingCode.length)}
+                        onChange={handleChange}
+                        className="w-full pl-14 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                        placeholder="Contact number"
+                      />
+                      <span className="absolute left-4 top-3 text-gray-500">{callingCode}</span>
+                    </div>
+                    {errors.director2ContactNumber && <p className="text-red-500 text-sm">{errors.director2ContactNumber}</p>}
+                  </div>
 
-            {/* Contact Number & Email */}
-            <div className="mb-3 flex space-x-4">
-              <div className="w-1/2">
-              <label htmlFor="contactNumber" className="block mb-1 text-sm" style={{ color: '#191919' }}>
-                  Company Contact Number:
-                </label>
-                <input
-                  type="text"
-                  id="contactNumber"
-                  name="contactNumber"
-                  className="w-full p-2 border rounded-md text-sm"
-                  style={{ borderColor: '#191919', backgroundColor: '#FFFFFF', color: '#191919' }}
-                  value={callingCode + formData.contactNumber.slice(callingCode.length)}
-                  onChange={handleChange}
-                />
-                {errors.contactNumber && <p className="text-red-500 text-xs">{errors.contactNumber}</p>}
-              </div>
-              <div className="w-1/2">
-                <label
-                  htmlFor="email"
-                  className="block mb-1 text-sm"
-                  style={{ color: '#191919' }}
-                >
-                  Company Email:
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="w-full p-2 border rounded-md text-sm"
-                  style={{
-                    borderColor: '#191919',
-                    backgroundColor: '#FFFFFF',
-                    color: '#191919',
-                  }}
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-                {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input
+                      type="email"
+                      name="director2Email"
+                      value={formData.director2Email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
+                      placeholder="director@email.com"
+                    />
+                    {errors.director2Email && <p className="text-red-500 text-sm">{errors.director2Email}</p>}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Password */}
-            <div className="mb-3">
-              <label
-                htmlFor="password"
-                className="block mb-1 text-sm"
-                style={{ color: '#191919' }}
-              >
-                Password:
-              </label>
-              <div className="relative">
-                <input
-                  type={passwordVisible ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  className="w-full p-2 border rounded-md text-sm"
-                  style={{
-                    borderColor: '#191919',
-                    backgroundColor: '#FFFFFF',
-                    color: '#191919',
-                  }}
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-                <span
-                  onClick={togglePasswordVisibility}
-                  className="absolute right-2 top-2 cursor-pointer"
-                  style={{ fontSize: '18px' }}
-                >
-                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-                </span>
-              </div>
-              {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-            </div>
-
-            {/* Director 01 */}
-<div className="mb-3">
-  <h3 className="text-lg font-semibold" style={{ color: '#191919' }}>Director 01</h3>
-  
-  <label
-    htmlFor="director1Name"
-    className="block mb-1 text-sm"
-    style={{ color: '#191919' }}
-  >
-    Director 01 Name:
-  </label>
-  <input
-    type="text"
-    id="director1Name"
-    name="director1Name"
-    className="w-full p-2 border rounded-md text-sm"
-    value={formData.director1Name}
-    onChange={handleChange}
-  />
-  {errors.director1Name && <p className="text-red-500 text-xs">{errors.director1Name}</p>}
-
-  {/* Director 01 Contact and Email in the same line */}
-  <div className="flex space-x-4">
-    <div className="flex-1">
-      <label
-        htmlFor="director1ContactNumber"
-        className="block mb-1 text-sm"
-        style={{ color: '#191919' }}
-      >
-        Director 01 Contact Number:
-      </label>
-      <input
-        type="text"
-        id="director1ContactNumber"
-        name="director1ContactNumber"
-        className="w-full p-2 border rounded-md text-sm"
-        style={{ borderColor: '#191919', backgroundColor: '#FFFFFF', color: '#191919' }}
-        value={callingCode + formData.director1ContactNumber.slice(callingCode.length)}
-        onChange={handleChange}
-      />
-      {errors.director1ContactNumber && (
-        <p className="text-red-500 text-xs">{errors.director1ContactNumber}</p>
-      )}
-    </div>
-
-    <div className="flex-1">
-      <label
-        htmlFor="director1Email"
-        className="block mb-1 text-sm"
-        style={{ color: '#191919' }}
-      >
-        Director 01 Email:
-      </label>
-      <input
-        type="email"
-        id="director1Email"
-        name="director1Email"
-        className="w-full p-2 border rounded-md text-sm"
-        value={formData.director1Email}
-        onChange={handleChange}
-      />
-      {errors.director1Email && <p className="text-red-500 text-xs">{errors.director1Email}</p>}
-    </div>
-  </div>
-</div>
-
-{/* Director 02 */}
-<div className="mb-3">
-  <h3 className="text-lg font-semibold" style={{ color: '#191919' }}>Director 02 (Optional)</h3>
-  
-  <label
-    htmlFor="director2Name"
-    className="block mb-1 text-sm"
-    style={{ color: '#191919' }}
-  >
-    Director 02 Name:
-  </label>
-  <input
-    type="text"
-    id="director2Name"
-    name="director2Name"
-    className="w-full p-2 border rounded-md text-sm"
-    value={formData.director2Name}
-    onChange={handleChange}
-  />
-  {errors.director2Name && <p className="text-red-500 text-xs">{errors.director2Name}</p>}
-
-  {/* Director 02 Contact and Email in the same line */}
-  <div className="flex space-x-4">
-    <div className="flex-1">
-      <label
-        htmlFor="director2ContactNumber"
-        className="block mb-1 text-sm"
-        style={{ color: '#191919' }}
-      >
-        Director 02 Contact Number:
-      </label>
-      <input
-        type="text"
-        id="director2ContactNumber"
-        name="director2ContactNumber"
-        className="w-full p-2 border rounded-md text-sm"
-        style={{ borderColor: '#191919', backgroundColor: '#FFFFFF', color: '#191919' }}
-        value={callingCode + formData.director2ContactNumber.slice(callingCode.length)}
-        onChange={handleChange}
-      />
-      {errors.director2ContactNumber && (
-        <p className="text-red-500 text-xs">{errors.director2ContactNumber}</p>
-      )}
-    </div>
-
-    <div className="flex-1">
-      <label
-        htmlFor="director2Email"
-        className="block mb-1 text-sm"
-        style={{ color: '#191919' }}
-      >
-        Director 02 Email:
-      </label>
-      <input
-        type="email"
-        id="director2Email"
-        name="director2Email"
-        className="w-full p-2 border rounded-md text-sm"
-        value={formData.director2Email}
-        onChange={handleChange}
-      />
-      {errors.director2Email && <p className="text-red-500 text-xs">{errors.director2Email}</p>}
-    </div>
-  </div>
-</div>
-
-
-
-            {/* Submit */}
-            <div className="mb-3">
+            {/* Submit Button */}
             <button
               type="submit"
-              className="p-3 rounded-md text-lg cursor-pointer border-2 w-full mt-4"
-              style={{
-                borderColor: '#FF4D00',
-                backgroundColor: '#FF4D00',
-                color: '#FFFFFF',
-                transition: 'background-color 0.3s ease, color 0.3s ease',
-              }}
+              className="w-full py-3.5 bg-gradient-to-r from-[#0534F0] to-[#98009E] hover:from-[#0429C7] hover:to-[#7A0080] text-white rounded-xl font-semibold text-lg transition-all shadow-lg"
             >
-              Add Freight Agent
+              Create Freight Agent Account
             </button>
-            </div>
           </form>
         </div>
       </main>
-
-    </div>
-    </main>
     </div>
   );
 };

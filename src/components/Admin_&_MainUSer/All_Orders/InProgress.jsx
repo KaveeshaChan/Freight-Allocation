@@ -12,9 +12,9 @@ const Dashboard = ({ children }) => {
   const [showCancelReason, setShowCancelReason] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const closeErrorPopup = () => {setShowErrorPopup(false)};
+  const closeErrorPopup = () => { setShowErrorPopup(false) };
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const closeSuccessPopup = () => {setShowSuccessPopup(false)};
+  const closeSuccessPopup = () => { setShowSuccessPopup(false) };
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
@@ -141,13 +141,15 @@ const Dashboard = ({ children }) => {
     );
 
     const DetailItem = ({ label, value, icon }) => (
-      <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-gray-50">
-        <div className="flex items-center gap-2 text-gray-500">
-          {icon}
-          <span>{label}</span>
+      value ? (
+        <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-gray-50">
+          <div className="flex items-center gap-2 text-gray-500">
+            {icon}
+            <span>{label}</span>
+          </div>
+          <span className="text-gray-700 font-medium">{value}</span>
         </div>
-        <span className="text-gray-700 font-medium">{value}</span>
-      </div>
+      ) : null
     );
 
     return (
@@ -191,8 +193,8 @@ const Dashboard = ({ children }) => {
         {order.shipmentType === 'airFreight' && (
           <Section title="Cargo Details" icon={<FiPackage className="text-purple-500" />}>
             <DetailItem label="Cargo Type" value={order.cargoType} />
-            <DetailItem label="Gross Weight" value={`${order.grossWeight} kg`} />
-            <DetailItem label="Chargeable Weight" value={`${order.chargeableWeight} kg`} />
+            <DetailItem label="Gross Weight" value={order.grossWeight ? `${order.grossWeight} kg` : ''} />
+            <DetailItem label="Chargeable Weight" value={order.chargeableWeight ? `${order.chargeableWeight} kg` : ''} />
             <DetailItem label="Cargo CBM" value={order.cargoCBM} />
           </Section>
         )}

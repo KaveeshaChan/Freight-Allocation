@@ -206,142 +206,121 @@ const handleViewCoordinatorsClick = async() => {
   return (
     <div>
       <Header />
-      <main className="mt-32">
-      <div className="p-4 mt-8">
+      <main className="mt-24">
+        <div className="p-4 mt-8">
         <div className="flex items-center justify-between mb-6">
-          <span className="px-4 py-2 border-2 border-orange-500 text-orange-500 bg-transparent rounded-md">
-            View Freight Agents
-          </span>
-
-          <form
-            onSubmit={handleSearchSubmit}
-            className="flex items-center border border-gray-300 rounded-full overflow-hidden h-10"
-          >
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              placeholder="Search by Agent Name"
-              className="flex-grow outline-none px-4 text-sm"
-            />
-            <button
-              type="submit"
-              className="flex items-center justify-center w-10 h-10 bg-orange-500 text-white hover:bg-orange-600"
-              style={{ transition: 'all 0.3s ease' }}
-            >
-              <FaSearch />
-            </button>
-          </form>
-        </div>
-
-        {/* Filter Section */}
-        <div className="flex flex-wrap justify-center gap-4 mb-6">
-          <button
-            onClick={() => handleFilterChange("All")}
-            className={`px-4 py-2 rounded-full border-2 ${
-              filterStatus === "All"
-                ? "bg-orange-500 text-white border-orange-500"
-                : "border-gray-400 text-gray-500 hover:border-orange-500 hover:text-orange-500"
-            }`}
-          >
-            All ({agents.length})
-          </button>
-          <button
-            onClick={() => handleFilterChange("Active")}
-            disabled={filterStatus === "Active"}
-            className={`px-4 py-2 rounded-full border-2 ${filterStatus === "Active" ? "bg-green-500 text-white border-green-500" : "border-gray-400 text-gray-500 hover:border-green-500 hover:text-green-500"}`}
-          >
-            Active ({agents.filter((agent) => agent.AgentStatus === "Active").length})
-          </button>
-
-          <button
-            onClick={() => handleFilterChange("Non Active")}
-            className={`px-4 py-2 rounded-full border-2 ${
-              filterStatus === "Non Active"
-                ? "bg-yellow-500 text-white border-yellow-500"
-                : "border-gray-400 text-gray-500 hover:border-yellow-500 hover:text-yellow-500"
-            }`}
-          >
-            Non Active (
-            {agents.filter((agent) => agent.AgentStatus === "Non Active").length}
-            )
-          </button>
-          <button
-            onClick={() => handleFilterChange("Blacklisted")}
-            className={`px-4 py-2 rounded-full border-2 ${
-              filterStatus === "Blacklisted"
-                ? "bg-red-500 text-white border-red-500"
-                : "border-gray-400 text-gray-500 hover:border-red-500 hover:text-red-500"
-            }`}
-          >
-            Blacklisted (
-            {agents.filter((agent) => agent.AgentStatus === "Blacklisted").length}
-            )
-          </button>
-        </div>
-
-        <div className="table-wrapper border border-gray-300 rounded-lg shadow-lg overflow-hidden">
-  <table className="min-w-full bg-white">
-  <thead className="bg-gradient-to-r from-orange-600 to-orange-500 text-white sticky top-0 z-[1]">
-
-      <tr>
-        <th className="px-6 py-3 text-left font-semibold text-sm">Freight Agent Name</th>
-        <th className="px-6 py-3 text-left font-semibold text-sm">Email</th>
-        <th className="px-6 py-3 text-left font-semibold text-sm">Contact Numbers</th>
-        <th className="px-6 py-3 text-left font-semibold text-sm">No. of Coordinators</th>
-        <th className="px-6 py-3 text-left font-semibold text-sm">Status</th>
-      </tr>
-    </thead>
-    <tbody
-      className="divide-y divide-gray-200 overflow-y-auto h-[250px]" // Added scrollable height
-    >
-      {filteredAgents.map((agent, index) => (
-        <tr
-          key={index}
-          onClick={() => handleRowClick(agent)}
-          className="hover:bg-orange-50 cursor-pointer transition-all duration-300"
+      <div className="flex flex-wrap justify-start gap-4 mb-6">
+        <button
+          onClick={() => handleFilterChange("All")}
+          className={`px-4 py-2 rounded-full border-2 ${
+            filterStatus === "All"
+              ? "bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white border-transparent"
+              : "border-gray-400 text-gray-700 hover:border-[#0534F0] hover:text-[#0534F0]"
+          }`}
         >
-          <td className="px-6 py-4 text-sm font-medium text-gray-700">{agent.Freight_Agent}</td>
-          <td className="px-6 py-4 text-sm text-gray-500">{agent.Email || "N/A"}</td>
-          <td className="px-6 py-4 text-sm text-gray-500">{agent.ContactNumber}</td>
-          <td className="px-6 py-4 text-sm text-gray-500">{agent.CoordinatorCount}
-            {/* {getCoordinatorsForAgent(agent.AgentID).length} */}
-          </td>
-          <td className="px-6 py-4 text-sm font-medium text-gray-700">
-            <span
-              className={`px-3 py-1 rounded-full border-2 
-                ${
-                  agent.AgentStatus === "Active"
-                    ? "border-green-700 bg-green-100 text-green-700"
-                    : agent.AgentStatus === "Non Active"
-                    ? "border-yellow-700 bg-yellow-100 text-yellow-700"
-                    : "border-red-700 bg-red-100 text-red-700"
-                }`}
+          All ({agents.length})
+        </button>
+        <button
+          onClick={() => handleFilterChange("Active")}
+          className={`px-4 py-2 rounded-full border-2 ${
+            filterStatus === "Active"
+              ? "bg-green-600 text-white border-transparent"
+              : "border-gray-400 text-gray-700 hover:border-green-600 hover:text-green-600"
+          }`}
+        >
+          Active ({agents.filter((agent) => agent.AgentStatus === "Active").length})
+        </button>
+        <button
+          onClick={() => handleFilterChange("Non Active")}
+          className={`px-4 py-2 rounded-full border-2 ${
+            filterStatus === "Non Active"
+              ? "bg-yellow-500 text-white border-yellow-500"
+              : "border-gray-400 text-gray-500 hover:border-yellow-500 hover:text-yellow-500"
+          }`}
+        >
+          Non Active (
+          {agents.filter((agent) => agent.AgentStatus === "Non Active").length}
+          )
+        </button>
+        <button
+          onClick={() => handleFilterChange("Blacklisted")}
+          className={`px-4 py-2 rounded-full border-2 ${
+            filterStatus === "Blacklisted"
+              ? "bg-red-500 text-white border-red-500"
+              : "border-gray-400 text-gray-500 hover:border-red-500 hover:text-red-500"
+          }`}
+        >
+          Blacklisted (
+          {agents.filter((agent) => agent.AgentStatus === "Blacklisted").length}
+          )
+        </button>
+      </div>
+      <form
+        onSubmit={handleSearchSubmit}
+        className="flex items-center border border-gray-300 rounded-full overflow-hidden h-10"
+      >
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search by Agent Name"
+          className="flex-grow outline-none px-4 text-sm"
+        />
+        <button
+          type="submit"
+          className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white hover:from-[#0429C7] hover:to-[#7A0080] transition-all duration-300"
+        >
+          <FaSearch />
+        </button>
+      </form>
+    </div>
+
+    <div className="table-wrapper border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+      <table className="min-w-full bg-white">
+        <thead className="bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white sticky top-0 z-[1]">
+          <tr>
+            <th className="px-6 py-3 text-center font-semibold text-sm">Freight Agent Name</th>
+            <th className="px-6 py-3 text-center font-semibold text-sm">Email</th>
+            <th className="px-6 py-3 text-center font-semibold text-sm">Contact Numbers</th>
+            <th className="px-6 py-3 text-center font-semibold text-sm">No. of Coordinators</th>
+            <th className="px-6 py-3 text-center font-semibold text-sm">Status</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 overflow-y-auto h-[400px]">
+          {filteredAgents.map((agent, index) => (
+            <tr
+              key={index}
+              onClick={() => handleRowClick(agent)}
+              className="hover:bg-gray-50 cursor-pointer transition-all duration-300"
             >
-              {agent.AgentStatus}
-            </span>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+              <td className="px-6 py-4 text-sm text-center font-medium text-gray-700">{agent.Freight_Agent}</td>
+              <td className="px-6 py-4 text-sm text-center text-gray-500">{agent.Email || "N/A"}</td>
+              <td className="px-6 py-4 text-sm text-center text-gray-500">{agent.ContactNumber}</td>
+              <td className="px-6 py-4 text-sm text-center text-gray-500">{agent.CoordinatorCount}</td>
+              <td className="px-6 py-4 text-sm text-center font-medium text-gray-700">
+                <span
+                  className={`px-3 py-1 rounded-full border-2 
+                    ${
+                      agent.AgentStatus === "Active"
+                        ? "border-green-700 bg-green-100 text-green-700"
+                        : agent.AgentStatus === "Non Active"
+                        ? "border-yellow-700 bg-yellow-100 text-yellow-700"
+                        : "border-red-700 bg-red-100 text-red-700"
+                    }`}
+                >
+                  {agent.AgentStatus}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
-
-
-
-{showPopup && (
-  <div
-    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50] transition-opacity duration-300"
-    role="dialog"
-    aria-labelledby="agentPopupTitle"
-    aria-modal="true"
-  >
-    <div
-      className="relative bg-white p-8 rounded-xl shadow-xl w-[600px] max-h-[90vh] overflow-auto transform transition-all duration-300"
-      style={{ marginTop: '100px' }}
-    >
-      {/* Header */}
+          {showPopup && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50]">
+              <div className="relative bg-white p-8 rounded-xl shadow-xl w-[800px] max-h-[90vh] overflow-auto">
+                {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2
           id="agentPopupTitle"
@@ -377,12 +356,13 @@ const handleViewCoordinatorsClick = async() => {
           >
               <input
                 type="radio"
+                  className="form-radio text-[#0534F0]"
                 name="status"
                 value={status}
                 checked={selectedAgent.AgentStatus === status}
                 onChange={() => handleStatusChange(status)}
                 disabled={!isAdmin}
-                className="form-radio text-blue-500"
+                
               />
               <span
                 className={`${
@@ -469,76 +449,69 @@ const handleViewCoordinatorsClick = async() => {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex justify-between gap-4 mt-6">
-        <button
-          onClick={handleViewCoordinatorsClick}
-          className="px-6 py-3 bg-transparent border border-blue-500 text-blue-500 rounded-full hover:bg-blue-600 hover:text-white transition-all duration-300"
+                {/* Update buttons in popup */}
+                <div className="flex justify-between gap-4 mt-6">
+                  <button
+                    onClick={handleViewCoordinatorsClick}
+                    className="px-6 py-3 bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white rounded-full hover:from-[#0429C7] hover:to-[#7A0080] transition-all duration-300"
+                  >
+                    View Coordinators ({selectedAgent.CoordinatorCount})
+                  </button>
+                  <button
+                    onClick={saveChanges}
+                    className="px-6 py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all duration-300"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={closePopup}
+                    className="px-6 py-3 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
-        >
-          View Coordinators (
-          {selectedAgent.CoordinatorCount})
-        </button>
-        <button
-          onClick={saveChanges}
-          className="px-6 py-3 bg-transparent border border-green-500 text-green-500 rounded-full hover:bg-green-600 hover:text-white transition-all duration-300"
-        >
-          Save
-        </button>
-        <button
-          onClick={closePopup}
-          className="px-6 py-3 bg-transparent border border-red-500 text-red-500 rounded-full hover:bg-red-600 hover:text-white transition-all duration-300"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-{/* Popup for Coordinators */}
-{showCoordinatorPopup && (
-  <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300">
-    <div className="bg-white p-8 rounded-xl shadow-xl w-[800px] max-h-[80vh] overflow-hidden transform transition-all duration-300">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Coordinators</h2>
-      
-      <div className="overflow-y-auto max-h-[400px]">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
-          <thead className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Coordinator Name</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Contact Number</th>
+          {/* Coordinator Popup */}
+          {showCoordinatorPopup && (
+            <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+              <div className="bg-white p-8 rounded-xl shadow-xl w-[800px] max-h-[80vh] overflow-hidden">
+                <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Coordinators</h2>
+                <div className="overflow-y-auto max-h-[400px]">
+                  <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead className="bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white">
+                      <tr>
+              <th className="px-6 py-3 text-center text-sm font-semibold">Coordinator Name</th>
+              <th className="px-6 py-3 text-center text-sm font-semibold">Email</th>
+              <th className="px-6 py-3 text-center text-sm font-semibold">Contact Number</th>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {coordinators.map((coordinator, index) => (
-              <tr key={index} className="hover:bg-orange-50 cursor-pointer transition-all duration-300">
-                <td className="px-6 py-4 text-sm font-medium text-gray-700">{coordinator.Coordinator_Name}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{coordinator.Email}</td>
-                <td className="px-6 py-4 text-sm text-gray-600">{coordinator.ContactNumber}</td>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {coordinators.map((coordinator, index) => (
+              <tr key={index} className="hover:bg-gray-50 cursor-pointer transition-all duration-300">
+                <td className="px-6 py-4 text-sm text-center font-medium text-gray-700">{coordinator.Coordinator_Name}</td>
+                <td className="px-6 py-4 text-sm text-center text-gray-600">{coordinator.Email}</td>
+                <td className="px-6 py-4 text-sm text-center text-gray-600">{coordinator.ContactNumber}</td>
               </tr>
             ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="flex justify-center gap-6 mt-6">
-        <button
-          onClick={closeCoordinatorPopup} // Close only the coordinator popup
-          className="px-6 py-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 transform"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-      </div>
-    </main>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="flex justify-center gap-6 mt-6">
+                  <button
+                    onClick={closeCoordinatorPopup}
+                    className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

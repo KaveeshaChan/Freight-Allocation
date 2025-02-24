@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiDownload, FiInfo, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandler';
 import PDFGenerator from '../All_Orders/PDF/PdfExAir'; // Import the PDFGenerator component
+import QuoteDetailsPopup from '../PopupForSelectAgent/ImportFCL';
 
 const ImportFCL = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);
@@ -9,6 +10,44 @@ const ImportFCL = ({ order }) => {
   const [documentName, setDocumentName] = useState(null);
   const [freightQuotes, setFreightQuotes] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [selectedQuote, setSelectedQuote] = useState(null);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  const handleRowSelect = (quote) => {
+    setSelectedQuote(quote);
+    setIsPopupVisible(true);
+  };
+
+  const handleSelectAgent = async () => {
+    if (!selectedQuote) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found. Please log in again.');
+
+      const response = await fetch("http://localhost:5056/api/orderhandling/select-best-quote/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          orderNumber: order.orderNumber,
+          OrderQuoteID: selectedQuote.OrderQuoteID,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to select agent');
+      }
+
+      alert('Agent selected successfully!');
+      setIsPopupVisible(false);
+    } catch (error) {
+      console.error('Error selecting agent:', error);
+      alert('Failed to select agent. Please try again.');
+    }
+  };
 
   useEffect(() => {
     const fetchDocumentData = async () => {
@@ -57,7 +96,7 @@ const ImportFCL = ({ order }) => {
       try {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found. Please log in again.');
-    
+
         const response = await fetch(`http://localhost:5056/api/select/view-quotes/?orderNumber=${order.orderNumber}`, {
           method: "GET",
           headers: {
@@ -65,13 +104,13 @@ const ImportFCL = ({ order }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-    
+
         if (!response.ok) {
           throw new Error('Failed to fetch freight quotes');
         }
-    
+
         const data = await response.json();
-    
+
         // Extract the 'quotes' array from the response object
         if (Array.isArray(data.quotes)) {
           setFreightQuotes(data.quotes);
@@ -94,7 +133,7 @@ const ImportFCL = ({ order }) => {
     }
   };
 
-  const cheapestQuote = freightQuotes.reduce((min, quote) => quote.netFreight < min.netFreight ? quote : min, freightQuotes[0] || { netFreight: Infinity });
+  const cheapestQuote = freightQuotes.reduce((min, quote) => quote.totalFreight < min.totalFreight ? quote : min, freightQuotes[0] || { totalFreight: Infinity });
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -161,7 +200,7 @@ const ImportFCL = ({ order }) => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-              {[
+                {[
                   'Route', 'Shipment Ready Date', 'Delivery Term',
                   'Type', 'Number of Containers', 'Target Date'
                 ].map((header) => (
@@ -175,7 +214,7 @@ const ImportFCL = ({ order }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-            <tr>
+              <tr>
                 {[
                   `${order.from} - ${order.to}`,
                   new Date(order.shipmentReadyDate).toISOString().split('T')[0],
@@ -220,7 +259,7 @@ const ImportFCL = ({ order }) => {
         <div className="overflow-x-auto p-4">
           <table className="w-full">
             <thead className="bg-gray-50">
-              <tr>
+             <tr>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Freight Agent Details</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('netFreight')}>
                   Net Freight ($) {sortConfig.key === 'netFreight' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
@@ -266,6 +305,15 @@ const ImportFCL = ({ order }) => {
         </div>
       </div>
 
+      {/* Popup for Quote Details */}
+      {isPopupVisible && (
+        <QuoteDetailsPopup
+          quote={selectedQuote}
+          order={order} // Pass the order prop here
+          onClose={() => setIsPopupVisible(false)}
+          onSelectAgent={handleSelectAgent}
+        />
+      )}
     </div>
   );
 };

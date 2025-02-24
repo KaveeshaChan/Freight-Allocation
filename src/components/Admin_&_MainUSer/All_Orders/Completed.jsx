@@ -1,59 +1,233 @@
-import React, { useState } from 'react';
-import Layout from '../../Layouts/Main_Layout';
-import { FaSearch } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../../Layouts/Main_Layout';
+import { FiSearch, FiPlusCircle, FiRefreshCw, FiClock, FiX, FiBox, FiTruck, FiAnchor, FiMapPin, FiCalendar, FiPackage } from 'react-icons/fi';
+import QuoteDetailsPopup from '../PopupForSelectAgent/Completed'; // Import the popup component
 
-const InProgress = () => {
+const Dashboard = ({ children }) => {
+  const [availableOrders, setAvailableOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [orderType, setOrderType] = useState('');
+  const [shipmentType, setShipmentType] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedQuote, setSelectedQuote] = useState(null); // State for selected quote
+  const navigate = useNavigate();
+  const status = "completed";
 
-  const handleSearchChange = (e) => {
+  const fetchAvailableOrders = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found. Please log in again.');
+
+      const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 401) {
+        navigate('/login');
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setAvailableOrders(data.orders || []);
+      console.log(availableOrders)
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableOrders();
+  }, []);
+
+  const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
-  
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    // Handle search submit (e.g., filter items or show results)
-    console.log('Searching for:', searchTerm);
+  const filteredOrders = availableOrders.filter(order => {
+    const matchesSearch = order.orderNumber.toString().toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesOrderType = orderType ? order.orderType.toLowerCase() === orderType.toLowerCase() : true;
+    const matchesShipmentType = shipmentType ? order.shipmentType.toLowerCase() === shipmentType.toLowerCase() : true;
+
+    return matchesSearch && matchesOrderType && matchesShipmentType;
+  });
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setOrderType('');
+    setShipmentType('');
+  };
+
+  const handleRowClick = (order) => {
+    setSelectedOrder(order);
+    setSelectedQuote({}); // Simulate selecting a quote for the popup
+  };
+
+  const handleSelectAgent = (order) => {
+    navigate('/Summary', { state: { order } });
+  };
+
+  const handleClosePopup = () => {
+    setSelectedOrder(null);
+    setSelectedQuote(null);
+  };
+
+  const handleSelectAgentInPopup = () => {
+    // Add logic to handle selecting an agent within the popup
+    handleClosePopup();
   };
 
   return (
-    <Layout>
-    <div className="p-4 mt-40">
-      <div className="flex items-center justify-between mb-6">
-              <span className="px-4 py-2 border-2 border-orange-500 text-orange-500 bg-transparent rounded-md">
-        Completed
-      </span>
-      
-      
-      
-                <form
-                            onSubmit={handleSearchSubmit}
-                            className="flex items-center border border-gray-300 rounded-full overflow-hidden h-10"
-                          >
-                            <input
-                              type="text"
-                              value={searchTerm}
-                              onChange={handleSearchChange}
-                              placeholder="Search..."
-                              className="flex-grow outline-none px-4 text-sm"
-                            />
-                            <button
-                              type="submit"
-                              className="flex items-center justify-center w-10 h-10 bg-orange-500 text-white hover:bg-orange-600"
-                              style={{ transition: 'all 0.3s ease' }}
-                            >
-                              <FaSearch />
-                            </button>
-                          </form>
+    <div className="bg-gray-100">
+      <Header />
+      <main className="mt-6">
+        <div className="container mx-auto p-6">
+          <div className="rounded-xl mb-8 border border-gray-100">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+              {/* Left Section - Heading */}
+              <div className="space-y-1">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                  Completed Orders
+                </h1>
+                <p className="text-gray-500 font-medium text-sm">
+                  {filteredOrders.length} orders found
+                </p>
+              </div>
+
+              {/* Right Section - Filters */}
+              <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 flex-grow max-w-4xl">
+                {/* Search Input */}
+                <div className="relative flex-grow">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  <FiSearch className="absolute left-3 top-3.5 text-gray-400 text-lg" />
                 </div>
 
-      {/* Additional content goes here (e.g., list of items) */}
-      <div>
-        <p>Search results or content for "Completed" will appear here.</p>
-      </div>
+                {/* Filters Group */}
+                <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                  <select
+                    className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                    value={orderType}
+                    onChange={(e) => setOrderType(e.target.value)}
+                  >
+                    <option value="">All Types</option>
+                    <option value="Export">Export</option>
+                    <option value="Import">Import</option>
+                  </select>
+
+                  <select
+                    className="px- py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                    value={shipmentType}
+                    onChange={(e) => setShipmentType(e.target.value)}
+                  >
+                    <option value="">All Shipments</option>
+                    <option value="airFreight">Air Freight</option>
+                    <option value="LCL">LCL</option>
+                    <option value="FCL">FCL</option>
+                  </select>
+
+                  <button
+                    onClick={clearFilters}
+                    className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-200 whitespace-nowrap"
+                  >
+                    <FiRefreshCw className="shrink-0" />
+                    
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Enhanced Table Section */}
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <div className="relative max-h-[600px]">
+              <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
+                <table className="w-full">
+                  <thead>
+                    <tr className="text-sm font-semibold text-gray-600 text-center">
+                      <th className="py-5 px-4 w-[16%]">Order Number</th>
+                      <th className="py-5 px-4 w-[16%]">Type</th>
+                      <th className="py-5 px-4 w-[16%]">Shipment</th>
+                      <th className="py-5 px-4 w-[16%]">Selected Agent</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+
+              {/* Scrollable body */}
+              <div className="overflow-y-auto max-h-[400px]">
+                <table className="w-full">
+                  <tbody className="divide-y divide-gray-100">
+                    {filteredOrders.map((order) => (
+                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.orderNumber}</td>
+                        <td className="py-5 px-4 w-[16%] text-center">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
+                            ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            {order.orderType}
+                          </span>
+                        </td>
+                        <td className="py-5 px-4 w-[16%] text-center">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
+                            ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
+                              order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                            {order.shipmentType}
+                          </span>
+                        </td>
+                        
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.AgentID}</td>
+                        
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {filteredOrders.length === 0 && (
+                <div className="text-center py-16">
+                  <div className="text-gray-300 mb-4 text-6xl">📭</div>
+                  <h3 className="text-xl font-semibold text-gray-500 mb-2">No orders found</h3>
+                  <p className="text-gray-400 max-w-md mx-auto">
+                    Try adjusting your filters or search terms to find what you're looking for.
+                  </p>
+                  <button
+                    onClick={clearFilters}
+                    className="mt-6 px-6 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {selectedOrder && (
+        <QuoteDetailsPopup 
+          quote={selectedQuote} 
+          order={selectedOrder} 
+          onClose={handleClosePopup} 
+          onSelectAgent={handleSelectAgentInPopup} 
+        />
+      )}
+
     </div>
-    </Layout>
   );
 };
 
-export default InProgress;
+export default Dashboard;

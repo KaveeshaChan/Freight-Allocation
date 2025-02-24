@@ -33,7 +33,7 @@ const ImportAirFreight = ({ order }) => {
         },
         body: JSON.stringify({
           orderNumber: order.orderNumber,
-          OrderQuotedID: selectedQuote.OrderQuotedID,
+          OrderQuoteID: selectedQuote.OrderQuoteID,
         }),
       });
 
