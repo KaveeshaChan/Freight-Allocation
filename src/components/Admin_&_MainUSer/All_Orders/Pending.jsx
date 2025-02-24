@@ -12,9 +12,9 @@ const Dashboard = ({ children }) => {
   const [showCancelReason, setShowCancelReason] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const closeErrorPopup = () => {setShowErrorPopup(false)};
+  const closeErrorPopup = () => { setShowErrorPopup(false) };
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const closeSuccessPopup = () => {setShowSuccessPopup(false)};
+  const closeSuccessPopup = () => { setShowSuccessPopup(false) };
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ const Dashboard = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found. Please log in again.');
-      
 
       const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, {
         method: "GET",
@@ -199,7 +198,7 @@ const Dashboard = ({ children }) => {
           </Section>
         )}
 
-        {order.shipmentType === 'FCL' && (
+        {order.shipmentType === 'fcl' && (
           <Section title="Container Details" icon={<FiAnchor className="text-teal-500" />}>
             <DetailItem label="Containers" value={order.numberOfContainers} />
             <DetailItem label="Container Type" value={order.containerType} />
@@ -209,71 +208,75 @@ const Dashboard = ({ children }) => {
     );
   };
 
+  const handleSelectAgent = (order) => {
+    navigate('/Summary', { state: { order } });
+  };
+
   return (
     <div className="bg-gray-100">
       <Header />
       <main className="mt-6">
         <div className="container mx-auto p-6">
-        <div className="rounded-xl mb-8 border border-gray-100">
-  <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-    {/* Left Section - Heading */}
-    <div className="space-y-1">
-      <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-        Pending Orders
-      </h1>
-      <p className="text-gray-500 font-medium text-sm">
-        {filteredOrders.length} orders found
-      </p>
-    </div>
+          <div className="rounded-xl mb-8 border border-gray-100">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+              {/* Left Section - Heading */}
+              <div className="space-y-1">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                  Pending Orders
+                </h1>
+                <p className="text-gray-500 font-medium text-sm">
+                  {filteredOrders.length} orders found
+                </p>
+              </div>
 
-    {/* Right Section - Filters */}
-    <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 flex-grow max-w-4xl">
-      {/* Search Input */}
-      <div className="relative flex-grow">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-        <FiSearch className="absolute left-3 top-3.5 text-gray-400 text-lg" />
-      </div>
+              {/* Right Section - Filters */}
+              <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 flex-grow max-w-4xl">
+                {/* Search Input */}
+                <div className="relative flex-grow">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  <FiSearch className="absolute left-3 top-3.5 text-gray-400 text-lg" />
+                </div>
 
-      {/* Filters Group */}
-      <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
-        <select
-          className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
-          value={orderType}
-          onChange={(e) => setOrderType(e.target.value)}
-        >
-          <option value="">All Types</option>
-          <option value="Export">Export</option>
-          <option value="Import">Import</option>
-        </select>
+                {/* Filters Group */}
+                <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                  <select
+                    className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                    value={orderType}
+                    onChange={(e) => setOrderType(e.target.value)}
+                  >
+                    <option value="">All Types</option>
+                    <option value="Export">Export</option>
+                    <option value="Import">Import</option>
+                  </select>
 
-        <select
-          className="px- py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
-          value={shipmentType}
-          onChange={(e) => setShipmentType(e.target.value)}
-        >
-          <option value="">All Shipments</option>
-          <option value="airFreight">Air Freight</option>
-          <option value="LCL">LCL</option>
-          <option value="FCL">FCL</option>
-        </select>
+                  <select
+                    className="px- py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                    value={shipmentType}
+                    onChange={(e) => setShipmentType(e.target.value)}
+                  >
+                    <option value="">All Shipments</option>
+                    <option value="airFreight">Air Freight</option>
+                    <option value="LCL">LCL</option>
+                    <option value="FCL">FCL</option>
+                  </select>
 
-        <button
-          onClick={clearFilters}
-          className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-200 whitespace-nowrap"
-        >
-          <FiRefreshCw className="shrink-0" />
-          
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+                  <button
+                    onClick={clearFilters}
+                    className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-xl transition-all flex items-center justify-center gap-2 border border-gray-200 whitespace-nowrap"
+                  >
+                    <FiRefreshCw className="shrink-0" />
+                    
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Enhanced Table Section */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
@@ -282,11 +285,12 @@ const Dashboard = ({ children }) => {
                 <table className="w-full">
                   <thead>
                     <tr className="text-sm font-semibold text-gray-600 text-center">
-                      <th className="py-5 px-4 w-[20%]">Order Number</th>
-                      <th className="py-5 px-4 w-[20%]">Type</th>
-                      <th className="py-5 px-4 w-[20%]">Shipment</th>
-                      <th className="py-5 px-4 w-[20%]">Valid Days</th>
-                      <th className="py-5 px-4 w-[20%]">Number of Quotes</th>
+                      <th className="py-5 px-4 w-[16%]">Order Number</th>
+                      <th className="py-5 px-4 w-[16%]">Type</th>
+                      <th className="py-5 px-4 w-[16%]">Shipment</th>
+                      <th className="py-5 px-4 w-[16%]">Valid Days</th>
+                      <th className="py-5 px-4 w-[16%]">Number of Quotes</th>
+                      <th className="py-5 px-4 w-[16%]">Actions</th>
                     </tr>
                   </thead>
                 </table>
@@ -298,27 +302,35 @@ const Dashboard = ({ children }) => {
                   <tbody className="divide-y divide-gray-100">
                     {filteredOrders.map((order) => (
                       <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[20%] text-center">{order.orderNumber}</td>
-                        <td className="py-5 px-4 w-[20%] text-center">
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.orderNumber}</td>
+                        <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
                             ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                             {order.orderType}
                           </span>
                         </td>
-                        <td className="py-5 px-4 w-[20%] text-center">
+                        <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
                             ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
                               order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
                             {order.shipmentType}
                           </span>
                         </td>
-                        <td className="py-5 px-4 w-[20%] text-center">
+                        <td className="py-5 px-4 w-[16%] text-center">
                           
                             <span className="font-medium text-gray-800">{order.daysRemaining}</span>
                             <span className="text-sm text-gray-400"> &nbsp; days</span>
                           
                         </td>
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[20%] text-center">{order.quotationCount}</td>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.quotationCount}</td>
+                        <td className="py-5 px-4 w-[16%] text-center items-center">
+                          <button
+                            onClick={() => handleSelectAgent(order)}
+                            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all"
+                          >
+                            Select Agent
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>

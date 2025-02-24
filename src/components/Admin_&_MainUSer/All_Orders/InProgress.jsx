@@ -197,7 +197,7 @@ const Dashboard = ({ children }) => {
           </Section>
         )}
 
-        {order.shipmentType === 'FCL' && (
+        {order.shipmentType === 'fcl' && (
           <Section title="Container Details" icon={<FiAnchor className="text-teal-500" />}>
             <DetailItem label="Containers" value={order.numberOfContainers} />
             <DetailItem label="Container Type" value={order.containerType} />

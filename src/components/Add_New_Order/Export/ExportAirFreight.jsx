@@ -230,7 +230,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
                 error={errors.shipmentReadyDate}
               />
               <InputField
-                label="Target Date"
+                label="ETA Date Client Destination"
                 name="targetDate"
                 type="date"
                 value={formData.targetDate}
@@ -430,7 +430,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
             type="submit"
             className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95"
           >
-            🚀 Create Air Freight Order
+            Create Export-Air Freight Order
           </button>
           </div>
 
