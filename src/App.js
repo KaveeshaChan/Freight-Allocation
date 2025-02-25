@@ -19,6 +19,7 @@ import Summary from './components/Admin_&_MainUSer/All_Orders/Summary.jsx';
 import Pending from './components/Admin_&_MainUSer/All_Orders/Pending.jsx';
 import OrderAmmends from './components/Admin_&_MainUSer/Order_Ammendments.jsx';
 import Cancel from './components/Admin_&_MainUSer/All_Orders/Cancelled_Orders.jsx';
+import ViewMainUsers from './components/Admin_&_MainUSer/ViewMainUsers.jsx';
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/Completed" element={<Completed />} />
         <Route path="/add-new-order" element={<AddNewOrder />} />
         <Route path="/view-freight-agents" element={<ViewFreightAgents />} />
+        <Route path="/view_Main_User" element={<ViewMainUsers />} />
         <Route path="/Header" element={<Header />} />
         <Route path="/Add_Quote" element={<AddQuote />} />
         <Route path="/user-dashboard" element={<Dashboard />} />

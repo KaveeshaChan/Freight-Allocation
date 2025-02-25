@@ -84,13 +84,17 @@ const Dashboard = ({ children }) => {
   const handleCancelOrder = async (order, reason) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5056/api/orders/${order.orderNumber}/cancel`, {
-        method: 'PUT',
+      const response = await fetch("http://localhost:5056/api/update/cancel-order/", {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ reason }),
+        body: JSON.stringify({ 
+          OrderID: order.orderID,
+          orderStatus: 'cancelled',
+          reason: reason,
+        }),
       });
 
       if (!response.ok) throw new Error('Failed to cancel order');
@@ -423,6 +427,8 @@ const Dashboard = ({ children }) => {
 
       {/* Error Title */}
       <h2 className="text-xl font-semibold my-3 text-gray-800">Oops</h2>
+
+      
 
       {/* Error Message */}
       <p className="text-gray-700 text-sm">{errorMessage || "Something went wrong. Let’s try one more time."}</p>

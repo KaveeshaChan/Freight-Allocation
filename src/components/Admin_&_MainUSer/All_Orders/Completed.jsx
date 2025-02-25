@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Layouts/Main_Layout';
 import { FiSearch, FiPlusCircle, FiRefreshCw, FiClock, FiX, FiBox, FiTruck, FiAnchor, FiMapPin, FiCalendar, FiPackage } from 'react-icons/fi';
-import QuoteDetailsPopup from '../PopupForSelectAgent/Completed'; // Import the popup component
+import AirfreightExportPopup from '../PopupForSelectAgent/CompletedEXP-AIR'; // Import the popup component
+import AirfreightImportPopup from '../PopupForSelectAgent/CompletedIMP-AIR'; // Import the popup component
+import LCLExportPopup from '../PopupForSelectAgent/CompletedEXP-LCL'; // Import the popup component
+import LCLImportPopup from '../PopupForSelectAgent/CompletedIMP-LCL'; // Import the popup component
+import FCLExportPopup from '../PopupForSelectAgent/CompletedEXP-FCL'; // Import the popup component
+import FCLImportPopup from '../PopupForSelectAgent/CompletedIMP-FCL'; // Import the popup component
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
@@ -39,7 +44,6 @@ const Dashboard = ({ children }) => {
 
       const data = await response.json();
       setAvailableOrders(data.orders || []);
-      console.log(availableOrders)
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
@@ -72,10 +76,6 @@ const Dashboard = ({ children }) => {
     setSelectedQuote({}); // Simulate selecting a quote for the popup
   };
 
-  const handleSelectAgent = (order) => {
-    navigate('/Summary', { state: { order } });
-  };
-
   const handleClosePopup = () => {
     setSelectedOrder(null);
     setSelectedQuote(null);
@@ -84,6 +84,38 @@ const Dashboard = ({ children }) => {
   const handleSelectAgentInPopup = () => {
     // Add logic to handle selecting an agent within the popup
     handleClosePopup();
+  };
+
+  const renderPopup = () => {
+    if (!selectedOrder) return null;
+
+    const { orderType, shipmentType } = selectedOrder;
+
+    if (orderType === 'export' && shipmentType === 'airFreight') {
+      return <AirfreightExportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
+    }
+
+    if (orderType === 'import' && shipmentType === 'airFreight') {
+      return <AirfreightImportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
+    }
+
+    if (orderType === 'export' && shipmentType === 'lcl') {
+      return <LCLExportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
+    }
+
+    if (orderType === 'import' && shipmentType === 'lcl') {
+      return <LCLImportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
+    }
+
+    if (orderType === 'export' && shipmentType === 'fcl') {
+      return <FCLExportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
+    }
+
+    if (orderType === 'import' && shipmentType === 'fcl') {
+      return <FCLImportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
+    }
+
+    return null;
   };
 
   return (
@@ -155,7 +187,7 @@ const Dashboard = ({ children }) => {
           {/* Enhanced Table Section */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
             <div className="relative max-h-[600px]">
-              <div className="sticky top-0 z-10 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
+              <div className="sticky top-0 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
                 <table className="w-full">
                   <thead>
                     <tr className="text-sm font-semibold text-gray-600 text-center">
@@ -189,7 +221,7 @@ const Dashboard = ({ children }) => {
                           </span>
                         </td>
                         
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.AgentID}</td>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.Freight_Agent}</td>
                         
                       </tr>
                     ))}
@@ -217,14 +249,7 @@ const Dashboard = ({ children }) => {
         </div>
       </main>
 
-      {selectedOrder && (
-        <QuoteDetailsPopup 
-          quote={selectedQuote} 
-          order={selectedOrder} 
-          onClose={handleClosePopup} 
-          onSelectAgent={handleSelectAgentInPopup} 
-        />
-      )}
+      {renderPopup()}
 
     </div>
   );

@@ -317,199 +317,192 @@ const handleViewCoordinatorsClick = async() => {
       </table>
     </div>
 
-          {showPopup && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[50]">
-              <div className="relative bg-white p-8 rounded-xl shadow-xl w-[800px] max-h-[90vh] overflow-auto">
-                {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2
-          id="agentPopupTitle"
-          className="text-2xl font-semibold text-gray-800 text-center"
-        >
-          {selectedAgent.Freight_Agent}
-        </h2>
-        <span
-          className={`px-3 py-1 rounded-full border-2 text-sm font-medium 
-            ${selectedAgent.AgentStatus === "Active"
-              ? "border-green-700 bg-green-100 text-green-700"
-              : selectedAgent.AgentStatus === "Non Active"
-              ? "border-yellow-700 bg-yellow-100 text-yellow-700"
-              : "border-red-700 bg-red-100 text-red-700"
-            }`}
-        >
-          {selectedAgent.AgentStatus}
-        </span>
-      </div>
-
-      {/* Change Status Section */}
-      <div className="mt-4">
-        <h3 className="font-semibold mb-2 text-gray-700">
-          Status: {!isAdmin && <span className="text-sm text-gray-500">(Admin only)</span>}
-        </h3>
-        <div className="flex gap-4 items-center">
-          {["Active", "Non Active", "Blacklisted"].map((status) => (
-          <label
-            key={status}
-            className={`flex items-center gap-2 text-sm font-medium ${
-              isAdmin ? "cursor-pointer" : "cursor-not-allowed opacity-70"
-            }`}
-          >
-              <input
-                type="radio"
-                  className="form-radio text-[#0534F0]"
-                name="status"
-                value={status}
-                checked={selectedAgent.AgentStatus === status}
-                onChange={() => handleStatusChange(status)}
-                disabled={!isAdmin}
-                
-              />
-              <span
-                className={`${
-                  selectedAgent.AgentStatus === status
-                    ? "text-blue-600 font-semibold"
-                    : "text-gray-700"
-                }`}
-              >
-                {status}
-              </span>
-            </label>
-          ))}
+    {showPopup && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60]">
+    <div className="relative bg-white rounded-2xl shadow-2xl w-[95%] max-w-4xl max-h-[90vh] overflow-hidden">
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-[#0534F0] to-[#98009E] p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-white">
+            {selectedAgent.Freight_Agent}
+          </h2>
+          <span className={`px-4 py-2 rounded-full text-sm font-semibold
+            ${selectedAgent.AgentStatus === "Active" ? 'bg-green-100/20 text-green-100 border border-green-200/30' :
+              selectedAgent.AgentStatus === "Non Active" ? 'bg-yellow-100/20 text-yellow-100 border border-yellow-200/30' :
+              'bg-red-100/20 text-red-100 border border-red-200/30'}`
+          }>
+            {selectedAgent.AgentStatus}
+          </span>
         </div>
       </div>
 
-      {/* Contact and Details Section */}
-      <div className="space-y-6 mt-6 border-t pt-4">
-        {/* BR Number */}
-        <div className="flex justify-between">
-          <p>
-            <strong className="font-semibold text-gray-700">BR Number:</strong>{" "}
-            {selectedAgent.BRNumber || "N/A"}
-          </p>
-        </div>
-
-        {/* Company Address and Country */}
-        <div className="flex justify-between">
-          <p>
-            <strong className="font-semibold text-gray-700">Company Address:</strong>{" "}
-            {selectedAgent.Address || "N/A"}
-          </p>
-          <p>
-            <strong className="font-semibold text-gray-700">Country:</strong>{" "}
-            {selectedAgent.Country || "N/A"}
-          </p>
-        </div>
-
-        {/* Email and Contact Number */}
-        <div className="flex justify-between">
-          <p>
-            <strong className="font-semibold text-gray-700">Email:</strong>{" "}
-            {selectedAgent.Email || "N/A"}
-          </p>
-          <p>
-            <strong className="font-semibold text-gray-700">Contact:</strong>{" "}
-            {selectedAgent.ContactNumber || "N/A"}
-          </p>
-        </div>
-
-        {/* Director Details */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h3 className="font-bold text-gray-800 mb-1">Director 1</h3>
-            <p>
-              <strong className="font-semibold">Name:</strong>{" "}
-              {selectedAgent.Director1_Name || "N/A"}
-            </p>
-            <p>
-              <strong className="font-semibold">Contact:</strong>{" "}
-              {selectedAgent.Director1_Contact_Number || "N/A"}
-            </p>
-            <p>
-              <strong className="font-semibold">Email:</strong>{" "}
-              {selectedAgent.Director1_Email || "N/A"}
-            </p>
+      {/* Main Content */}
+      <div className="p-8 overflow-y-auto">
+        {/* Status Control Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Account Status</h3>
+            {!isAdmin && <span className="text-sm text-gray-500">(Admin only)</span>}
           </div>
-          {selectedAgent.Director2_Name && (
-            <div>
-              <h3 className="font-bold text-gray-800 mb-1">Director 2</h3>
-              <p>
-                <strong className="font-semibold">Name:</strong>{" "}
-                {selectedAgent.Director2_Name || "N/A"}
-              </p>
-              <p>
-                <strong className="font-semibold">Contact:</strong>{" "}
-                {selectedAgent.Director2_Contact_Number || "N/A"}
-              </p>
-              <p>
-                <strong className="font-semibold">Email:</strong>{" "}
-                {selectedAgent.Director2_Email || "N/A"}
-              </p>
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {["Active", "Non Active", "Blacklisted"].map((status) => (
+              <label 
+                key={status}
+                className={`p-4 rounded-xl border-2 transition-all flex items-center gap-3
+                  ${selectedAgent.AgentStatus === status ? 
+                    'border-[#0534F0] bg-blue-50' : 
+                    'border-gray-200 hover:border-blue-200'}
+                  ${isAdmin ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+              >
+                <input
+                  type="radio"
+                  name="status"
+                  value={status}
+                  checked={selectedAgent.AgentStatus === status}
+                  onChange={() => handleStatusChange(status)}
+                  disabled={!isAdmin}
+                  className="form-radio h-5 w-5 text-[#0534F0] border-2 border-gray-300"
+                />
+                <span className={`font-medium ${
+                  selectedAgent.AgentStatus === status ? 
+                  'text-[#0534F0]' : 'text-gray-700'}`}
+                >
+                  {status}
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
 
-                {/* Update buttons in popup */}
-                <div className="flex justify-between gap-4 mt-6">
-                  <button
-                    onClick={handleViewCoordinatorsClick}
-                    className="px-6 py-3 bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white rounded-full hover:from-[#0429C7] hover:to-[#7A0080] transition-all duration-300"
-                  >
-                    View Coordinators ({selectedAgent.CoordinatorCount})
-                  </button>
-                  <button
-                    onClick={saveChanges}
-                    className="px-6 py-3 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all duration-300"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={closePopup}
-                    className="px-6 py-3 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300"
-                  >
-                    Close
-                  </button>
-                </div>
+        {/* Company Details Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="space-y-4">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Business Details</h3>
+              <div className="space-y-2">
+                <p><span className="font-semibold text-gray-800">BR Number:</span> {selectedAgent.BRNumber || "—"}</p>
+                <p><span className="font-semibold text-gray-800">Country:</span> {selectedAgent.Country || "—"}</p>
               </div>
             </div>
-          )}
 
-          {/* Coordinator Popup */}
-          {showCoordinatorPopup && (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-              <div className="bg-white p-8 rounded-xl shadow-xl w-[800px] max-h-[80vh] overflow-hidden">
-                <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Coordinators</h2>
-                <div className="overflow-y-auto max-h-[400px]">
-                  <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                    <thead className="bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white">
-                      <tr>
-              <th className="px-6 py-3 text-center text-sm font-semibold">Coordinator Name</th>
-              <th className="px-6 py-3 text-center text-sm font-semibold">Email</th>
-              <th className="px-6 py-3 text-center text-sm font-semibold">Contact Number</th>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Contact Information</h3>
+              <div className="space-y-2">
+                <p><span className="font-semibold text-gray-800">Email:</span> {selectedAgent.Email || "—"}</p>
+                <p><span className="font-semibold text-gray-800">Phone:</span> {selectedAgent.ContactNumber || "—"}</p>
+                <p><span className="font-semibold text-gray-800">Address:</span> {selectedAgent.Address || "—"}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Directors Section */}
+          <div className="space-y-6">
+            {[selectedAgent.Director1_Name, selectedAgent.Director2_Name].map((director, index) => (
+              director && (
+                <div key={index} className="bg-gray-50 p-4 rounded-xl">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                    Director {index + 1}
+                  </h3>
+                  <div className="space-y-2">
+                    <p><span className="font-medium text-gray-700">Name:</span> {director}</p>
+                    <p><span className="font-medium text-gray-700">Contact:</span> 
+                      {selectedAgent[`Director${index+1}_Contact_Number`] || "—"}
+                    </p>
+                    <p><span className="font-medium text-gray-700">Email:</span> 
+                      {selectedAgent[`Director${index+1}_Email`] || "—"}
+                    </p>
+                  </div>
+                </div>
+              )
+            ))}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row gap-4 border-t pt-6">
+          <button
+            onClick={handleViewCoordinatorsClick}
+            className="flex-1 py-3 bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white rounded-xl
+                      hover:from-[#0429C7] hover:to-[#7A0080] transition-all shadow-lg
+                      flex items-center justify-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            View Coordinators ({selectedAgent.CoordinatorCount})
+          </button>
+          <button
+            onClick={saveChanges}
+            className="flex-1 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl
+                      hover:from-green-600 hover:to-green-700 transition-all shadow-lg
+                      flex items-center justify-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Save Changes
+          </button>
+          <button
+            onClick={closePopup}
+            className="flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl
+                      hover:from-red-600 hover:to-red-700 transition-all shadow-lg"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Coordinators Popup */}
+{showCoordinatorPopup && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[70]">
+    <div className="bg-white rounded-2xl shadow-2xl w-[95%] max-w-3xl max-h-[90vh] flex flex-col">
+      <div className="p-6 border-b flex justify-between items-center bg-gradient-to-r from-[#0534F0] to-[#98009E]">
+        <h2 className="text-xl font-bold text-white">Coordinators List</h2>
+        <button
+          onClick={closeCoordinatorPopup}
+          className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <div className="overflow-y-auto flex-1">
+        <table className="w-full">
+          <thead className="sticky top-0 bg-gray-200">
+            <tr>
+              <th className="px-6 py-4 text-center font-semibold text-gray-700">Name</th>
+              <th className="px-6 py-4 text-center font-semibold text-gray-700">Email</th>
+              <th className="px-6 py-4 text-center font-semibold text-gray-700">Contact</th>
             </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {coordinators.map((coordinator, index) => (
-              <tr key={index} className="hover:bg-gray-50 cursor-pointer transition-all duration-300">
-                <td className="px-6 py-4 text-sm text-center font-medium text-gray-700">{coordinator.Coordinator_Name}</td>
-                <td className="px-6 py-4 text-sm text-center text-gray-600">{coordinator.Email}</td>
-                <td className="px-6 py-4 text-sm text-center text-gray-600">{coordinator.ContactNumber}</td>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {coordinators.map((coordinator, index) => (
+              <tr key={index} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4 text-center font-medium text-gray-900">{coordinator.Coordinator_Name}</td>
+                <td className="px-6 py-4 text-center font-medium text-gray-600 break-all">{coordinator.Email}</td>
+                <td className="px-6 py-4 text-center font-medium text-gray-600">{coordinator.ContactNumber}</td>
               </tr>
             ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="flex justify-center gap-6 mt-6">
-                  <button
-                    onClick={closeCoordinatorPopup}
-                    className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-all duration-300"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="p-4 border-t bg-gray-50">
+        <button
+          onClick={closeCoordinatorPopup}
+          className="w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors shadow-lg"
+        >
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         </div>
       </main>
     </div>

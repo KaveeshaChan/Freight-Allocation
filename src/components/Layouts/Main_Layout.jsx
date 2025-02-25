@@ -145,7 +145,7 @@ const Header = () => {
         
         {isViewUserDropdownOpen && (
           <div className="ml-4 border-l-2 border-purple-100">
-            <a href="/View_Main_User" className="flex items-center px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50">
+            <a href="/view_Main_User" className="flex items-center px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50">
               <svg className="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>

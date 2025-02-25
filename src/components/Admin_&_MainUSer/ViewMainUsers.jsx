@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from './Header';
+import Header from '../Layouts/Main_Layout';
 import { FaSearch, FaUser, FaEnvelope, FaPhone, FaIdBadge } from 'react-icons/fa';
 
 const MembersPage = () => {
@@ -13,9 +13,7 @@ const MembersPage = () => {
         if (!token) {
           throw new Error('No token found. Please log in again.');
         }
-        const agentID = localStorage.getItem('agentID');
-        const response = await fetch(
-          `http://localhost:5056/api/select/view-freight-agents/coordinators/${agentID}`, 
+        const response = await fetch("http://localhost:5056/api/select/view-mainUsers/", 
           {
             method: "GET",
             headers: {
@@ -28,8 +26,9 @@ const MembersPage = () => {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         
         const data = await response.json();
-        if (data?.freightCoordinators) {
-          setMembers(data.freightCoordinators);
+        console.log(data)
+        if (data?.mainUsers) {
+          setMembers(data.mainUsers);
         }
       } catch (error) {
         console.error('Error fetching members:', error.message);
@@ -41,7 +40,7 @@ const MembersPage = () => {
   }, []);
 
   const filteredMembers = members.filter(member =>
-    member.Coordinator_Name?.toLowerCase().includes(searchQuery.toLowerCase())
+    member.MainUserName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -54,7 +53,7 @@ const MembersPage = () => {
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
                 <FaIdBadge className="text-[#98009E] w-8 h-8" />
-                Team Members
+                Main Users
               </h1>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -73,7 +72,7 @@ const MembersPage = () => {
             {/* Members Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredMembers.map((member) => (
-                <div key={member.CoordinatorID} className="group bg-white p-6 rounded-xl border border-gray-200 hover:border-[#0534F0]/30 hover:shadow-lg transition-all duration-300">
+                <div key={member.MainUserID} className="group bg-white p-6 rounded-xl border border-gray-200 hover:border-[#0534F0]/30 hover:shadow-lg transition-all duration-300">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#0534F0] to-[#98009E] flex items-center justify-center">
@@ -82,7 +81,7 @@ const MembersPage = () => {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                        {member.Coordinator_Name}
+                        {member.MainUserName}
                       </h3>
                       <div className="flex items-center gap-2 text-gray-600 mb-2">
                         <FaEnvelope className="w-4 h-4 text-[#98009E]" />
