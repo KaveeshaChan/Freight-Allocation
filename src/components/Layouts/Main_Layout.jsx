@@ -167,8 +167,8 @@ const Header = () => {
 
         {/* Logout Button */}
         <a 
-          href="/logout" 
-          className="px-4 py-2 border border-gray-400 rounded-full text-gray-900 font-medium hover:bg-gradient-to-r hover:from-[#0534F0] hover:to-[#98009E] hover:text-white transition-all"
+          href="/login" 
+          className="px-4 py-2 border border-gray-400 rounded-full text-gray-900 font-small hover:bg-gradient-to-r hover:from-[#0534F0] hover:to-[#98009E] hover:text-white transition-all"
         >
           Log Out
         </a>

@@ -203,310 +203,281 @@ const handleViewCoordinatorsClick = async() => {
 };
 
 
-  return (
-    <div>
-      <Header />
-      <main className="mt-24">
-        <div className="p-4 mt-8">
-        <div className="flex items-center justify-between mb-6">
-      <div className="flex flex-wrap justify-start gap-4 mb-6">
-        <button
-          onClick={() => handleFilterChange("All")}
-          className={`px-4 py-2 rounded-full border-2 ${
-            filterStatus === "All"
-              ? "bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white border-transparent"
-              : "border-gray-400 text-gray-700 hover:border-[#0534F0] hover:text-[#0534F0]"
-          }`}
-        >
-          All ({agents.length})
-        </button>
-        <button
-          onClick={() => handleFilterChange("Active")}
-          className={`px-4 py-2 rounded-full border-2 ${
-            filterStatus === "Active"
-              ? "bg-green-600 text-white border-transparent"
-              : "border-gray-400 text-gray-700 hover:border-green-600 hover:text-green-600"
-          }`}
-        >
-          Active ({agents.filter((agent) => agent.AgentStatus === "Active").length})
-        </button>
-        <button
-          onClick={() => handleFilterChange("Non Active")}
-          className={`px-4 py-2 rounded-full border-2 ${
-            filterStatus === "Non Active"
-              ? "bg-yellow-500 text-white border-yellow-500"
-              : "border-gray-400 text-gray-500 hover:border-yellow-500 hover:text-yellow-500"
-          }`}
-        >
-          Non Active (
-          {agents.filter((agent) => agent.AgentStatus === "Non Active").length}
-          )
-        </button>
-        <button
-          onClick={() => handleFilterChange("Blacklisted")}
-          className={`px-4 py-2 rounded-full border-2 ${
-            filterStatus === "Blacklisted"
-              ? "bg-red-500 text-white border-red-500"
-              : "border-gray-400 text-gray-500 hover:border-red-500 hover:text-red-500"
-          }`}
-        >
-          Blacklisted (
-          {agents.filter((agent) => agent.AgentStatus === "Blacklisted").length}
-          )
-        </button>
-      </div>
-      <form
-        onSubmit={handleSearchSubmit}
-        className="flex items-center border border-gray-300 rounded-full overflow-hidden h-10"
-      >
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search by Agent Name"
-          className="flex-grow outline-none px-4 text-sm"
-        />
-        <button
-          type="submit"
-          className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white hover:from-[#0429C7] hover:to-[#7A0080] transition-all duration-300"
-        >
-          <FaSearch />
-        </button>
-      </form>
-    </div>
-
-    <div className="table-wrapper border border-gray-300 rounded-lg shadow-lg overflow-hidden">
-      <table className="min-w-full bg-white">
-        <thead className="bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white sticky top-0 z-[1]">
-          <tr>
-            <th className="px-6 py-3 text-center font-semibold text-sm">Freight Agent Name</th>
-            <th className="px-6 py-3 text-center font-semibold text-sm">Email</th>
-            <th className="px-6 py-3 text-center font-semibold text-sm">Contact Numbers</th>
-            <th className="px-6 py-3 text-center font-semibold text-sm">No. of Coordinators</th>
-            <th className="px-6 py-3 text-center font-semibold text-sm">Status</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 overflow-y-auto h-[400px]">
-          {filteredAgents.map((agent, index) => (
-            <tr
-              key={index}
-              onClick={() => handleRowClick(agent)}
-              className="hover:bg-gray-50 cursor-pointer transition-all duration-300"
-            >
-              <td className="px-6 py-4 text-sm text-center font-medium text-gray-700">{agent.Freight_Agent}</td>
-              <td className="px-6 py-4 text-sm text-center text-gray-500">{agent.Email || "N/A"}</td>
-              <td className="px-6 py-4 text-sm text-center text-gray-500">{agent.ContactNumber}</td>
-              <td className="px-6 py-4 text-sm text-center text-gray-500">{agent.CoordinatorCount}</td>
-              <td className="px-6 py-4 text-sm text-center font-medium text-gray-700">
-                <span
-                  className={`px-3 py-1 rounded-full border-2 
-                    ${
-                      agent.AgentStatus === "Active"
-                        ? "border-green-700 bg-green-100 text-green-700"
-                        : agent.AgentStatus === "Non Active"
-                        ? "border-yellow-700 bg-yellow-100 text-yellow-700"
-                        : "border-red-700 bg-red-100 text-red-700"
-                    }`}
-                >
-                  {agent.AgentStatus}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-
-    {showPopup && (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60]">
-    <div className="relative bg-white rounded-2xl shadow-2xl w-[95%] max-w-4xl max-h-[90vh] overflow-hidden">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-[#0534F0] to-[#98009E] p-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white">
-            {selectedAgent.Freight_Agent}
-          </h2>
-          <span className={`px-4 py-2 rounded-full text-sm font-semibold
-            ${selectedAgent.AgentStatus === "Active" ? 'bg-green-100/20 text-green-100 border border-green-200/30' :
-              selectedAgent.AgentStatus === "Non Active" ? 'bg-yellow-100/20 text-yellow-100 border border-yellow-200/30' :
-              'bg-red-100/20 text-red-100 border border-red-200/30'}`
-          }>
-            {selectedAgent.AgentStatus}
-          </span>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="p-8 overflow-y-auto">
-        {/* Status Control Section */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Account Status</h3>
-            {!isAdmin && <span className="text-sm text-gray-500">(Admin only)</span>}
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {["Active", "Non Active", "Blacklisted"].map((status) => (
-              <label 
-                key={status}
-                className={`p-4 rounded-xl border-2 transition-all flex items-center gap-3
-                  ${selectedAgent.AgentStatus === status ? 
-                    'border-[#0534F0] bg-blue-50' : 
-                    'border-gray-200 hover:border-blue-200'}
-                  ${isAdmin ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+return (
+  <div className="bg-gray-50 min-h-screen">
+    <Header />
+    <main className="pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-8xl mx-auto">
+        {/* Filters Section */}
+        <div className="mb-8 flex justify-between items-center">
+          <div className="flex flex-wrap gap-3">
+            {[
+              { status: "All", count: agents.length, color: "bg-gradient-to-r from-[#0534F0] to-[#98009E]" },
+              { status: "Active", count: agents.filter(a => a.AgentStatus === "Active").length, color: "bg-green-600" },
+              { status: "Non Active", count: agents.filter(a => a.AgentStatus === "Non Active").length, color: "bg-yellow-500" },
+              { status: "Blacklisted", count: agents.filter(a => a.AgentStatus === "Blacklisted").length, color: "bg-red-500" }
+            ].map((filter, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleFilterChange(filter.status)}
+                className={`px-4 py-2 rounded-full transition-all ${
+                  filterStatus === filter.status 
+                    ? `${filter.color.includes('bg') ? filter.color : 'bg-gradient-to-r'} text-white shadow-lg`
+                    : 'bg-white text-gray-600 shadow-md hover:shadow-lg'
+                } ${filter.color.startsWith('bg') ? '' : 'bg-gradient-to-r'}`}
               >
-                <input
-                  type="radio"
-                  name="status"
-                  value={status}
-                  checked={selectedAgent.AgentStatus === status}
-                  onChange={() => handleStatusChange(status)}
-                  disabled={!isAdmin}
-                  className="form-radio h-5 w-5 text-[#0534F0] border-2 border-gray-300"
-                />
-                <span className={`font-medium ${
-                  selectedAgent.AgentStatus === status ? 
-                  'text-[#0534F0]' : 'text-gray-700'}`}
-                >
-                  {status}
-                </span>
-              </label>
+                {filter.status} ({filter.count})
+              </button>
             ))}
           </div>
+
+          {/* Search Bar */}
+          <div className="relative max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              placeholder="Search agents..."
+              className="w-full pl-10 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-[#0534F0] focus:ring-2 focus:ring-[#0534F0]/20 transition-all"
+            />
+          </div>
         </div>
 
-        {/* Company Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-xl">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Business Details</h3>
-              <div className="space-y-2">
-                <p><span className="font-semibold text-gray-800">BR Number:</span> {selectedAgent.BRNumber || "—"}</p>
-                <p><span className="font-semibold text-gray-800">Country:</span> {selectedAgent.Country || "—"}</p>
+        {/* Agents Table */}
+        <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gradient-to-r from-[#0534F0] to-[#98009E]">
+              <tr>
+                {['Freight Agent', 'Email', 'Contact', 'Coordinators', 'Status'].map((header, idx) => (
+                  <th
+                    key={idx}
+                    className="px-6 py-4 text-center text-sm font-semibold text-white uppercase tracking-wider"
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200 h-[400px]">
+              {filteredAgents.map((agent, idx) => (
+                <tr
+                  key={idx}
+                  onClick={() => handleRowClick(agent)}
+                  className="hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  <td className="px-6 py-4 max-w-xs text-center text-gray-900 font-medium truncate">
+                    {agent.Freight_Agent}
+                  </td>
+                  <td className="px-6 py-4 text-center text-gray-600">{agent.Email || 'N/A'}</td>
+                  <td className="px-6 py-4 text-center text-gray-600">{agent.ContactNumber}</td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
+                      {agent.CoordinatorCount}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                      agent.AgentStatus === 'Active' ? 'bg-green-100 text-green-800' :
+                      agent.AgentStatus === 'Non Active' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {agent.AgentStatus}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredAgents.length === 0 && (
+            <div className="p-8 text-center text-gray-500">
+              No agents found matching your criteria
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Agent Details Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Popup Header */}
+            <div className="bg-gradient-to-r from-[#0534F0] to-[#98009E] p-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-white">{selectedAgent.Freight_Agent}</h2>
+                <span className={`px-3 py-1 rounded-full text-sm ${
+                  selectedAgent.AgentStatus === 'Active' ? 'bg-green-100/20 text-green-100' :
+                  selectedAgent.AgentStatus === 'Non Active' ? 'bg-yellow-100/20 text-yellow-100' :
+                  'bg-red-100/20 text-red-100'
+                }`}>
+                  {selectedAgent.AgentStatus}
+                </span>
               </div>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-xl">
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Contact Information</h3>
-              <div className="space-y-2">
-                <p><span className="font-semibold text-gray-800">Email:</span> {selectedAgent.Email || "—"}</p>
-                <p><span className="font-semibold text-gray-800">Phone:</span> {selectedAgent.ContactNumber || "—"}</p>
-                <p><span className="font-semibold text-gray-800">Address:</span> {selectedAgent.Address || "—"}</p>
+            {/* Popup Content */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              {/* Status Selector */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800">Account Status</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {['Active', 'Non Active', 'Blacklisted'].map(status => (
+                    <label
+                      key={status}
+                      className={`p-4 rounded-xl border-2 flex items-center gap-3 transition-all ${
+                        selectedAgent.AgentStatus === status 
+                          ? 'border-[#0534F0] bg-blue-50' 
+                          : 'border-gray-200 hover:border-blue-200'
+                      } ${!isAdmin ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    >
+                      <input
+                        type="radio"
+                        name="status"
+                        value={status}
+                        checked={selectedAgent.AgentStatus === status}
+                        onChange={() => handleStatusChange(status)}
+                        disabled={!isAdmin}
+                        className="h-5 w-5 text-[#0534F0] border-2 border-gray-300 rounded-full"
+                      />
+                      <span className="font-medium">{status}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Directors Section */}
-          <div className="space-y-6">
-            {[selectedAgent.Director1_Name, selectedAgent.Director2_Name].map((director, index) => (
-              director && (
-                <div key={index} className="bg-gray-50 p-4 rounded-xl">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">
-                    Director {index + 1}
-                  </h3>
+              {/* Details Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Business Details Card */}
+                <div className="bg-gray-50 p-5 rounded-xl">
+                  <h3 className="text-sm font-semibold text-gray-500 mb-3">Business Details</h3>
                   <div className="space-y-2">
-                    <p><span className="font-medium text-gray-700">Name:</span> {director}</p>
-                    <p><span className="font-medium text-gray-700">Contact:</span> 
-                      {selectedAgent[`Director${index+1}_Contact_Number`] || "—"}
-                    </p>
-                    <p><span className="font-medium text-gray-700">Email:</span> 
-                      {selectedAgent[`Director${index+1}_Email`] || "—"}
-                    </p>
+                    <DetailItem label="BR Number" value={selectedAgent.BRNumber} />
+                    <DetailItem label="Country" value={selectedAgent.Country} />
                   </div>
                 </div>
-              )
-            ))}
+
+                {/* Contact Card */}
+                <div className="bg-gray-50 p-5 rounded-xl">
+                  <h3 className="text-sm font-semibold text-gray-500 mb-3">Contact Information</h3>
+                  <div className="space-y-2">
+                    <DetailItem label="Email" value={selectedAgent.Email} />
+                    <DetailItem label="Phone" value={selectedAgent.ContactNumber} />
+                    <DetailItem label="Address" value={selectedAgent.Address} />
+                  </div>
+                </div>
+
+                {/* Directors Section */}
+                {[1, 2].map(num => (
+                  selectedAgent[`Director${num}_Name`] && (
+                    <div key={num} className="bg-gray-50 p-5 rounded-xl">
+                      <h3 className="text-sm font-semibold text-gray-500 mb-3">Director {num}</h3>
+                      <div className="space-y-2">
+                        <DetailItem label="Name" value={selectedAgent[`Director${num}_Name`]} />
+                        <DetailItem label="Contact" value={selectedAgent[`Director${num}_Contact_Number`]} />
+                        <DetailItem label="Email" value={selectedAgent[`Director${num}_Email`]} />
+                      </div>
+                    </div>
+                  )
+                ))}
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="p-6 bg-gray-50 border-t">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button
+                  onClick={handleViewCoordinatorsClick}
+                  className="py-3 bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white rounded-xl hover:opacity-90 transition-opacity"
+                >
+                  View Coordinators ({selectedAgent.CoordinatorCount})
+                </button>
+                <button
+                  onClick={saveChanges}
+                  className="py-3 bg-green-600 text-white rounded-xl hover:opacity-90 transition-opacity"
+                >
+                  Save Changes
+                </button>
+                <button
+                  onClick={closePopup}
+                  className="py-3 bg-red-600 text-white rounded-xl hover:opacity-90 transition-opacity"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+      )}
 
-        {/* Action Buttons */}
-        <div className="flex flex-col md:flex-row gap-4 border-t pt-6">
-          <button
-            onClick={handleViewCoordinatorsClick}
-            className="flex-1 py-3 bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white rounded-xl
-                      hover:from-[#0429C7] hover:to-[#7A0080] transition-all shadow-lg
-                      flex items-center justify-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            View Coordinators ({selectedAgent.CoordinatorCount})
-          </button>
-          <button
-            onClick={saveChanges}
-            className="flex-1 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl
-                      hover:from-green-600 hover:to-green-700 transition-all shadow-lg
-                      flex items-center justify-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            Save Changes
-          </button>
-          <button
-            onClick={closePopup}
-            className="flex-1 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl
-                      hover:from-red-600 hover:to-red-700 transition-all shadow-lg"
-          >
-            Close
-          </button>
+      {/* Coordinators Popup */}
+      {showCoordinatorPopup && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-gradient-to-r from-[#0534F0] to-[#98009E] p-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-white">Coordinators</h2>
+                <button
+                  onClick={closeCoordinatorPopup}
+                  className="text-white hover:text-gray-200"
+                >
+                  <XIcon className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Name</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Email</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Contact</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {coordinators.map((coordinator, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-gray-900 font-medium">{coordinator.Coordinator_Name}</td>
+                      <td className="px-4 py-3 text-gray-600">{coordinator.Email}</td>
+                      <td className="px-4 py-3 text-gray-600">{coordinator.ContactNumber}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </main>
   </div>
-)}
-
-{/* Coordinators Popup */}
-{showCoordinatorPopup && (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[70]">
-    <div className="bg-white rounded-2xl shadow-2xl w-[95%] max-w-3xl max-h-[90vh] flex flex-col">
-      <div className="p-6 border-b flex justify-between items-center bg-gradient-to-r from-[#0534F0] to-[#98009E]">
-        <h2 className="text-xl font-bold text-white">Coordinators List</h2>
-        <button
-          onClick={closeCoordinatorPopup}
-          className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      
-      <div className="overflow-y-auto flex-1">
-        <table className="w-full">
-          <thead className="sticky top-0 bg-gray-200">
-            <tr>
-              <th className="px-6 py-4 text-center font-semibold text-gray-700">Name</th>
-              <th className="px-6 py-4 text-center font-semibold text-gray-700">Email</th>
-              <th className="px-6 py-4 text-center font-semibold text-gray-700">Contact</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {coordinators.map((coordinator, index) => (
-              <tr key={index} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 text-center font-medium text-gray-900">{coordinator.Coordinator_Name}</td>
-                <td className="px-6 py-4 text-center font-medium text-gray-600 break-all">{coordinator.Email}</td>
-                <td className="px-6 py-4 text-center font-medium text-gray-600">{coordinator.ContactNumber}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="p-4 border-t bg-gray-50">
-        <button
-          onClick={closeCoordinatorPopup}
-          className="w-full py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors shadow-lg"
-        >
-          Close Window
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-        </div>
-      </main>
-    </div>
-  );
+);
 }
+
+// Helper component for detail items
+const DetailItem = ({ label, value }) => (
+<div className="flex justify-between items-center">
+  <span className="text-sm text-gray-600">{label}:</span>
+  <span className="text-sm text-gray-900 font-medium">{value || 'N/A'}</span>
+</div>
+);
+
+// XIcon component for close button
+const XIcon = ({ className }) => (
+<svg
+  className={className}
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24"
+>
+  <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M6 18L18 6M6 6l12 12"
+  />
+</svg>
+);
 
 export default Dashboard;

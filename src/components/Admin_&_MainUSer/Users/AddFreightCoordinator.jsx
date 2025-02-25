@@ -216,7 +216,7 @@ const AddFreightCoordinator = () => {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Freight Agent Selection */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+              <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                 <FaBuilding className="text-[#98009E]" />
                 Freight Agent
               </label>
@@ -260,7 +260,7 @@ const AddFreightCoordinator = () => {
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                     <FaEnvelope className="text-[#0534F0]" />
                     Email Address
                   </label>
@@ -277,7 +277,7 @@ const AddFreightCoordinator = () => {
 
                 {/* Contact Number */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                     <FaPhone className="text-[#98009E]" />
                     Contact Number
                   </label>
@@ -294,7 +294,7 @@ const AddFreightCoordinator = () => {
 
                 {/* Password */}
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                     <FaKey className="text-[#0534F0]" />
                     Password
                   </label>

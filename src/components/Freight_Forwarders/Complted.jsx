@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
-import { FiSearch, FiPlusCircle, FiRefreshCw, FiClock, FiX, FiBox, FiTruck, FiAnchor, FiMapPin, FiCalendar, FiPackage } from 'react-icons/fi';
+import { FiSearch,FiRefreshCw} from 'react-icons/fi';
 import AirfreightExportPopup from '../Admin_&_MainUSer/PopupForSelectAgent/CompletedEXP-AIR'; // Import the popup component
 import AirfreightImportPopup from '../Admin_&_MainUSer/PopupForSelectAgent/CompletedIMP-AIR'; // Import the popup component
 import LCLExportPopup from '../Admin_&_MainUSer/PopupForSelectAgent/CompletedEXP-LCL'; // Import the popup component

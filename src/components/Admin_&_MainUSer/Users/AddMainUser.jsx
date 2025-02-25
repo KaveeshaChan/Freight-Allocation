@@ -179,7 +179,7 @@ const AddMainUser = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Name Field */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                   <FaUser className="text-[#98009E]" />
                   Full Name
                 </label>
@@ -196,7 +196,7 @@ const AddMainUser = () => {
 
               {/* Email Field */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                   <FaEnvelope className="text-[#0534F0]" />
                   Email Address
                 </label>
@@ -213,7 +213,7 @@ const AddMainUser = () => {
 
               {/* Contact Number Field */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                   <FaPhone className="text-[#98009E]" />
                   Contact Number
                 </label>
@@ -230,7 +230,7 @@ const AddMainUser = () => {
 
               {/* Password Field */}
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                <label className="block text-sm font-medium text-gray-700 flex-items-center gap-2">
                   <FaKey className="text-[#0534F0]" />
                   Password
                 </label>
