@@ -204,24 +204,24 @@ const Dashboard = ({ children }) => {
               <div className="overflow-y-auto max-h-[400px]">
                 <table className="w-full">
                   <tbody className="divide-y divide-gray-100">
-                    {filteredOrders.map((orders) => (
-                      <tr key={orders.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(orders)}>
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{orders.orderNumber}</td>
+                    {filteredOrders.map((order) => (
+                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.orderNumber}</td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
-                            ${orders.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                            {orders.orderType}
+                            ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            {order.orderType}
                           </span>
                         </td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
-                            ${orders.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
-                              orders.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
-                            {orders.shipmentType}
+                            ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
+                              order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                            {order.shipmentType}
                           </span>
                         </td>
                         
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{orders.Freight_Agent}</td>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.Freight_Agent}</td>
                         
                       </tr>
                     ))}

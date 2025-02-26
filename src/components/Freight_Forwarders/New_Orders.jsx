@@ -34,7 +34,7 @@ const Dashboard = ({ children }) => {
     };
     fetchAvailableOrders();
   }, []);
-  console.log(availableOrders);
+  
 
   const handleAddQuote = (order) => {
     navigate('/Add_Quote', { state: { order } });
