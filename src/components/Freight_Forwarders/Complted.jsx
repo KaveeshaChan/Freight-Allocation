@@ -17,14 +17,14 @@ const Dashboard = ({ children }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedQuote, setSelectedQuote] = useState(null); // State for selected quote
   const navigate = useNavigate();
-  const status = "completed";
+  
 
-  const fetchAvailableOrders = async () => {
+  const fetchCompletedOrders = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found. Please log in again.');
 
-      const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, {
+      const response = await fetch("http://localhost:5056/api/select/view-orders/completed", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const Dashboard = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchAvailableOrders();
+    fetchCompletedOrders();
   }, []);
 
   const handleSearch = (e) => {
@@ -204,24 +204,24 @@ const Dashboard = ({ children }) => {
               <div className="overflow-y-auto max-h-[400px]">
                 <table className="w-full">
                   <tbody className="divide-y divide-gray-100">
-                    {filteredOrders.map((order) => (
-                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.orderNumber}</td>
+                    {filteredOrders.map((orders) => (
+                      <tr key={orders.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(orders)}>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{orders.orderNumber}</td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
-                            ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                            {order.orderType}
+                            ${orders.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            {orders.orderType}
                           </span>
                         </td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
-                            ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
-                              order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
-                            {order.shipmentType}
+                            ${orders.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
+                              orders.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                            {orders.shipmentType}
                           </span>
                         </td>
                         
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.Freight_Agent}</td>
+                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{orders.Freight_Agent}</td>
                         
                       </tr>
                     ))}
@@ -232,7 +232,7 @@ const Dashboard = ({ children }) => {
               {filteredOrders.length === 0 && (
                 <div className="text-center py-16">
                   <div className="text-gray-300 mb-4 text-6xl">📭</div>
-                  <h3 className="text-xl font-semibold text-gray-500 mb-2">No orders found</h3>
+                  <h3 className="text-xl font-semibold text-gray-500 mb-2">You haven't completed any orders yet.</h3>
                   <p className="text-gray-400 max-w-md mx-auto">
                     Try adjusting your filters or search terms to find what you're looking for.
                   </p>

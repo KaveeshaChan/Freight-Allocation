@@ -17,7 +17,6 @@ import Members from './components/Freight_Forwarders/Members.jsx';
 import AllOrders from './components/Admin_&_MainUSer/All_Orders/All_Orders.jsx';
 import Summary from './components/Admin_&_MainUSer/All_Orders/Summary.jsx';
 import Pending from './components/Admin_&_MainUSer/All_Orders/Pending.jsx';
-import OrderAmmends from './components/Admin_&_MainUSer/Order_Ammendments.jsx';
 import Cancel from './components/Admin_&_MainUSer/All_Orders/Cancelled_Orders.jsx';
 import ViewMainUsers from './components/Admin_&_MainUSer/ViewMainUsers.jsx';
 
@@ -43,7 +42,6 @@ const App = () => {
         <Route path="/All-Orders" element={<AllOrders />} />
         <Route path="/Summary" element={<Summary />} />
         <Route path="/Pending" element={<Pending />} />
-        <Route path="/Order-Ammendments" element={<OrderAmmends />} />
         <Route path="/Cancelled-orders" element={<Cancel />} />
       </Routes>
     </Router>

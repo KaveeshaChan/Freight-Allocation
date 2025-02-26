@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import InProgress from './New_Orders';
 import CompletedOrders from './Complted';
+import Quoted from './Quoted_Items';
 import Header from '../Layouts/Main_Layout';
 
 const OrderTabs = () => {
@@ -13,6 +14,9 @@ const OrderTabs = () => {
       
       case 'completedOrders':
         return <CompletedOrders />;
+
+        case 'Quoted':
+        return <Quoted />;
       
         
       default:
@@ -37,6 +41,18 @@ const OrderTabs = () => {
           In Progress
         </button>
         
+
+        <button
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+            activeTab === 'Quoted'
+              ? 'bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white shadow-lg'
+              : 'text-gray-700 hover:bg-gradient-to-r hover:from-[#0534F0] hover:to-[#98009E] hover:text-white'
+          }`}
+          onClick={() => setActiveTab('Quoted')}
+        >
+          Quoted Orders
+        </button>
+        
         <button
           className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
             activeTab === 'completedOrders'
@@ -45,9 +61,8 @@ const OrderTabs = () => {
           }`}
           onClick={() => setActiveTab('completedOrders')}
         >
-          Completed Orders
+          Choosen Orders
         </button>
-        
         
       </div>
       <div className="tab-content">{renderTabContent()}</div>
