@@ -54,8 +54,8 @@ const QuoteDetailsPopup = ({ quote, order, onClose, onSelectAgent }) => {
           </div>
   
           {/* Second Table: Cancel Order Details */}
-          <div className="bg-red-100 rounded-xl shadow-sm border border-red-400 mb-6">
-            <div className="p-4 border-b border-red-700 bg-red-500 rounded-t-xl">
+          <div className="bg-red-100 rounded-xl shadow-sm border border-red-600 mb-6">
+            <div className="p-4 border-b border-red-700 bg-red-400 rounded-t-xl">
               <h3 className="font-semibold text-white">Cancelled Reason for Order</h3>
             </div>
             <div className="overflow-x-auto p-4">

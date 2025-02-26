@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../Layouts/Main_Layout';
 import { FiSearch, FiPlusCircle, FiRefreshCw, FiClock, FiX, FiBox, FiTruck, FiAnchor, FiMapPin, FiCalendar, FiPackage } from 'react-icons/fi';
 import AirfreightExportPopup from '../PopupForSelectAgent/CancelledEXP-AIR'; // Import the popup component
-import AirfreightImportPopup from '../PopupForSelectAgent/CompletedIMP-AIR'; // Import the popup component
-import LCLExportPopup from '../PopupForSelectAgent/CompletedEXP-LCL'; // Import the popup component
-import LCLImportPopup from '../PopupForSelectAgent/CompletedIMP-LCL'; // Import the popup component
-import FCLExportPopup from '../PopupForSelectAgent/CompletedEXP-FCL'; // Import the popup component
-import FCLImportPopup from '../PopupForSelectAgent/CompletedIMP-FCL'; // Import the popup component
+import AirfreightImportPopup from '../PopupForSelectAgent/CancelledIMP-AIR'; // Import the popup component
+import LCLExportPopup from '../PopupForSelectAgent/CancelledEXP-LCL'; // Import the popup component
+import LCLImportPopup from '../PopupForSelectAgent/CancelledIMP-LCL'; // Import the popup component
+import FCLExportPopup from '../PopupForSelectAgent/CancelledEXP-FCL'; // Import the popup component
+import FCLImportPopup from '../PopupForSelectAgent/CancelledIMP-FCL'; // Import the popup component
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
