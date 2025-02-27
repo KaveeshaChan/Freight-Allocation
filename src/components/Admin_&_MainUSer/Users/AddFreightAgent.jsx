@@ -63,7 +63,6 @@ const AddFreightAgent = () => {
     });
   };
   
-
   const handleCountryChange = (selectedOption) => {
     const countryCode = selectedOption.value;
     const newCallingCode = `+${getCountryCallingCode(countryCode)}`;
@@ -106,6 +105,10 @@ const AddFreightAgent = () => {
 
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+      }
+
       const response = await fetch('http://localhost:5056/api/add-freight-agent', {
         method: 'POST',
         headers: {

@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import { FaSearch, FaUser, FaEnvelope, FaPhone, FaIdBadge } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const MembersPage = () => {
   const [members, setMembers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); // Get token from storage
         if (!token) {
-          throw new Error('No token found. Please log in again.');
+          navigate('/login'); // Redirect to login if no token
+          return;
         }
         const agentID = localStorage.getItem('agentID');
         const response = await fetch(

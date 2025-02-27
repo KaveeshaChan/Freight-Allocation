@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InProgress from './New_Orders';
 import CompletedOrders from './Complted';
 import Quoted from './Quoted_Items';
 import Header from '../Layouts/Main_Layout';
+import { useNavigate } from 'react-router-dom';
 
 const OrderTabs = () => {
+
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('inProgress');
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   const renderTabContent = () => {
     switch (activeTab) {

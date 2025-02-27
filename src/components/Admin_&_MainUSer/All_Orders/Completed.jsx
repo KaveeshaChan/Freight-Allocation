@@ -22,7 +22,9 @@ const Dashboard = ({ children }) => {
   const fetchAvailableOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found. Please log in again.');
+      if (!token) {
+        navigate('/login');
+      }
 
       const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, {
         method: "GET",

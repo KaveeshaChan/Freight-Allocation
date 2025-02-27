@@ -22,7 +22,9 @@ const Dashboard = ({ children }) => {
   const fetchAvailableOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found. Please log in again.');
+      if (!token) {
+        navigate('/login');
+      }
 
       const response = await fetch("http://localhost:5056/api/select/view-orders/exporter", {
         method: "GET",
@@ -57,6 +59,10 @@ const Dashboard = ({ children }) => {
   const handlePendingOrder = async (OrderID) => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+      }
+
       const response = await fetch("http://localhost:5056/api/update/order-status", {
         method: "POST",
         headers: {
@@ -84,6 +90,10 @@ const Dashboard = ({ children }) => {
   const handleCancelOrder = async (order, reason) => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+      }
+
       const response = await fetch("http://localhost:5056/api/update/cancel-order/", {
         method: 'POST',
         headers: {

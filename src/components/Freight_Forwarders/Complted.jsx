@@ -21,8 +21,11 @@ const Dashboard = ({ children }) => {
 
   const fetchCompletedOrders = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found. Please log in again.');
+      const token = localStorage.getItem('token'); // Get token from storage
+      if (!token) {
+        navigate('/login'); // Redirect to login if no token
+        return;
+      }
 
       const response = await fetch("http://localhost:5056/api/select/view-orders/completed", {
         method: "GET",

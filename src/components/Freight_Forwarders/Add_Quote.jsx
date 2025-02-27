@@ -9,6 +9,7 @@ import ExportFCL from './Export/FCL';
 import ImportFCL from './Import/FCL';
 import ImportAirFreight from './Import/AirFreight';
 import ImportLCL from './Import/LCL';
+import { useNavigate } from 'react-router-dom';
 
 // Map the data's raw shipment types to the display text in your dropdown
 const SHIPMENT_TYPE_MAP = {
@@ -38,13 +39,15 @@ const ShipmentForm = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [showScreen, setShowScreen] = useState(Boolean(location.state?.order));
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); // Get token from storage
         if (!token) {
-          throw new Error('No token found. Please log in again.');
+          navigate('/login'); // Redirect to login if no token
+          return;
         }
         const response = await fetch(
           "http://localhost:5056/api/select/view-orders/", 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiDownload, FiInfo, FiArrowUp, FiArrowDown } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandler';
 import PDFGenerator from '../All_Orders/PDF/PdfExAir'; // Import the PDFGenerator component
 import QuoteDetailsPopup from '../PopupForSelectAgent/ExportAir';
@@ -12,6 +13,7 @@ const ExportAirFreight = ({ order }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const navigate = useNavigate();
 
   const handleRowSelect = (quote) => {
     setSelectedQuote(quote);
@@ -23,7 +25,9 @@ const ExportAirFreight = ({ order }) => {
 
     try {
       const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found. Please log in again.');
+      if (!token) {
+        navigate('/login');
+      }
 
       const response = await fetch("http://localhost:5056/api/orderhandling/select-best-quote/", {
         method: "POST",

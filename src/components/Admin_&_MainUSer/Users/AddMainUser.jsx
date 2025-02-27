@@ -57,6 +57,9 @@ const AddMainUser = () => {
   
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+      }
       const response = await fetch('http://localhost:5056/api/add-main-user/', {
         method: 'POST',
         headers: {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { FiAlertCircle, FiCheckCircle, FiXCircle, FiArrowLeft } from 'react-icons/fi';
 import Header from '../../Layouts/Main_Layout';
@@ -35,6 +36,7 @@ const OrderSummary = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [showScreen, setShowScreen] = useState(Boolean(location.state?.order));
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const navigate = useNavigate();
   const status = "pending"
 
   useEffect(() => {
@@ -42,7 +44,7 @@ const OrderSummary = () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          throw new Error('No token found. Please log in again.');
+          navigate('/login');
         }
         const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, 
           {

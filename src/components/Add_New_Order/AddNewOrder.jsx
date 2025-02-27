@@ -6,13 +6,20 @@ import ExportFCL from "./Export/ExportFCL";
 import ImportAirFreight from "./Import/ImportAirFreight";
 import ImportLCL from "./Import/ImportLCL";
 import ImportFCL from "./Import/ImportFCL";
+import { useNavigate } from 'react-router-dom';
 
 const DocumentPage = () => {
   const [formData, setFormData] = useState({});
   const [orderType, setOrderType] = useState("export");
   const [shipmentType, setShipmentType] = useState("airFreight");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token'); // Get token from storage
+    if (!token) {
+      navigate('/login'); // Redirect to login if no token
+      return;
+    }
     resetForm(); // Reset the form data when orderType or shipmentType changes
   }, [orderType, shipmentType]);
 

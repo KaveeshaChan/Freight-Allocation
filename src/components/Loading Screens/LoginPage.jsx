@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../../assests/CargoLogo.png';
 import { jwtDecode } from 'jwt-decode';
 
@@ -8,15 +8,29 @@ const LoginPage = () => {
   const [email, setEmail] = useState(""); // To store email input
   const [password, setPassword] = useState(""); 
   const [showPassword, setShowPassword] = useState(false);
-  // To store password input
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // Load stored credentials on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
+
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", email);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+    }
   
     const apiUrl = "http://localhost:5056/api/login";
-  
     const payload = { email, password };
   
     try {
@@ -27,11 +41,12 @@ const LoginPage = () => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (!response.ok) {
-        throw new Error("Invalid email or password!");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Something went wrong. Try again.");
       }
-  
+
       const data = await response.json();
       const token = data.token;
 
@@ -59,34 +74,33 @@ const LoginPage = () => {
       } else {
         throw new Error("Unknown role");
       }
-      console.log("Login successful",data);
       setEmail("");
       setPassword("");
       setIsLoading(false);
     } catch (error) {
       setErrorMessage(error.message);
+    } finally {
       setIsLoading(false);
     }
   };
   
-
   return (
     <div className="font-sans min-h-screen flex flex-col bg-[#F4F4F4]">
       {/* Gradient Header */}
       <header className="flex items-center justify-center p-4 relative">
-  {/* Rounded rectangle background for the header */}
-  <div className="w-full max-w-2xl bg-gradient-to-r from-[#0534F0] to-[#98009E] rounded-full p-4 flex items-center justify-center relative">
-    {/* Circle for logo */}
-    <div className="absolute left-2 bg-white rounded-full p-1 h-12 w-12 flex items-center justify-center shadow-lg">
-      <img src={logo} alt="Logo" className="h-10 w-10 object-contain" />
-    </div>
+        {/* Rounded rectangle background for the header */}
+        <div className="w-full max-w-2xl bg-gradient-to-r from-[#0534F0] to-[#98009E] rounded-full p-4 flex items-center justify-center relative">
+          {/* Circle for logo */}
+          <div className="absolute left-2 bg-white rounded-full p-1 h-12 w-12 flex items-center justify-center shadow-lg">
+            <img src={logo} alt="Logo" className="h-10 w-10 object-contain" />
+          </div>
 
-    {/* Title "Cargo Connect" */}
-    <h1 className="text-2xl font-bold text-white">
-      Cargo Connect
-    </h1>
-  </div>
-</header>
+            {/* Title "Cargo Connect" */}
+            <h1 className="text-2xl font-bold text-white">
+              Cargo Connect
+            </h1>
+          </div>
+      </header>
 
 
       {/* Main Content */}
@@ -165,6 +179,8 @@ const LoginPage = () => {
                   <input
                     type="checkbox"
                     className="rounded border-[#2C2C2C]/30 text-[#0534F0] focus:ring-[#0534F0]"
+                    checked={rememberMe}
+                    onChange={() => setRememberMe(!rememberMe)}
                   />
                   <span>Remember me</span>
                 </label>

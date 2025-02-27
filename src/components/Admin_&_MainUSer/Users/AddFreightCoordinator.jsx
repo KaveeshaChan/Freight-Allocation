@@ -28,9 +28,9 @@ const AddFreightCoordinator = () => {
   useEffect(() => {
     const fetchFreightAgents = async () => {
       try {
-        const token = localStorage.getItem('token'); // Get token from localStorage
+        const token = localStorage.getItem('token');
         if (!token) {
-          throw new Error('No token found. Please log in again.');
+          navigate('/login');
         }
     
         const response = await axios.get(
