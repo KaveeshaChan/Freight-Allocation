@@ -64,71 +64,70 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
-
+  
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      try {
-        const payload = {
-          orderType,
-          shipmentType,
-          orderNumber: formData.orderNumber,
-          routeFrom: formData.routeFrom,
-          routeTo: formData.routeTo,
-          shipmentReadyDate: formData.shipmentReadyDate,
-          deliveryTerm: formData.deliveryTerm,
-          type: formData.type,
-          cargoType: formData.cargoType,
-          numberOfPallets: formData.noOfPallets || null,
-          chargeableWeight: formData.chargeableWeight,
-          dueDate: formData.dueDate,
-          grossWeight: formData.grossWeight,
-          cargoCBM: formData.cargoCBM,
-          targetDate: formData.targetDate,
-          additionalNotes: formData.additionalNotes || null,
-          fileUpload: uploadedFile,
-          fileName: fileName ? fileName.split('.')[0] : null,
-          userId,
-        };
-        
-        const token = localStorage.getItem('token');
+    if (!validateForm()) {
+        setShowErrorPopup(true);
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem("token");
         if (!token) {
-          navigate('/login'); // Navigate to login page
-          return;
+            navigate("/login");
+            return;
         }
 
-        const response = await fetch(
-          "http://localhost:5056/api/orderHandling/add-new-order/export-airFreight",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(payload),
-          }
+        //Create the order
+        const payload = {
+            orderType,
+            shipmentType,
+            orderNumber: formData.orderNumber,
+            routeFrom: formData.routeFrom,
+            routeTo: formData.routeTo,
+            shipmentReadyDate: formData.shipmentReadyDate,
+            deliveryTerm: formData.deliveryTerm,
+            type: formData.type,
+            cargoType: formData.cargoType,
+            numberOfPallets: formData.noOfPallets || null,
+            chargeableWeight: formData.chargeableWeight,
+            dueDate: formData.dueDate,
+            grossWeight: formData.grossWeight,
+            cargoCBM: formData.cargoCBM,
+            targetDate: formData.targetDate,
+            additionalNotes: formData.additionalNotes || null,
+            fileUpload: uploadedFile,
+            fileName: fileName ? fileName.split('.')[0] : null,
+            userId,
+        };
+
+        const orderResponse = await fetch(
+            "http://localhost:5056/api/orderHandling/add-new-order/export-airFreight",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload),
+            }
         );
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          setErrorMessage(errorData.message);
-          setShowErrorPopup(true);
-          return;
+        if (!orderResponse.ok) {
+            const errorData = await orderResponse.json();
+            setErrorMessage(errorData.message);
+            setShowErrorPopup(true);
+            return;
         }
-
-        const responseData = await response.json();
-        console.log("Success:", responseData);
         setShowSuccessPopup(true);
         resetForm();
 
-      } catch (error) {
-        setErrorMessage("Error:", error);
+    } catch (error) {
+        setErrorMessage("Error: " + error.message);
         setShowErrorPopup(true);
-      }
-    } else {
-      setShowErrorPopup(true);
     }
-  };
+};
 
   const resetForm = () => {
     const resetFields = {
@@ -320,7 +319,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
                   value={formData.grossWeight}
                   onChange={handleInputChange}
                   error={errors.grossWeight}
-                  icon="⚖️"
+                  icon="⚖"
                 />
                 <InputField
                   label="Chargeable Weight"
@@ -328,7 +327,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
                   value={formData.chargeableWeight}
                   onChange={handleInputChange}
                   error={errors.chargeableWeight}
-                  icon="🏷️"
+                  icon="🏷"
                 />
               </div>
               
@@ -348,7 +347,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
                 onChange={handleInputChange}
                 error={errors.noOfPallets}
                 disabled={formData.cargoType === "LooseCargo"}
-                icon="🛢️"
+                icon="🛢"
               />
             </div>
           </div>
@@ -460,15 +459,16 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       {showSuccessPopup && (
         <div className="fixed inset-0 bg-[#2C2C2C]/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center mb-4">
-              <div className="bg-[#38B000]/10 p-2 rounded-full mr-3">
+            <div className="flex items-center justify-center mt-3 mb-8">
+              <div className="bg-[#38B000]/10 p-2 rounded-full">
                 <svg className="w-6 h-6 text-[#38B000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-[#2C2C2C]">Order Created!</h3>
+              <h3 className="text-2xl font-semibold text-[#2C2C2C] mr-2">&nbsp;Hooray!</h3>
             </div>
-            <p className="text-[#2C2C2C]/70 mb-6">Your order has been successfully submitted.</p>
+            <p className="text-[#2C2C2C]/90 text-center mb-1">Your order has been successfully submitted.</p>
+            <p className="text-[#2C2C2C]/50 text-center text-sm mb-6">*A notification email will be sent to all active freight forwarders.</p>
             <button
               onClick={() => setShowSuccessPopup(false)}
               className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors"

@@ -298,9 +298,10 @@ const ImportLCL = ({ order }) => {
             <tbody className="divide-y divide-gray-200">
               {sortedQuotes.map((quote, index) => (
                 <tr
-                  key={index}
-                  className={quote.totalFreight === cheapestQuote.totalFreight ? 'bg-green-100' : ''}
-                >
+                key={index}
+                className={`${quote.totalFreight === cheapestQuote.totalFreight ? 'bg-green-100' : ''} cursor-pointer hover:bg-gray-50`}
+                onClick={() => handleRowSelect(quote)}
+              >
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
                     <span className="font-medium text-gray-900">{quote.Agent}</span>
                     <span className="block text-gray-500">{quote.createdUser}</span>

@@ -67,9 +67,10 @@ const Header = () => {
         <div className="flex items-center space-x-2">
           <img src={logo} alt="CargoConnect Logo" className="h-8 w-8" />
           <span className="text-lg font-bold text-gray-900 tracking-tighter">
-            CargoConnect
+            Cargo Connect
           </span>
-          <span className="text-sm text-blue-700">  Main Portal</span>
+          <span className="text-lg font-bold text-gray-900 tracking-tighter">  - </span>
+          <span className="text-lg font-bold text-blue-700"> Main Portal</span>
         </div>
 
         {/* Navigation */}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Layouts/Main_Layout';
 import { FiSearch, FiRefreshCw, FiClock, FiX, FiBox, FiTruck, FiAnchor, FiMapPin, FiCalendar, FiPackage } from 'react-icons/fi';
+import OrderDetailsPopup from './OrderDetailsPopup';
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
@@ -17,6 +18,9 @@ const Dashboard = ({ children }) => {
   const closeSuccessPopup = () => { setShowSuccessPopup(false) };
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [impactLevel, setImpactLevel] = useState('');
+  const [cancelType, setCancelType] = useState('');
+  const [priority, setPriority] = useState('');
   const navigate = useNavigate();
 
   const fetchAvailableOrders = async () => {
@@ -101,7 +105,7 @@ const Dashboard = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ 
-          OrderID: order.orderID,
+          OrderID: order.OrderID,
           orderStatus: 'cancelled',
           reason: reason,
         }),
@@ -125,7 +129,7 @@ const Dashboard = ({ children }) => {
     const matchesShipmentType = shipmentType ? order.shipmentType.toLowerCase() === shipmentType.toLowerCase() : true;
 
     return matchesSearch && matchesOrderType && matchesShipmentType;
-  });
+  }).sort((b, a) => new Date(b.orderCreatedDate) - new Date(a.orderCreatedDate));
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -139,88 +143,6 @@ const Dashboard = ({ children }) => {
 
   const closePopup = () => {
     setSelectedOrder(null);
-  };
-
-  const renderOrderDetails = (order) => {
-    const Section = ({ title, icon, children }) => (
-      <div className="bg-gray-50 p-4 rounded-lg mb-4">
-        <div className="flex items-center gap-2 mb-3">
-          {icon}
-          <h4 className="font-semibold text-lg text-blue-600">{title}</h4>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {children}
-        </div>
-      </div>
-    );
-
-    const DetailItem = ({ label, value, icon }) => (
-      value ? (
-        <div className="flex justify-between items-center p-2 bg-white rounded-lg hover:bg-gray-50">
-          <div className="flex items-center gap-2 text-gray-500">
-            {icon}
-            <span>{label}</span>
-          </div>
-          <span className="text-gray-700 font-medium">{value}</span>
-        </div>
-      ) : null
-    );
-
-    return (
-      <div className="space-y-6">
-        <Section title="Basic Info" icon={<FiBox className="text-blue-500" />}>
-          <DetailItem
-            label="Order Number"
-            value={`#${order.orderNumber}`}
-            icon={<FiPackage className="text-sm" />}
-          />
-          <DetailItem
-            label="Order Type"
-            value={order.orderType}
-            icon={<FiTruck className="text-sm" />}
-          />
-          <DetailItem
-            label="Shipment Type"
-            value={order.shipmentType}
-            icon={<FiAnchor className="text-sm" />}
-          />
-        </Section>
-
-        <Section title="Route Details" icon={<FiMapPin className="text-green-500" />}>
-          <DetailItem
-            label="Route"
-            value={`${order.from} → ${order.to}`}
-            icon={<FiTruck className="text-sm" />}
-          />
-          <DetailItem
-            label="Shipment Ready Date"
-            value={new Date(order.shipmentReadyDate).toLocaleDateString()}
-            icon={<FiCalendar className="text-sm" />}
-          />
-          <DetailItem
-            label="Target Date"
-            value={new Date(order.targetDate).toLocaleDateString()}
-            icon={<FiCalendar className="text-sm" />}
-          />
-        </Section>
-
-        {order.shipmentType === 'airFreight' && (
-          <Section title="Cargo Details" icon={<FiPackage className="text-purple-500" />}>
-            <DetailItem label="Cargo Type" value={order.cargoType} />
-            <DetailItem label="Gross Weight" value={order.grossWeight ? `${order.grossWeight} kg` : ''} />
-            <DetailItem label="Chargeable Weight" value={order.chargeableWeight ? `${order.chargeableWeight} kg` : ''} />
-            <DetailItem label="Cargo CBM" value={order.cargoCBM} />
-          </Section>
-        )}
-
-        {order.shipmentType === 'fcl' && (
-          <Section title="Container Details" icon={<FiAnchor className="text-teal-500" />}>
-            <DetailItem label="Containers" value={order.numberOfContainers} />
-            <DetailItem label="Container Type" value={order.containerType} />
-          </Section>
-        )}
-      </div>
-    );
   };
 
   return (
@@ -360,130 +282,85 @@ const Dashboard = ({ children }) => {
       </main>
 
       {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-lg max-w-4xl w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold text-gray-800">Order Details</h3>
-              <button onClick={closePopup} className="text-gray-400 hover:text-gray-600">
-                <FiX className="text-2xl" />
-              </button>
-            </div>
-
-            {renderOrderDetails(selectedOrder)}
-
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => handlePendingOrder(selectedOrder.OrderID)}
-                className="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg transition-colors flex items-center gap-2"
-              >
-                <FiClock className="shrink-0" />
-                <span>Mark as Pending</span>
-              </button>
-
-              {showCancelReason ? (
-                <div className="flex flex-col gap-3 flex-grow">
-                  <textarea
-                    required
-                    value={cancelReason}
-                    onChange={(e) => setCancelReason(e.target.value)}
-                    placeholder="Enter cancellation reason..."
-                    className="p-2 border rounded-lg focus:ring-2 focus:ring-red-500 outline-none"
-                    rows="3"
-                  />
-                  <div className="flex gap-3 justify-end">
-                    <button
-                      onClick={() => {
-                        setShowCancelReason(false);
-                        setCancelReason('');
-                      }}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => handleCancelOrder(selectedOrder, cancelReason)}
-                      disabled={!cancelReason.trim()}
-                      className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Confirm Cancellation
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setShowCancelReason(true)}
-                  className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors flex items-center gap-2"
-                >
-                  <FiX className="shrink-0" />
-                  <span>Cancel Order</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <OrderDetailsPopup
+          order={selectedOrder}
+          closePopup={closePopup}
+          handlePendingOrder={handlePendingOrder}
+          handleCancelOrder={handleCancelOrder}
+          showCancelReason={showCancelReason}
+          setShowCancelReason={setShowCancelReason}
+          cancelReason={cancelReason}
+          setCancelReason={setCancelReason}
+          impactLevel={impactLevel}
+          setImpactLevel={setImpactLevel}
+          cancelType={cancelType}
+          setCancelType={setCancelType}
+          priority={priority}
+          setPriority={setPriority}
+        />
       )}
 
       {/* Error Popup */}
       {showErrorPopup && (
-      <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
-    <div className="bg-red-100 p-6 rounded-lg shadow-lg w-96 text-center">
-      
-      {/* Red Cross Icon */}
-      <div className="flex justify-center">
-        <div className="w-16 h-16 flex items-center justify-center bg-red-500 rounded-full">
-          <span className="text-white text-3xl font-bold">✖</span>
+        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+          <div className="bg-red-100 p-6 rounded-lg shadow-lg w-96 text-center">
+            
+            {/* Red Cross Icon */}
+            <div className="flex justify-center">
+              <div className="w-16 h-16 flex items-center justify-center bg-red-500 rounded-full">
+                <span className="text-white text-3xl font-bold">✖</span>
+              </div>
+            </div>
+
+            {/* Error Title */}
+            <h2 className="text-xl font-semibold my-3 text-gray-800">Oops</h2>
+
+            
+
+            {/* Error Message */}
+            <p className="text-gray-700 text-sm">{errorMessage || "Something went wrong. Let’s try one more time."}</p>
+
+            {/* Try Again Button */}
+            <button
+              onClick={closeErrorPopup}
+              className="mt-4 p-2 w-full rounded-md bg-red-500 text-white font-semibold hover:bg-red-600"
+            >
+              TRY AGAIN
+            </button>
+          </div>
         </div>
-      </div>
-
-      {/* Error Title */}
-      <h2 className="text-xl font-semibold my-3 text-gray-800">Oops</h2>
-
-      
-
-      {/* Error Message */}
-      <p className="text-gray-700 text-sm">{errorMessage || "Something went wrong. Let’s try one more time."}</p>
-
-      {/* Try Again Button */}
-      <button
-        onClick={closeErrorPopup}
-        className="mt-4 p-2 w-full rounded-md bg-red-500 text-white font-semibold hover:bg-red-600"
-      >
-        TRY AGAIN
-          </button>
-        </div>
-      </div>
-)}
+      )}
 
       {/* Success Popup */}
       {showSuccessPopup && (
-  <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
-    <div className="bg-green-100 p-6 rounded-lg shadow-lg w-96 text-center">
-      
-      {/* Green Checkmark Icon */}
-      <div className="flex justify-center">
-        <div className="w-16 h-16 flex items-center justify-center bg-green-500 rounded-full">
-          <span className="text-white text-3xl font-bold">✔</span>
+        <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+          <div className="bg-green-100 p-6 rounded-lg shadow-lg w-96 text-center">
+            
+            {/* Green Checkmark Icon */}
+            <div className="flex justify-center">
+              <div className="w-16 h-16 flex items-center justify-center bg-green-500 rounded-full">
+                <span className="text-white text-3xl font-bold">✔</span>
+              </div>
+            </div>
+
+            {/* Success Title */}
+            <h2 className="text-xl font-semibold my-3 text-gray-800">Success</h2>
+
+            {/* Success Message */}
+            <p className="text-gray-700 text-sm">
+              {successMessage}
+            </p>
+
+            {/* Close Button */}
+            <button
+              onClick={closeSuccessPopup}
+              className="mt-4 p-2 w-full rounded-md bg-green-500 text-white font-semibold hover:bg-green-600"
+            >
+              OK
+            </button>
+          </div>
         </div>
-      </div>
-
-      {/* Success Title */}
-      <h2 className="text-xl font-semibold my-3 text-gray-800">Success</h2>
-
-      {/* Success Message */}
-      <p className="text-gray-700 text-sm">
-        {successMessage}
-      </p>
-
-      {/* Close Button */}
-      <button
-        onClick={closeSuccessPopup}
-        className="mt-4 p-2 w-full rounded-md bg-green-500 text-white font-semibold hover:bg-green-600"
-      >
-        OK
-      </button>
-    </div>
-  </div>
-)}
+      )}
 
     </div>
   );

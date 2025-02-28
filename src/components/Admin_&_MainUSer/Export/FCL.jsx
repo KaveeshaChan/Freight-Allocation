@@ -137,7 +137,7 @@ const ExportFCL = ({ order }) => {
     }
   };
 
-  const cheapestQuote = freightQuotes.reduce((min, quote) => quote.totalFreight < min.totalFreight ? quote : min, freightQuotes[0] || { totalFreight: Infinity });
+  const cheapestQuote = freightQuotes.reduce((min, quote) => quote.netFreight < min.netFreight ? quote : min, freightQuotes[0] || { netFreight: Infinity });
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -288,9 +288,7 @@ const ExportFCL = ({ order }) => {
 
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Flight/Vessel Details</th>
 
-                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('totalFreight')}>
-                Total Freight {sortConfig.key === 'totalFreight' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
-                </th>
+                
 
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('validityTime')}>
                 Validity Time {sortConfig.key === 'validityTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
@@ -302,7 +300,7 @@ const ExportFCL = ({ order }) => {
               {sortedQuotes.map((quote, index) => (
                 <tr
                   key={index}
-                  className={`${quote.totalFreight === cheapestQuote.totalFreight ? 'bg-green-100' : ''} cursor-pointer hover:bg-gray-50`}
+                  className={`${quote.netFreight === cheapestQuote.netFreight ? 'bg-green-100' : ''} cursor-pointer hover:bg-gray-50`}
                   onClick={() => handleRowSelect(quote)}
                 >
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
@@ -316,7 +314,6 @@ const ExportFCL = ({ order }) => {
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.carrier}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.totalFreight}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
                   </tr>
               ))}

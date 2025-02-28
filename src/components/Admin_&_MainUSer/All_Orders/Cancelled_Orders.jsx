@@ -197,6 +197,8 @@ const Dashboard = ({ children }) => {
                       <th className="py-5 px-4 w-[16%]">Order Number</th>
                       <th className="py-5 px-4 w-[16%]">Order Type</th>
                       <th className="py-5 px-4 w-[16%]">Shipment Type</th>
+                      <th className="py-5 px-4 w-[16%]">Cancelled By</th>
+
                       
                     </tr>
                   </thead>
@@ -223,6 +225,8 @@ const Dashboard = ({ children }) => {
                             {order.shipmentType}
                           </span>
                         </td>
+
+                        <td className="py-5 px-4 font-medium text-red-700 w-[16%] text-center">{order.cancelledByName}</td>
                         
                         
                         

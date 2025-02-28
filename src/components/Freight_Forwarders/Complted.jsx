@@ -66,7 +66,7 @@ const Dashboard = ({ children }) => {
     const matchesShipmentType = shipmentType ? order.shipmentType.toLowerCase() === shipmentType.toLowerCase() : true;
 
     return matchesSearch && matchesOrderType && matchesShipmentType;
-  });
+  }).sort((a, b) => new Date(b.targetDate) - new Date(a.targetDate));
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -197,7 +197,6 @@ const Dashboard = ({ children }) => {
                       <th className="py-5 px-4 w-[16%]">Order Number</th>
                       <th className="py-5 px-4 w-[16%]">Type</th>
                       <th className="py-5 px-4 w-[16%]">Shipment</th>
-                      <th className="py-5 px-4 w-[16%]">Selected Agent</th>
                     </tr>
                   </thead>
                 </table>
@@ -224,7 +223,6 @@ const Dashboard = ({ children }) => {
                           </span>
                         </td>
                         
-                        <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.Freight_Agent}</td>
                         
                       </tr>
                     ))}

@@ -53,7 +53,7 @@ const Dashboard = ({ children }) => {
     const matchesShipmentType = shipmentType ? order.shipmentType.toLowerCase() === shipmentType.toLowerCase() : true;
 
     return matchesSearch && matchesOrderType && matchesShipmentType;
-  });
+  }).sort((b, a) => new Date(b.daysRemaining) - new Date(a.daysRemaining));
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -125,22 +125,31 @@ const Dashboard = ({ children }) => {
               </div>
             </div>
 
-            {/* Orders Table */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden mt-4">
-              <div className="overflow-x-auto" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            
+            {/* Enhanced Table Section */}
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mt-6">
+            <div className="relative max-h-[600px]">
+              <div className="sticky top-0 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
                 <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr className="text-left text-sm font-semibold text-gray-500">
-                      <th className="py-4 px-6">Order </th>
+                  <thead>
+                    <tr className="text-sm font-semibold text-gray-600 text-center">
+                      <th className="py-4 px-6 -[20px]">Order </th>
                       <th className="py-4 px-6">Type</th>
                       <th className="py-4 px-6">Shipment</th>
                       <th className="py-4 px-6">Valid Days</th>
+                      <th className="py-4 px-6">Quoting Status</th>
                       <th className="py-4 px-6">Actions</th>
                     </tr>
                   </thead>
+                </table>
+              </div>
+
+              {/* Scrollable body */}
+              <div className="overflow-y-auto max-h-[400px]">
+                <table className="w-full">
                   <tbody className="divide-y divide-gray-100">
                     {filteredOrders.map((order) => (
-                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors">
+                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors text-center">
                         <td className="py-4 px-6 font-medium text-gray-800">{order.orderNumber}</td>
                         <td className="py-4 px-6">
                           <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm">
@@ -149,10 +158,21 @@ const Dashboard = ({ children }) => {
                         </td>
                         <td className="py-4 px-6 text-gray-600">{order.shipmentType}</td>
                         <td className="py-4 px-6">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 justify-center">
                             <span className="text-gray-600">{order.daysRemaining}</span>
                             <span className="text-sm text-gray-400">days</span>
                           </div>
+                        </td>
+                        <td className="py-4 px-6">
+                          {order.alreadyQuoted === 'Yes' ? (
+                            <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm">
+                              Quoted
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm">
+                              Not Quoted
+                            </span>
+                          )}
                         </td>
                         <td className="py-4 px-6">
                           <button
@@ -167,21 +187,25 @@ const Dashboard = ({ children }) => {
                     ))}
                   </tbody>
                 </table>
-
-                {filteredOrders.length === 0 && (
-                  <div className="text-center py-12">
-                    <div className="text-gray-400 mb-4 text-4xl">📭</div>
-                    <p className="text-gray-500">No orders found matching your criteria</p>
-                    <button
-                      onClick={clearFilters}
-                      className="mt-4 text-blue-600 hover:text-blue-700 font-medium"
-                    >
-                      Clear filters
-                    </button>
-                  </div>
-                )}
               </div>
+
+              {filteredOrders.length === 0 && (
+                <div className="text-center py-16">
+                  <div className="text-gray-300 mb-4 text-6xl">📭</div>
+                  <h3 className="text-xl font-semibold text-gray-500 mb-2">You haven't completed any orders yet.</h3>
+                  <p className="text-gray-400 max-w-md mx-auto">
+                    Try adjusting your filters or search terms to find what you're looking for.
+                  </p>
+                  <button
+                    onClick={clearFilters}
+                    className="mt-6 px-6 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
+              )}
             </div>
+          </div>
           </div>
         </div>
       </main>

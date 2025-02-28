@@ -114,7 +114,7 @@ const Dashboard = ({ children }) => {
     const matchesShipmentType = shipmentType ? order.shipmentType.toLowerCase() === shipmentType.toLowerCase() : true;
 
     return matchesSearch && matchesOrderType && matchesShipmentType;
-  });
+  }).sort((b, a) => new Date(b.targetDate) - new Date(a.targetDate));
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -290,7 +290,7 @@ const Dashboard = ({ children }) => {
                       <th className="py-5 px-4 w-[16%]">Order Number</th>
                       <th className="py-5 px-4 w-[16%]">Type</th>
                       <th className="py-5 px-4 w-[16%]">Shipment</th>
-                      <th className="py-5 px-4 w-[16%]">Valid Days</th>
+                      <th className="py-5 px-4 w-[16%]">ETA to Client Destination</th>
                       <th className="py-5 px-4 w-[16%]">Number of Quotes</th>
                       <th className="py-5 px-4 w-[16%]">Actions</th>
                     </tr>
@@ -320,8 +320,7 @@ const Dashboard = ({ children }) => {
                         </td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           
-                            <span className="font-medium text-gray-800">{order.daysRemaining}</span>
-                            <span className="text-sm text-gray-400"> &nbsp; days</span>
+                            <span className="font-medium text-gray-800">{new Date(order.targetDate).toISOString().split('T')[0]}</span>
                           
                         </td>
                         <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.quotationCount}</td>
