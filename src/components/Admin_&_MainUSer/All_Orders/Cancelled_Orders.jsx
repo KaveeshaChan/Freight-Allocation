@@ -46,7 +46,6 @@ const Dashboard = ({ children }) => {
 
       const data = await response.json();
       setAvailableOrders(data.orders || []);
-      console.log(data)
     } catch (error) {
       console.error('Error fetching orders:', error);
     }

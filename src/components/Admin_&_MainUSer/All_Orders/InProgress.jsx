@@ -315,8 +315,6 @@ const Dashboard = ({ children }) => {
             {/* Error Title */}
             <h2 className="text-xl font-semibold my-3 text-gray-800">Oops</h2>
 
-            
-
             {/* Error Message */}
             <p className="text-gray-700 text-sm">{errorMessage || "Something went wrong. Let’s try one more time."}</p>
 

@@ -140,7 +140,12 @@ const OrderDetailsPopup = ({
               <FiX className={`text-red-500 shrink-0 mt-1 ${showCancelReason ? 'animate-pulse' : ''}`} />
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h4 className="font-medium text-red-800">Cancel Order</h4>
+                  <div>
+                    <h4 className="font-medium text-red-800">Cancel Order</h4>
+                    <p className="text-xs text-red-600 opacity-80">
+                      This will send an email notification to all active freight forwarders automatically
+                    </p>
+                  </div>
                   {!showCancelReason && (
                     <button
                       onClick={() => setShowCancelReason(true)}
@@ -153,50 +158,6 @@ const OrderDetailsPopup = ({
 
                 {showCancelReason && (
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-xs font-medium text-gray-500">Cancellation Type*</label>
-                        <select
-                          className="w-full p-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-300"
-                          value={cancelType}
-                          onChange={(e) => setCancelType(e.target.value)}
-                        >
-                          <option value="">Select type</option>
-                          <option value="client">Client Request</option>
-                          <option value="logistics">Logistics Issue</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs font-medium text-gray-500">Impact Level*</label>
-                        <select
-                          className="w-full p-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-300"
-                          value={impactLevel}
-                          onChange={(e) => setImpactLevel(e.target.value)}
-                        >
-                          <option value="">Select impact</option>
-                          <option value="low">Low Impact</option>
-                          <option value="medium">Medium Impact</option>
-                          <option value="high">High Impact</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs font-medium text-gray-500">Priority*</label>
-                        <select
-                          className="w-full p-2 text-sm border rounded-lg focus:ring-2 focus:ring-red-300"
-                          value={priority}
-                          onChange={(e) => setPriority(e.target.value)}
-                        >
-                          <option value="">Select priority</option>
-                          <option value="urgent">Urgent</option>
-                          <option value="high">High</option>
-                          <option value="normal">Normal</option>
-                        </select>
-                      </div>
-                    </div>
-
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs">
                         <label className="font-medium text-gray-500">Cancellation Reason*</label>
