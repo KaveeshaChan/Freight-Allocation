@@ -14,7 +14,6 @@ const ForgotPassword = () => {
     setIsLoading(true);
     setError('');
     setSuccess('');
-
     try {
       const response = await fetch('http://localhost:5056/api/forgot-password', {
         method: 'POST',
