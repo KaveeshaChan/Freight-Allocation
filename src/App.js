@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoadingPage from './components/Loading Screens/LoadingPage.jsx';
 import LoginPage from './components/Loading Screens/LoginPage.jsx';
+import PasswordReset from './components/Loading Screens/ResetPassword.jsx'
+import ForgotPassword from './components/Loading Screens/ForgortPassword.jsx'
 import AddFreightAgent from './components/Admin_&_MainUSer/Users/AddFreightAgent.jsx'; // Add this page
 import AddFreightCoordinator from './components/Admin_&_MainUSer/Users/AddFreightCoordinator.jsx'; // Add this page
 import AddMainUser from './components/Admin_&_MainUSer/Users/AddMainUser.jsx'; // Add this page
@@ -27,6 +29,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoadingPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/password-reset" element={<PasswordReset />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/add-freight-agent" element={<AddFreightAgent />} />
         <Route path="/add-freight-coordinator" element={<AddFreightCoordinator />} />
         <Route path="/add-main-user" element={<AddMainUser />} />

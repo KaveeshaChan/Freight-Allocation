@@ -215,7 +215,7 @@ return (
               { status: "All", count: agents.length, color: "bg-gradient-to-r from-[#0534F0] to-[#98009E]" },
               { status: "Active", count: agents.filter(a => a.AgentStatus === "Active").length, color: "bg-green-600" },
               { status: "Non Active", count: agents.filter(a => a.AgentStatus === "Non Active").length, color: "bg-yellow-500" },
-              { status: "Blacklisted", count: agents.filter(a => a.AgentStatus === "Blacklisted").length, color: "bg-red-500" }
+              
             ].map((filter, idx) => (
               <button
                 key={idx}
@@ -323,7 +323,7 @@ return (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">Account Status</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {['Active', 'Non Active', 'Blacklisted'].map(status => (
+                  {['Active', 'Non Active',].map(status => (
                     <label
                       key={status}
                       className={`p-4 rounded-xl border-2 flex items-center gap-3 transition-all ${

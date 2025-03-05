@@ -29,6 +29,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Please fill all required fields");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [fileName, setFileName] = useState(null);
   const userId = localStorage.getItem('userId');
@@ -103,6 +104,8 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           return;
         }
 
+        setLoading(true);
+
         const response = await fetch(
           "http://localhost:5056/api/orderHandling/add-new-order/import-airFreight",
           {
@@ -119,6 +122,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           const errorData = await response.json();
           setErrorMessage(errorData.message);
           setShowErrorPopup(true);
+          setLoading(false);
           return;
         }
 
@@ -130,6 +134,8 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       } catch (error) {
         setErrorMessage("Error:", error);
         setShowErrorPopup(true);
+      } finally {
+        setLoading(false);
       }
     } else {
       setShowErrorPopup(true);
@@ -328,6 +334,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 <InputField
                 label="Pallets Count"
                 name="noOfPallets"
+                type='number'
                 value={formData.noOfPallets}
                 onChange={handleInputChange}
                 error={errors.noOfPallets}
@@ -338,6 +345,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
               <div className="grid grid-cols-2 gap-4">
                 <InputField
                   label="Gross Weight (kg)"
+                  type='number'
                   name="grossWeight"
                   value={formData.grossWeight}
                   onChange={handleInputChange}
@@ -346,6 +354,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
                 />
                 <InputField
                   label="Chargeable Weight"
+                  type='number'
                   name="chargeableWeight"
                   value={formData.chargeableWeight}
                   onChange={handleInputChange}
@@ -356,6 +365,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
               
               <InputField
                 label="Cargo CBM"
+                type='number'
                 name="cargoCBM"
                 value={formData.cargoCBM}
                 onChange={handleInputChange}
@@ -368,6 +378,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
                 <InputField
                   label="Length (cm) "
                   name="length"
+                  type='number'
                   value={formData.length}
                   onChange={handleInputChange}
                   error={errors.length}
@@ -377,6 +388,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 <InputField
                   label="Width (cm)"
                   name="width"
+                  type='number'
                   value={formData.width}
                   onChange={handleInputChange}
                   error={errors.width}
@@ -386,6 +398,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
 <InputField
                   label="Height (cm)"
                   name="height"
+                  type='number'
                   value={formData.height}
                   onChange={handleInputChange}
                   error={errors.height}
@@ -487,15 +500,27 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           </div>
         </div>
 
+
         {/* Submit Section */}
         <div className="pt-6 border-t border-gray-200">
-          <button
-            type="submit"
-            className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95"
-          >
-            Create import-Air Freight Order
-          </button>
+        <button
+          type="submit"
+          onClick={handleFormSubmit}
+          className={`w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={loading}
+        >
+          {loading ? (
+            <svg className="animate-spin h-5 w-5 mr-3 inline-block text-white" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          ) : (
+            'Create import-Air Freight Order'
+          )}
+        </button>
           </div>
+
+    
 
         {/* Popups remain similar with updated colors */}
        {showErrorPopup && (

@@ -30,6 +30,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
   const [errorMessage, setErrorMessage] = useState("Please fill all required fields");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState(null);
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
@@ -100,6 +101,8 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           return;
         }
 
+        setLoading(true);
+
         const response = await fetch(
           "http://localhost:5056/api/orderHandling/add-new-order/import-lcl",
           {
@@ -116,6 +119,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           const errorData = await response.json();
           setErrorMessage(errorData.message);
           setShowErrorPopup(true);
+          setLoading(false);
           return;
         }
 
@@ -127,6 +131,8 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
       } catch (error) {
         setErrorMessage("Error:", error);
         setShowErrorPopup(true);
+      } finally {
+        setLoading(false);
       }
     } else {
       setShowErrorPopup(true);
@@ -256,6 +262,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
               
               <InputField
               label="Number of Pallets"
+              type='number'
               name="noOfPallets"
               value={formData.noOfPallets}
               placeholder="Enter the number of pallets"
@@ -266,6 +273,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
 <InputField
               label="Gross Weight (Kg)"
               name="grossWeight"
+              type='number'
               value={formData.grossWeight}
               placeholder="Enter the gross weight"
               onChange={handleInputChange}
@@ -277,6 +285,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
                 <InputField
                   label="Pallet CBM"
                   name="palletCBM"
+                  type='number'
                   value={formData.palletCBM}
                   onChange={handleInputChange}
                   error={errors.palletCBM}
@@ -285,6 +294,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
                 <InputField
                   label="Cargo CBM"
                   name="cargoCBM"
+                  type='number'
                   value={formData.cargoCBM}
                   onChange={handleInputChange}
                   error={errors.cargoCBM}
@@ -334,6 +344,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
               <InputField
                 label="Due Date (Days)"
                 name="dueDate"
+                type='number'
                 value={formData.dueDate}
                 onChange={handleInputChange}
                 error={errors.dueDate}
@@ -383,15 +394,27 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
           </div>
         </div>
 
-        {/* Submit Section */}
-        <div className="pt-6 border-t border-gray-200">
-          <button
-            type="submit"
-            className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95"
-          >
-            Create Import-LCL Order
-          </button>
+
+
+{/* Submit Section */}
+<div className="pt-6 border-t border-gray-200">
+        <button
+          type="submit"
+          onClick={handleFormSubmit}
+          className={`w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={loading}
+        >
+          {loading ? (
+            <svg className="animate-spin h-5 w-5 mr-3 inline-block text-white" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          ) : (
+            'Create Import-LCL Order'
+          )}
+        </button>
           </div>
+
 
         {/* Popups remain similar with updated colors */}
        {showErrorPopup && (
@@ -416,18 +439,19 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         </div>
       )}
 
-      {showSuccessPopup && (
+{showSuccessPopup && (
         <div className="fixed inset-0 bg-[#2C2C2C]/50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center mb-4">
-              <div className="bg-[#38B000]/10 p-2 rounded-full mr-3">
+            <div className="flex items-center justify-center mt-3 mb-8">
+              <div className="bg-[#38B000]/10 p-2 rounded-full">
                 <svg className="w-6 h-6 text-[#38B000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-[#2C2C2C]">Order Created!</h3>
+              <h3 className="text-2xl font-semibold text-[#2C2C2C] mr-2">&nbsp;Hooray!</h3>
             </div>
-            <p className="text-[#2C2C2C]/70 mb-6">Your order has been successfully submitted.</p>
+            <p className="text-[#2C2C2C]/90 text-center mb-1">Your order has been successfully submitted.</p>
+            <p className="text-[#2C2C2C]/50 text-center text-sm mb-6">*A notification email will be sent to all active freight forwarders.</p>
             <button
               onClick={() => setShowSuccessPopup(false)}
               className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors"

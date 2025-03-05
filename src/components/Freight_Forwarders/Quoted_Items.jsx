@@ -131,7 +131,7 @@ const Dashboard = ({ children }) => {
               {/* Left Section - Heading */}
               <div className="space-y-1">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                  Completed Orders
+                  Quoted Orders
                 </h1>
                 <p className="text-gray-500 font-medium text-sm">
                   {filteredOrders.length} orders found

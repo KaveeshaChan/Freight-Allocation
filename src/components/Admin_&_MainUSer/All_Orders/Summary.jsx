@@ -37,7 +37,7 @@ const OrderSummary = () => {
   const [showScreen, setShowScreen] = useState(Boolean(location.state?.order));
   const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
-  const status = "pending"
+  const status = "pending";
 
   useEffect(() => {
     const fetchAvailableOrders = async () => {
@@ -343,6 +343,13 @@ const OrderSummary = () => {
                 <div className="mt-6 p-4 bg-red-50 rounded-lg flex items-center">
                   <FiXCircle className="h-6 w-6 text-red-500 mr-3" />
                   <span className="text-red-700">{errors.submit}</span>
+                </div>
+              )}
+
+              {selectedOrder && (
+                <div className="mt-6 p-4 bg-green-50 rounded-lg flex items-center">
+                  <FiCheckCircle className="h-6 w-6 text-green-500 mr-3" />
+                  <span className="text-green-700">Order selected successfully!</span>
                 </div>
               )}
             </form>

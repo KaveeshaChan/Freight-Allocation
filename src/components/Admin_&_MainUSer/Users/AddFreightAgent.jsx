@@ -43,7 +43,7 @@ const AddFreightAgent = () => {
 
       const decodedToken = jwtDecode(token);
       if (decodedToken.roleName !== 'admin' && decodedToken.roleName !== 'mainUser') {
-        navigate('/unauthorized'); // Redirect if not an admin or mainUser
+        navigate('/login'); // Redirect if not an admin or mainUser
       }
       setUserID(decodedToken.userId)
     } catch (error) {
@@ -100,8 +100,6 @@ const AddFreightAgent = () => {
       director2ContactNumber: cleanPhoneNumber(formData.director2ContactNumber),
       userID: userID
     };
-
-    console.log("Cleaned Form Data in submit:", cleanedFormData); // Log cleaned data
 
     try {
       const token = localStorage.getItem('token');
@@ -379,7 +377,7 @@ if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
                       className="w-full pl-14 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
                       placeholder="Contact number"
                     />
-                    <span className="absolute left-4 top-3 text-gray-500">{callingCode}</span>
+                    
                   </div>
                   {errors.contactNumber && <p className="text-red-500 text-sm">{errors.contactNumber}</p>}
                 </div>
@@ -464,7 +462,7 @@ if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
                         className="w-full pl-14 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
                         placeholder="Contact number"
                       />
-                      <span className="absolute left-4 top-3 text-gray-500">{callingCode}</span>
+                     
                     </div>
                     {errors.director1ContactNumber && <p className="text-red-500 text-sm">{errors.director1ContactNumber}</p>}
                   </div>
@@ -518,7 +516,7 @@ if (isDirector2DataProvided || formData.director2ContactNumber.trim() !== "") {
                         className="w-full pl-14 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0534F0] focus:border-transparent"
                         placeholder="Contact number"
                       />
-                      <span className="absolute left-4 top-3 text-gray-500">{callingCode}</span>
+                      
                     </div>
                     {errors.director2ContactNumber && <p className="text-red-500 text-sm">{errors.director2ContactNumber}</p>}
                   </div>
