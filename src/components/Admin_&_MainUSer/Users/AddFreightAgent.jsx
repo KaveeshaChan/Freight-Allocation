@@ -43,7 +43,7 @@ const AddFreightAgent = () => {
 
       const decodedToken = jwtDecode(token);
       if (decodedToken.roleName !== 'admin' && decodedToken.roleName !== 'mainUser') {
-        navigate('/unauthorized'); // Redirect if not an admin or mainUser
+        navigate('/login'); // Redirect if not an admin or mainUser
       }
       setUserID(decodedToken.userId)
     } catch (error) {
@@ -100,8 +100,6 @@ const AddFreightAgent = () => {
       director2ContactNumber: cleanPhoneNumber(formData.director2ContactNumber),
       userID: userID
     };
-
-    console.log("Cleaned Form Data in submit:", cleanedFormData); // Log cleaned data
 
     try {
       const token = localStorage.getItem('token');

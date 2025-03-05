@@ -50,7 +50,13 @@ const LoginPage = () => {
       const data = await response.json();
       const token = data.token;
 
-            // Decode the token to get user role
+      if (data.requiresPasswordReset) {
+        localStorage.setItem("tempToken", token);
+        window.location.href = "/password-reset";
+        return;
+      }
+
+      // Decode the token to get user role
       const decodedToken = jwtDecode(token);
       const roleName = decodedToken.roleName;
       const userId = decodedToken.userId
@@ -174,18 +180,6 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <label className="flex items-center space-x-2 text-sm text-[#2C2C2C]">
-                  <input
-                    type="checkbox"
-                    className="rounded border-[#2C2C2C]/30 text-[#0534F0] focus:ring-[#0534F0]"
-                    checked={rememberMe}
-                    onChange={() => setRememberMe(!rememberMe)}
-                  />
-                  <span>Remember me</span>
-                </label>
-              </div>
-
               <button
                   type="submit"
                   disabled={isLoading}
@@ -205,6 +199,15 @@ const LoginPage = () => {
                   </span>
                   <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
+
+                <div className="text-center mt-4">
+                  <a 
+                    href="/forgot-password" 
+                    className="text-[#0534F0] hover:text-[#98009E] text-sm transition-colors"
+                  >
+                    Forgot Password?
+                  </a>
+                </div>
             </form>
           </div>
         </div>
