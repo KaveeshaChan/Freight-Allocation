@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from "../../assests/CargoLogo.png";
 
 const Header = ({ userName, userEmail }) => {
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    const role = localStorage.getItem('userRole');
+    if (role) {
+      setUserRole(role);
+    }
+  }, []);
+
   const currentPath = window.location.pathname;
 
   const navItems = [
@@ -9,6 +18,11 @@ const Header = ({ userName, userEmail }) => {
     { name: "New Quote", path: "/Add_Quote" },
     { name: "Members", path: "/members" },
   ];
+
+  // Filter out "New Quote" for freightAgent role
+  const filteredNavItems = userRole === "freightAgent" 
+    ? navItems.filter(item => item.name !== "New Quote")
+    : navItems;
 
   const handleLogout = async () => {
     const token = localStorage.getItem('token');
@@ -51,7 +65,7 @@ const Header = ({ userName, userEmail }) => {
 
         {/* Navigation */}
         <nav className="flex space-x-6">
-          {navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <a 
               key={item.path} 
               href={item.path} 

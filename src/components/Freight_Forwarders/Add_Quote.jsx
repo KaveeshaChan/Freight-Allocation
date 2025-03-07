@@ -40,8 +40,18 @@ const ShipmentForm = () => {
   const [showScreen, setShowScreen] = useState(Boolean(location.state?.order));
   const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState('');
+  
 
   useEffect(() => {
+    const role = localStorage.getItem('userRole');
+    if (role) {
+      setUserRole(role);
+      if (role === 'freightAgent') {
+        navigate('/UnAuthorized'); // Redirect to unauthorized page
+      }
+    }
+
     const fetchAvailableOrders = async () => {
       try {
         const token = localStorage.getItem('token'); // Get token from storage

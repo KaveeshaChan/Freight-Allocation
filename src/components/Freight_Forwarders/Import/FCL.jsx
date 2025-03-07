@@ -7,6 +7,7 @@ const ImportFCL = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);
   const [documentData, setDocumentData] = useState(null);
   const [documentName, setDocumentName] = useState(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   useEffect(() => {
     const fetchDocumentData = async () => {
@@ -134,13 +135,17 @@ const ImportFCL = ({ order }) => {
       }
 
       const result = await response.json();
-      console.log('Quotes submitted successfully:', result);
-      alert('Quotes submitted successfully!');
-    } catch (error) {
-      console.error('Error submitting quotes:', error);
-      alert(error);
-    }
-  };
+    console.log('Quotes submitted successfully:', result);
+    setShowSuccessPopup(true);
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+      navigate('/user-dashboard'); // Refresh the page after 3 seconds
+    }, 1000); // Hide popup after 3 seconds
+  } catch (error) {
+    console.error('Error submitting quotes:', error);
+    alert(error);
+  }
+};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -387,6 +392,32 @@ const ImportFCL = ({ order }) => {
           </div>
         </div>
       </div>
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-[#2C2C2C]/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+            <div className="flex items-center justify-center mt-3 mb-8">
+              <div className="bg-[#38B000]/10 p-2 rounded-full">
+                <svg className="w-6 h-6 text-[#38B000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-semibold text-[#2C2C2C] mr-2">&nbsp;Hooray!</h3>
+            </div>
+            <p className="text-[#2C2C2C]/90 text-center mb-1">Your quotes have been successfully submitted.</p>
+            
+            <button
+              onClick={() => setShowSuccessPopup(false)}
+              className=" mt-4 w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
+
+
     </div>
   );
 };

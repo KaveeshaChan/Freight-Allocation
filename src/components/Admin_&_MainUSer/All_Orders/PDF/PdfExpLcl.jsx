@@ -83,7 +83,7 @@ const PDFGenerator = ({ order, freightQuotes }) => {
       doc.setFont(undefined, 'normal');
       doc.setTextColor('#374151');
       doc.setFontSize(9);
-      doc.text(`- Order Type: Export - FCL`, col1, yPos + lineHeight);
+      doc.text(`- Order Type: Export - LCL`, col1, yPos + lineHeight);
       doc.text(`- Route: ${order.from || 'N/A'} to ${order.to || 'N/A'}`, col1, yPos + lineHeight * 2);
       doc.text(`- Ready Date: ${formatDate(order.shipmentReadyDate)}`, col1, yPos + lineHeight * 3);
       doc.text(`- Target Date: ${formatDate(order.targetDate)}`, col1, yPos + lineHeight * 4);
@@ -96,6 +96,9 @@ const PDFGenerator = ({ order, freightQuotes }) => {
       doc.setTextColor('#374151');
       doc.setFontSize(9);
       doc.text(`- Pallets: ${(order.numberOfPallets || 0).toLocaleString()}`, col2, yPos + lineHeight);
+      doc.text(`- Pallet CBM: ${(order.palletCBM || 0).toLocaleString()}`, col2, yPos + lineHeight * 2);
+      doc.text(`- Cargo CBM: ${(order.cargoCBM || 0).toLocaleString()}`, col2, yPos + lineHeight * 3);
+      doc.text(`- Gross Weight (Kg): ${(order.grossWeight || 0).toLocaleString()}`, col2, yPos + lineHeight * 4);
       yPos += 45;
 
       // Freight Quotes Table
@@ -108,24 +111,19 @@ const PDFGenerator = ({ order, freightQuotes }) => {
 
         const headers = [
           { header: 'Agent', dataKey: 'agent' },
-          { header: 'DTHC ($)', dataKey: 'dthc' },
-          { header: 'Free Time', dataKey: 'freetimes' },
           { header: 'Transshipment', dataKey: 'transshipmentPort' },
-          { header: 'Carrier', dataKey: 'carriers' },
           { header: 'Transit Time', dataKey: 'transit' },
           { header: 'Validity', dataKey: 'validity' },
           { header: 'Net Freight ($)', dataKey: 'netFreight' },
+          { header: 'Total', dataKey: 'total' }
         ];
         const quotesData = freightQuotes.map(quote => ({
           agent: quote.Agent || '-',
-          dthc: quote.DTHC,
-          freetimes: quote.freeTime ? `${quote.freeTime} days` : '-',
           transshipmentPort: quote.transShipmentPort || '-',
-          carriers: quote.carrier,
           transit: quote.transitTime ? `${quote.transitTime} days` : '-',
           validity: formatDate(quote.validityTime),
           netFreight: formatCurrency(quote.netFreight),
-          
+          total: formatCurrency(quote.totalFreight)
         }));
 
         doc.autoTable({
@@ -154,21 +152,19 @@ const PDFGenerator = ({ order, freightQuotes }) => {
             rowFillColor: '#f8fafc'
           },
           columnStyles: {
-            0: { cellWidth: 28, halign: 'center' },
-            1: { cellWidth: 18, halign: 'center' },
-            2: { cellWidth: 22, halign: 'center' },
-            3: { cellWidth: 24, halign: 'center' },
-            4: { cellWidth: 22, halign: 'center' },
-            5: { cellWidth: 22, halign: 'center' },
-            6: { cellWidth: 22, halign: 'center' },
-            7: { cellWidth: 22, halign: 'center', fontStyle: 'bold' }
+            0: { cellWidth: 30, halign: 'center' },
+            1: { cellWidth: 30, halign: 'center' },
+            2: { cellWidth: 30, halign: 'center' },
+            3: { cellWidth: 30, halign: 'center' },
+            4: { cellWidth: 30, halign: 'center' },
+            5: { cellWidth: 30, halign: 'center', fontStyle: 'bold' }
           }
         });
 
         yPos = doc.lastAutoTable.finalY + 12;
 
         // Summary Box
-        const lowestQuote = Math.min(...freightQuotes.map(q => q.netFreight));
+        const lowestQuote = Math.min(...freightQuotes.map(q => q.totalFreight));
         doc.setFillColor('#f3f4f6');
         doc.setDrawColor(primaryColor);
         doc.rect(

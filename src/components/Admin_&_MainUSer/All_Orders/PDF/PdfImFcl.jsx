@@ -83,7 +83,7 @@ const PDFGenerator = ({ order, freightQuotes }) => {
       doc.setFont(undefined, 'normal');
       doc.setTextColor('#374151');
       doc.setFontSize(9);
-      doc.text(`- Order Type: Export - FCL`, col1, yPos + lineHeight);
+      doc.text(`- Order Type: Import - FCL`, col1, yPos + lineHeight);
       doc.text(`- Route: ${order.from || 'N/A'} to ${order.to || 'N/A'}`, col1, yPos + lineHeight * 2);
       doc.text(`- Ready Date: ${formatDate(order.shipmentReadyDate)}`, col1, yPos + lineHeight * 3);
       doc.text(`- Target Date: ${formatDate(order.targetDate)}`, col1, yPos + lineHeight * 4);
@@ -95,7 +95,7 @@ const PDFGenerator = ({ order, freightQuotes }) => {
       doc.setFont(undefined, 'normal');
       doc.setTextColor('#374151');
       doc.setFontSize(9);
-      doc.text(`- Pallets: ${(order.numberOfPallets || 0).toLocaleString()}`, col2, yPos + lineHeight);
+      doc.text(`- No.of Containers: ${(order.numberOfContainers || 0).toLocaleString()}`, col2, yPos + lineHeight);
       yPos += 45;
 
       // Freight Quotes Table
@@ -108,24 +108,23 @@ const PDFGenerator = ({ order, freightQuotes }) => {
 
         const headers = [
           { header: 'Agent', dataKey: 'agent' },
-          { header: 'DTHC ($)', dataKey: 'dthc' },
-          { header: 'Free Time', dataKey: 'freetimes' },
-          { header: 'Transshipment', dataKey: 'transshipmentPort' },
-          { header: 'Carrier', dataKey: 'carriers' },
-          { header: 'Transit Time', dataKey: 'transit' },
-          { header: 'Validity', dataKey: 'validity' },
+          { header: 'DO Fee', dataKey: 'dofee' },
+           { header: 'Transshipment', dataKey: 'transshipmentPort' },
+           { header: 'Free Time', dataKey: 'freetimes' },
+           { header: 'Carrier', dataKey: 'carriers' },
+           { header: 'Transit Time', dataKey: 'transit' },
+           { header: 'Validity', dataKey: 'validity' },
           { header: 'Net Freight ($)', dataKey: 'netFreight' },
         ];
         const quotesData = freightQuotes.map(quote => ({
           agent: quote.Agent || '-',
-          dthc: quote.DTHC,
-          freetimes: quote.freeTime ? `${quote.freeTime} days` : '-',
+          dofee: quote.DOFee,
           transshipmentPort: quote.transShipmentPort || '-',
+          freetimes: quote.freeTime ? `${quote.freeTime} days` : '-',
           carriers: quote.carrier,
           transit: quote.transitTime ? `${quote.transitTime} days` : '-',
           validity: formatDate(quote.validityTime),
           netFreight: formatCurrency(quote.netFreight),
-          
         }));
 
         doc.autoTable({

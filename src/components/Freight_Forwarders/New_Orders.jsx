@@ -8,9 +8,15 @@ const Dashboard = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [orderType, setOrderType] = useState('');
   const [shipmentType, setShipmentType] = useState('');
+  const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
+    const role = localStorage.getItem('userRole');
+    if (role) {
+      setUserRole(role);
+    }
+    
     const fetchAvailableOrders = async () => {
       try {
         const token = localStorage.getItem('token'); // Get token from storage
@@ -131,16 +137,17 @@ const Dashboard = ({ children }) => {
             <div className="relative max-h-[600px]">
               <div className="sticky top-0 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
                 <table className="w-full">
-                  <thead>
+                <thead>
                     <tr className="text-sm font-semibold text-gray-600 text-center">
-                      <th className="py-4 px-6 -[20px]">Order </th>
-                      <th className="py-4 px-6">Type</th>
-                      <th className="py-4 px-6">Shipment</th>
-                      <th className="py-4 px-6">Valid Days</th>
-                      <th className="py-4 px-6">Quoting Status</th>
-                      <th className="py-4 px-6">Actions</th>
+                      <th className="py-5 px-4 w-[15%]">Order Number</th>
+                      <th className="py-5 px-4 w-[15%]">Type</th>
+                      <th className="py-5 px-4 w-[15%]">Shipment</th>
+                      <th className="py-5 px-4 w-[15%]">Valid Days</th>
+                      <th className="py-5 px-4 w-[15%]">Quoting Status</th>
+                      {userRole !== 'freightAgent' && <th className="py-4 px-6">Actions</th>}
                     </tr>
                   </thead>
+
                 </table>
               </div>
 
@@ -150,20 +157,20 @@ const Dashboard = ({ children }) => {
                   <tbody className="divide-y divide-gray-100">
                     {filteredOrders.map((order) => (
                       <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors text-center">
-                        <td className="py-4 px-6 font-medium text-gray-800">{order.orderNumber}</td>
-                        <td className="py-4 px-6">
+                        <td className="py-5 px-4 w-[15%] font-medium text-gray-800">{order.orderNumber}</td>
+                        <td className="py-5 px-4 w-[15%]">
                           <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm">
                             {order.orderType}
                           </span>
                         </td>
-                        <td className="py-4 px-6 text-gray-600">{order.shipmentType}</td>
-                        <td className="py-4 px-6">
+                        <td className="py-5 px-4 w-[15%] text-gray-600">{order.shipmentType}</td>
+                        <td className="py-5 px-4 w-[15%]">
                           <div className="flex items-center gap-2 justify-center">
                             <span className="text-gray-600">{order.daysRemaining}</span>
                             <span className="text-sm text-gray-400">days</span>
                           </div>
                         </td>
-                        <td className="py-4 px-6">
+                        <td className="py-5 px-4 w-[15%]">
                           {order.alreadyQuoted === 'Yes' ? (
                             <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm">
                               Quoted
@@ -174,7 +181,8 @@ const Dashboard = ({ children }) => {
                             </span>
                           )}
                         </td>
-                        <td className="py-4 px-6">
+                        {userRole !== 'freightAgent' && (
+                        <td className="py-5 px-4 w-[15%]">
                           <button
                             onClick={() => handleAddQuote(order)}
                             className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2 ml-auto"
@@ -183,6 +191,7 @@ const Dashboard = ({ children }) => {
                             Add Quote
                           </button>
                         </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -206,6 +215,10 @@ const Dashboard = ({ children }) => {
               )}
             </div>
           </div>
+
+
+
+
           </div>
         </div>
       </main>

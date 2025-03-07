@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiDownload, FiInfo, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandler';
-import PDFGenerator from '../All_Orders/PDF/PdfExAir'; // Import the PDFGenerator component
+import PDFGenerator from '../All_Orders/PDF/PdfImAir'; // Import the PDFGenerator component
 import QuoteDetailsPopup from '../PopupForSelectAgent/ImportAir';
 
 const ImportAirFreight = ({ order }) => {

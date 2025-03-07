@@ -132,14 +132,17 @@ const ExportAirFreight = ({ order }) => {
       }
 
       const result = await response.json();
-      console.log('Quotes submitted successfully:', result);
-      setShowSuccessPopup(true);
-      setTimeout(() => setShowSuccessPopup(false), 3000); // Hide popup after 3 seconds
-    } catch (error) {
-      console.error('Error submitting quotes:', error);
-      alert(error);
-    }
-  };
+    console.log('Quotes submitted successfully:', result);
+    setShowSuccessPopup(true);
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+      navigate('/user-dashboard'); // Refresh the page after 3 seconds
+    }, 1000); // Hide popup after 3 seconds
+  } catch (error) {
+    console.error('Error submitting quotes:', error);
+    alert(error);
+  }
+};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
