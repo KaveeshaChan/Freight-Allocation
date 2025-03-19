@@ -89,7 +89,12 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
           chargeableWeight: formData.chargeableWeight,
           grossWeight: formData.grossWeight,
           cargoCBM: formData.cargoCBM,
-          LWHWithThePallet: (formData.length)+'x'+(formData.width)+'x'+(formData.height),
+          LWHWithThePallet: (
+            typeof formData.length === 'number' && 
+            typeof formData.width === 'number' && 
+            typeof formData.height === 'number'
+        ) ? `${formData.length}x${formData.width}x${formData.height}`
+          : null,
           productDescription: formData.productDescription,
           targetDate: formData.targetDate,
           additionalNotes: formData.additionalNotes || null,

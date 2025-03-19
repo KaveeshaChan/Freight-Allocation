@@ -8,6 +8,7 @@ import AddFreightAgent from './components/Admin_&_MainUSer/Users/AddFreightAgent
 import AddFreightCoordinator from './components/Admin_&_MainUSer/Users/AddFreightCoordinator.jsx'; // Add this page
 import AddMainUser from './components/Admin_&_MainUSer/Users/AddMainUser.jsx'; // Add this page
 import Layout from './components/Layouts/Main_Layout.jsx';
+import AdminDashboard from './components/Admin_&_MainUSer/Dashboard.jsx'
 import InProgress from './components/Admin_&_MainUSer/All_Orders/InProgress.jsx';
 import Completed from './components/Admin_&_MainUSer/All_Orders/Completed.jsx';
 import AddNewOrder from './components/Add_New_Order/AddNewOrder.jsx';
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/Admin-Dashboard" element={<AdminDashboard />} />
         <Route path="/add-freight-agent" element={<AddFreightAgent />} />
         <Route path="/add-freight-coordinator" element={<AddFreightCoordinator />} />
         <Route path="/add-main-user" element={<AddMainUser />} />

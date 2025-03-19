@@ -70,9 +70,9 @@ const LoginPage = () => {
 
       // Redirect based on role
       if (roleName === "admin") {
-        window.location.href = "/All-Orders"; // Redirect to admin page
+        window.location.href = "/Admin-Dashboard"; // Redirect to admin page
       } else if (roleName === "mainUser") {
-        window.location.href = "/All-Orders"; // Redirect to main user page
+        window.location.href = "/Admin-Dashboard"; // Redirect to main user page
       } else if (roleName === "freightAgent") {
         window.location.href = "/user-dashboard";
       } else if (roleName === "coordinator") {

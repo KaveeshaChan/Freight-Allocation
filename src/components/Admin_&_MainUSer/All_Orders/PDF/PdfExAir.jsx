@@ -1,6 +1,6 @@
 import React from 'react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import 'jspdf-autotable';   // this extends the jsPDF instance
 import { FiPrinter } from 'react-icons/fi';
 import logo from '../../../../assests/CargoLogo.png';
 import { format, isValid, parseISO } from 'date-fns';
