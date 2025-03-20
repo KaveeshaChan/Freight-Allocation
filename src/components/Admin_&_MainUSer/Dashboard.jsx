@@ -43,7 +43,7 @@ function AdminDashboard() {
       toolbar: { show: false },
       height: 300,
     },
-    colors: ['#1C64F2', '#3B82F6', '#60A5FA', '#10B981', '#059669', '#047857'],
+    colors: ['#03045E', '#0077B6', '#00B4D8', '#6CD900', '#39B500', '#035E20'],
     labels: [
       'Import Air Freight',
       'Import FCL',
@@ -156,7 +156,7 @@ function AdminDashboard() {
             }
           }
         },
-        barThickness: 5
+        barThickness: 8
   };
 
   useEffect(() => {
@@ -186,9 +186,7 @@ function AdminDashboard() {
                 ? item.quotationCount
                 :0
               ),
-              backgroundColor: 'rgba(255, 99, 132, 0.6)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(255, 0, 0, 0.8)',
             },
             {
               label: 'Warning (4-8 days)',
@@ -197,9 +195,7 @@ function AdminDashboard() {
                 ? item.quotationCount
                 : 0
               ),
-              backgroundColor: 'rgba(255, 206, 86, 0.6)',
-              borderColor: 'rgba(255, 206, 86, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(252, 186, 3, 1)',
             },
             {
               label: 'Normal (>8 days)',
@@ -208,9 +204,7 @@ function AdminDashboard() {
                   ? item.quotationCount 
                   : 0
               ),
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(7, 211, 0, 0.8)',
             },
             {
               label: 'Pending',
@@ -219,9 +213,7 @@ function AdminDashboard() {
                   ? item.quotationCount 
                   : 0
               ),
-              backgroundColor: 'rgba(153, 102, 255, 0.6)',
-              borderColor: 'rgba(153, 102, 255, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgb(163, 163, 197)',
             }
           );
         }
@@ -235,9 +227,7 @@ function AdminDashboard() {
                 ? item.quotationCount 
                 : 0
             ),
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1,
+            backgroundColor: 'rgba(90, 90, 90, 1)',
           });
         }
 
@@ -247,9 +237,7 @@ function AdminDashboard() {
             {
               label: 'Urgent (≤3 days)',
               data: filtered.map(item => item.orderStatus === 'active' && item.daysRemaining > 0 && item.daysRemaining <= 3 ? item.quotationCount : 0),
-              backgroundColor: 'rgba(255, 99, 132, 0.6)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(255, 0, 0, 0.8)',
             },
             {
               label: 'Warning (4-8 days)',
@@ -258,16 +246,12 @@ function AdminDashboard() {
                   ? item.quotationCount 
                   : 0
               ),
-              backgroundColor: 'rgba(255, 206, 86, 0.6)',
-              borderColor: 'rgba(255, 206, 86, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(252, 186, 3, 1)',
             },
             {
               label: 'Normal (>8 days)',
               data: filtered.map(item => item.orderStatus === 'active' && item.daysRemaining > 8 ? item.quotationCount : 0),
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(7, 211, 0, 0.8)',
 
             }
           );
@@ -279,9 +263,7 @@ function AdminDashboard() {
             {
               label: 'Pending',
               data: filtered.map(item => item.orderStatus === 'pending' ? item.quotationCount : 0),
-              backgroundColor: 'rgba(153, 102, 255, 0.6)',
-              borderColor: 'rgba(153, 102, 255, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgb(163, 163, 197)',
             },
           )
         }
@@ -315,7 +297,7 @@ function AdminDashboard() {
                   method: "GET", // Use GET for fetching data
                   headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`, // Attach token
+                    Authorization: `Bearer ${token}`,
                   },
                 }
             );
@@ -361,6 +343,7 @@ function AdminDashboard() {
             const cancelled = await cancelledCounts.json();
             const orders = await orderCounts.json();
             const quotes = await orderQuotes.json();
+            
             setQuotesData(quotes);
             setCancelledStats(cancelled)
             
@@ -381,10 +364,8 @@ function AdminDashboard() {
             }));
 
         } catch (error) {
-            console.error("Error fetching total freight agents count:", error.message);
             if (error.message.includes("401")) {
-              console.error("Unauthorized. Redirecting to login.");
-              navigate('/login'); // Navigate to login page
+              navigate('/login');
               return;
             }
         }
@@ -392,6 +373,10 @@ function AdminDashboard() {
     };
 
     fetchDashboardData();
+
+    const interval = setInterval(fetchDashboardData, 5000);
+    return () => clearInterval(interval);
+
   }, [cancelledFilterType, cancelledFilterValue]);
 
   const handleStatusFilter = (e) => {
@@ -404,13 +389,13 @@ function AdminDashboard() {
       <div className="grid grid-cols-1 p-6 mt-[52px]">
         
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 gap-2 mb-8">
+        <div className="grid grid-cols-1 gap-2 mb-2">
 
             {/* number row */}
             <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-2'>
-                <div className="p-6 bg-blue-100 rounded-lg shadow .hover:shadow-lg shadow-none transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 group">
+                <div className="p-6 bg-gray-200 rounded-lg shadow-md .hover:shadow-lg transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 group">
                   <h2 className="text-gray-900 font-bold md:text-xl sm:text-lg transition-all duration-300 ease-in-out transform">Open for Quotes</h2>
-                    <hr className='mb-5 h-1 border-none bg-gradient-to-r from-[#030bfc] to-[#98009E] opacity-90 rounded-full shadow-lg mt-1'></hr>
+                    <hr className='mb-5 h-1 border-none bg-gradient-to-r from-[#030bfc] to-[#e5e7eb] opacity-90 rounded-full shadow-lg mt-1'></hr>
                     <div className='grid grid-cols-2'>
                         <div className='justify-items-end mr-6'>
                             <svg className="transition-transform duration-300 ease-in-out group-hover:scale-110 group-hover:fill-blue" xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 32 32"><path fill="currentColor" fillRule="evenodd" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m0 26a12 12 0 0 1 0-24v12l8.481 8.481A11.96 11.96 0 0 1 16 28"/></svg>
@@ -419,9 +404,9 @@ function AdminDashboard() {
                     </div>
                 </div>
 
-                <div className="bg-yellow-100 p-6 rounded-lg shadow .hover:shadow-lg shadow-none transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 group">
+                <div className="bg-gray-200 p-6 rounded-lg shadow-md .hover:shadow-lg transition-shadow duration-300 hover:shadow-lg hover:shadow-gray-400 group">
                   <h2 className="text-gray-900 font-bold md:text-xl sm:text-lg transition-all duration-300 ease-in-out transform">Pending Decision</h2>
-                    <hr className='mb-5 h-1 border-none bg-gradient-to-r from-[#fcba03] to-[#98009E] opacity-90 rounded-full shadow-lg mt-1'></hr>
+                    <hr className='mb-5 h-1 border-none bg-gradient-to-r from-[#fcba03] to-[#e5e7eb] opacity-90 rounded-full shadow-lg mt-1'></hr>
                     <div className='grid grid-cols-2'>
                         <div className='justify-items-end mr-6'>
                             <svg className="transition-transform duration-300 ease-in-out group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 24 24">
@@ -432,7 +417,7 @@ function AdminDashboard() {
                     </div>
                 </div>
 
-                <div className="bg-red-100 p-6 px-4 rounded-lg shadow .hover:shadow-lg shadow-none transition-shadow duration-300 hover:shadow-gray-400 hover:shadow-lg group md:col-span-1 sm:col-span-3">
+                <div className="bg-gray-200 p-6 rounded-lg shadow-md .hover:shadow-lg transition-shadow duration-300 hover:shadow-gray-400 hover:shadow-lg group md:col-span-1 sm:col-span-3">
                   <div className="flex flex-row justify-between items-start md:items-center gap-1">
                   <h2 className="text-gray-900 font-bold md:text-xl sm:text-lg transition-all duration-300 ease-in-out transform">Cancelled Orders</h2>
                     <div className="flex flex-wrap gap-1 items-center">
@@ -521,7 +506,7 @@ function AdminDashboard() {
                   </div>
 
                   {/* Divider */}
-                  <hr className="mb-5 h-1 border-none bg-gradient-to-r from-[#fc0303] to-[#98009E] opacity-90 rounded-full shadow-lg mt-1" />
+                  <hr className="mb-5 h-1 border-none bg-gradient-to-r from-[#ff0000] to-[#e5e7eb] opacity-90 rounded-full shadow-lg mt-1" />
 
                   {/* Stats Section */}
                   <div className="grid grid-cols-2">
@@ -549,14 +534,14 @@ function AdminDashboard() {
 
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-2'>
                 {/* donut chart */}
-                <div className="bg-white p-6 rounded-lg shadow .hover:shadow-lg shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400">
+                <div className="bg-gray-200 p-6 rounded-lg shadow .hover:shadow-lg shadow-md transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400">
                     <div className="flex items-center">
                         <h2 className="text-gray-900 font-bold text-2xl">Orders</h2>
                     </div>
                     <hr className="mb-5 h-1 border-none bg-gradient-to-r from-[#0534F0] to-[#98009E] opacity-90 my-2 rounded-full shadow-lg"></hr>
 
                     <div className='grid grid-cols-2 grid-cols-1'>
-                        <div className='p-4 bg-gray-50 rounded-lg shadow-sm'>
+                        <div className='p-4 bg-gray-100 rounded-lg shadow shadow-md'>
                             <ReactApexChart
                                 options={chartOptions}
                                 series={chartSeries} 
@@ -568,13 +553,13 @@ function AdminDashboard() {
                             <div className="flex-wrap mt-6 text-center">
                                 <div className='flex-col p-4 py-8'>
                                     <h3 className='text-xl font-semibold text-gray-700'>Total Imports</h3>
-                                    <p className='text-5xl font-bold text-blue-600'>
+                                    <p className='text-5xl font-bold text-[#030bfc]'>
                                         {stats.allImportAF + stats.allImportFCL + stats.allImportLCL}
                                     </p>
                                 </div>
                                 <div className="flex-col p-4 py-8">
                                     <h3 className='text-xl font-semibold text-gray-700'>Total Exports</h3>
-                                    <p className='text-5xl font-bold text-green-600'>
+                                    <p className='text-5xl font-bold text-[#00B100]'>
                                         {stats.allExportAF + stats.allExportFCL + stats.allExportLCL}
                                     </p>
                                 </div>
@@ -584,14 +569,14 @@ function AdminDashboard() {
                 </div>
 
                 {/* bar chart */}
-                <div className="bg-white p-6 rounded-lg shadow .hover:shadow-lg shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400">
+                <div className="bg-gray-200 p-6 rounded-lg shadow .hover:shadow-lg shadow-md transition-shadow duration-300 cursor-pointer hover:shadow-lg hover:shadow-gray-400">
                     <div className="flex items-center justify-between">
                         <h2 className="text-gray-900 font-bold text-2xl">Freight Forwarder Shipments</h2>
                         <div className="flex items-center gap-4">
                           <select
                             value={selectedType}
                             onChange={(e) => setSelectedType(e.target.value)}
-                            className='px-1 pr-8 py-1 text-sm border rounded-lg border border-gray-200 focus:border-gray-300 focus:ring-gray-100 transition-all hover:bg-gray-100 cursor-pointer'
+                            className='px-1 pr-8 py-1 bg-gray-200 text-sm border rounded-lg border-gray-300 focus:border-gray-300 focus:ring-gray-100 transition-all hover:bg-gray-300 cursor-pointer'
                           >
                             <option value="export">Export</option>
                             <option value="import">Import</option>
@@ -606,7 +591,7 @@ function AdminDashboard() {
       </div>
       
         {/* graph */}
-        <div className="bg-white p-6 mb-2 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 cursor-pointer hover:shadow-gray-400 w-full h-auto">
+        <div className="bg-gray-200 p-6 mb-2 rounded-lg shadow shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer hover:shadow-gray-400 w-full h-auto">
 
               <div className="flex justify-between items-center">
                 <h2 className="text-gray-900 font-bold text-2xl">Order Quotation Analysis</h2>
@@ -614,7 +599,7 @@ function AdminDashboard() {
                   <select
                     value={statusFilter}
                     onChange={handleStatusFilter}
-                    className='px-4 pr-8 py-2 border rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'>
+                    className='px-1 pr-8 py-1 text-sm border rounded-lg border border-gray-300 bg-transparent focus:border-gray-300 focus:ring-gray-100 transition-all hover:bg-gray-300 cursor-pointer'>
                       <option value="all">All Statuses</option>
                       <option value="active">Active</option>
                       <option value="pending">Pending</option>
@@ -625,8 +610,8 @@ function AdminDashboard() {
               </div>
               <hr className="mb-6 h-1 border-none bg-gradient-to-r from-[#0534F0] to-[#98009E] opacity-90 my-2 rounded-full shadow-lg"></hr>
               {chartData && (
-              <div className='h-[550px] w-full pb-3 overflow-x-auto'>
-                <div style={{ minWidth: `${chartData.labels.length * 20}px`, height: '500px' }}>
+              <div className='h-[550px] bg-gray-100 shadow shadow-md rounded-lg w-full pt-2 px-2 overflow-x-auto'>
+                <div style={{ minWidth: `${chartData.labels.length * 25}px`, height: '500px' }}>
                   <Bar data={{
                     labels: chartData.labels,
                     datasets: chartData.datasets
@@ -654,7 +639,15 @@ function AdminDashboard() {
                           label: (context) => {
                             const item = filteredData[context.dataIndex];
                             if (!item) return "No Data";
-                            return `Quotations: ${item.quotationCount}/${item.emailCount} • Due in ${item.daysRemaining} days`;
+
+                            let label = `Quotations: ${item.quotationCount}/${item.emailCount}`;
+
+                            // Only show due date if daysRemaining is > 0
+                            if (item.daysRemaining > 0) {
+                              label += ` • Due in ${item.daysRemaining} days`;
+                            }
+
+                            return label;
                           }
                         }
                       }
@@ -664,15 +657,6 @@ function AdminDashboard() {
               </div>
             </div>
               )}
-        </div>
-
-        {/* Recent Activity Section */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold mb-4">Recent Activity</h2>
-          <div className="space-y-4">
-            {/* Add your recent activity items here */}
-            <p className="text-gray-600">No recent activity to display</p>
-          </div>
         </div>
       </div>
     </div>
