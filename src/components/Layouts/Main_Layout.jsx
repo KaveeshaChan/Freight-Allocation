@@ -15,6 +15,7 @@ const Header = () => {
   }, []);
 
   const navItems = [
+    { name: "Dashboard", path: "/Admin-Dashboard" },
     { name: "All Orders", path: "/All-Orders" },
     { name: "Add New Order", path: "/add-new-order" },
   ];
