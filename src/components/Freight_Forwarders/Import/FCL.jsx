@@ -274,7 +274,7 @@ const ImportFCL = ({ order }) => {
                   <span className="text-red-500 italic text-xs"> (14 days free time is must)</span>
                 </>
               ), name: 'transitTime', type: 'number', min: 14 }, // Set minimum value to 14
-              { label: 'Flight Details', name: 'vesselOrFlightDetails' },
+              { label: 'Vessel Details', name: 'vesselOrFlightDetails' },
               { label: 'Validity Date', name: 'validityTime', type: 'date' },
             ].map((field, index) => (
               <InputField

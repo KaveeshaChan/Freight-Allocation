@@ -424,7 +424,7 @@ function AdminDashboard() {
                       {/* Filter Type Dropdown */}
                       <div className="relative w-[95px]">
                         <select
-                          className="w-full pl-1 py-1 pr-1 text-sm bg-transparent rounded-lg border border-red-200 focus:border-red-100 focus:ring-1 focus:ring-red-100 transition-all hover:bg-red-200 cursor-pointer"
+                          className="w-full pl-1 py-1 pr-1 text-sm bg-transparent rounded-lg border border-gray-300 focus:border-gray-200 focus:ring-1 focus:ring-gray-100 transition-all hover:bg-gray-300 cursor-pointer"
                           value={cancelledFilterType}
                           onChange={(e) => {
                             setCancelledFilterType(e.target.value);

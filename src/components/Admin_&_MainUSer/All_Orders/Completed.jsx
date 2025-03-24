@@ -2,20 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Layouts/Main_Layout';
 import { FiSearch, FiPlusCircle, FiRefreshCw, FiClock, FiX, FiBox, FiTruck, FiAnchor, FiMapPin, FiCalendar, FiPackage } from 'react-icons/fi';
-import AirfreightExportPopup from '../PopupForSelectAgent/CompletedEXP-AIR'; // Import the popup component
-import AirfreightImportPopup from '../PopupForSelectAgent/CompletedIMP-AIR'; // Import the popup component
-import LCLExportPopup from '../PopupForSelectAgent/CompletedEXP-LCL'; // Import the popup component
-import LCLImportPopup from '../PopupForSelectAgent/CompletedIMP-LCL'; // Import the popup component
-import FCLExportPopup from '../PopupForSelectAgent/CompletedEXP-FCL'; // Import the popup component
-import FCLImportPopup from '../PopupForSelectAgent/CompletedIMP-FCL'; // Import the popup component
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [orderType, setOrderType] = useState('');
   const [shipmentType, setShipmentType] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [selectedQuote, setSelectedQuote] = useState(null); // State for selected quote
   const navigate = useNavigate();
   const status = "completed";
 
@@ -73,51 +65,8 @@ const Dashboard = ({ children }) => {
     setShipmentType('');
   };
 
-  const handleRowClick = (order) => {
-    setSelectedOrder(order);
-    setSelectedQuote({}); // Simulate selecting a quote for the popup
-  };
-
-  const handleClosePopup = () => {
-    setSelectedOrder(null);
-    setSelectedQuote(null);
-  };
-
-  const handleSelectAgentInPopup = () => {
-    // Add logic to handle selecting an agent within the popup
-    handleClosePopup();
-  };
-
-  const renderPopup = () => {
-    if (!selectedOrder) return null;
-
-    const { orderType, shipmentType } = selectedOrder;
-
-    if (orderType === 'export' && shipmentType === 'airFreight') {
-      return <AirfreightExportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
-    }
-
-    if (orderType === 'import' && shipmentType === 'airFreight') {
-      return <AirfreightImportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
-    }
-
-    if (orderType === 'export' && shipmentType === 'lcl') {
-      return <LCLExportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
-    }
-
-    if (orderType === 'import' && shipmentType === 'lcl') {
-      return <LCLImportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
-    }
-
-    if (orderType === 'export' && shipmentType === 'fcl') {
-      return <FCLExportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
-    }
-
-    if (orderType === 'import' && shipmentType === 'fcl') {
-      return <FCLImportPopup quote={selectedQuote} order={selectedOrder} onClose={handleClosePopup} onSelectAgent={handleSelectAgentInPopup} />;
-    }
-
-    return null;
+  const handleViewOrder = (order) => {
+    navigate(`/order/${order.orderNumber}`);
   };
 
   return (
@@ -164,7 +113,7 @@ const Dashboard = ({ children }) => {
                   </select>
 
                   <select
-                    className="px- py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                    className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
                     value={shipmentType}
                     onChange={(e) => setShipmentType(e.target.value)}
                   >
@@ -197,6 +146,7 @@ const Dashboard = ({ children }) => {
                       <th className="py-5 px-4 w-[16%]">Type</th>
                       <th className="py-5 px-4 w-[16%]">Shipment</th>
                       <th className="py-5 px-4 w-[16%]">Selected Agent</th>
+                      <th className="py-5 px-4 w-[16%]">Actions</th>
                     </tr>
                   </thead>
                 </table>
@@ -207,7 +157,7 @@ const Dashboard = ({ children }) => {
                 <table className="w-full">
                   <tbody className="divide-y divide-gray-100">
                     {filteredOrders.map((order) => (
-                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(order)}>
+                      <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors even:bg-gray-50">
                         <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.orderNumber}</td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
@@ -225,6 +175,14 @@ const Dashboard = ({ children }) => {
                         
                         <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.Freight_Agent}</td>
                         
+                        <td className="py-5 px-4 w-[16%] text-center">
+                          <button
+                            onClick={() => handleViewOrder(order)}
+                            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                          >
+                            View Details
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -250,9 +208,6 @@ const Dashboard = ({ children }) => {
           </div>
         </div>
       </main>
-
-      {renderPopup()}
-
     </div>
   );
 };

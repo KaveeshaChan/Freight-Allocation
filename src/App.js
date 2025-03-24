@@ -23,6 +23,8 @@ import Pending from './components/Admin_&_MainUSer/All_Orders/Pending.jsx';
 import Cancel from './components/Admin_&_MainUSer/All_Orders/Cancelled_Orders.jsx';
 import ViewMainUsers from './components/Admin_&_MainUSer/ViewMainUsers.jsx';
 import UnAutho from './components/Layouts/UnAutho.jsx';
+import Import from './components/Admin_&_MainUSer/Import/AirFreight.jsx';
+import OrderDetails from './components/Admin_&_MainUSer/CompletedOrders/completed.jsx';
 
 const App = () => {
   return (
@@ -51,6 +53,8 @@ const App = () => {
         <Route path="/Pending" element={<Pending />} />
         <Route path="/Cancelled-orders" element={<Cancel />} />
         <Route path="/UnAuthorized" element={<UnAutho />} />
+        <Route path="/Import" element={<Import />} />
+        <Route path="/order/:orderNumber" element={<OrderDetails />} />
       </Routes>
     </Router>
   );
