@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const QuoteDetailsPopup = ({ quote, order, onClose, onSelectAgent }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  
+    const handleSelectAgent = async () => {
+      setIsLoading(true);
+      await onSelectAgent();
+      setIsLoading(false);
+    };
+
   if (!quote) return null;
   
     return (
@@ -108,11 +116,16 @@ const QuoteDetailsPopup = ({ quote, order, onClose, onSelectAgent }) => {
               Close
             </button>
             <button
-              onClick={onSelectAgent}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Select This Agent
-            </button>
+            onClick={handleSelectAgent}
+            className={`bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors ${isLoading ? 'cursor-not-allowed' : ''}`}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <svg className="animate-spin h-5 w-5 mr-3 border-t-2 border-white rounded-full" viewBox="0 0 24 24"></svg>
+            ) : (
+              'Select This Agent'
+            )}
+          </button>
           </div>
         </div>
       </div>

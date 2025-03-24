@@ -385,11 +385,14 @@ const ExportAirFreight = ({ order }) => {
             </div>
             <p className="text-[#2C2C2C]/90 text-center mb-1">Agent selected successfully!</p>
             <button
-              onClick={() => setShowSuccessPopup(false)}
+              onClick={() => {
+                setShowSuccessPopup(false);
+                navigate('/All-Orders'); // Navigate to the desired location
+              }}
               className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors mt-4"
             >
               Continue
- </button>
+            </button>
           </div>
         </div>
       )}

@@ -13,7 +13,11 @@ const ImportFCL = ({ order }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const navigate = useNavigate();
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+     const [errorMessage, setErrorMessage] = useState('');
+     const navigate = useNavigate();
+  
 
   const handleRowSelect = (quote) => {
     setSelectedQuote(quote);
@@ -42,14 +46,17 @@ const ImportFCL = ({ order }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to select agent');
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Failed to select agent');
+        setShowErrorPopup(true);
+        return;
       }
 
-      alert('Agent selected successfully!');
+      setShowSuccessPopup(true);
       setIsPopupVisible(false);
     } catch (error) {
-      console.error('Error selecting agent:', error);
-      alert('Failed to select agent. Please try again.');
+      setErrorMessage('Error: ' + error.message);
+      setShowErrorPopup(true);
     }
   };
 
@@ -321,6 +328,52 @@ const ImportFCL = ({ order }) => {
           onSelectAgent={handleSelectAgent}
         />
       )}
+       {/* Error Popup */}
+       {showErrorPopup && (
+        <div className="fixed inset-0 bg-gray-800/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+            <div className="flex items-center mb-4">
+              <div className="bg-red-100 p-2 rounded-full mr-3">
+                <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800">Validation Error</h3>
+            </div>
+            <p className="text-gray-600 mb-6">{errorMessage}</p>
+            <button
+              onClick={() => setShowErrorPopup(false)}
+              className="w-full py-2 px-4 bg-gray-200 hover:bg-red-100 text-red-500 rounded-lg transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-[#2C2C2C]/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl">
+            <div className="flex items-center justify-center mt-3 mb-8">
+              <div className="bg-[#38B000]/10 p-2 rounded-full">
+                <svg className="w-6 h-6 text-[#38B000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-semibold text-[#2C2C2C] mr-2">&nbsp;Success!</h3>
+            </div>
+            <p className="text-[#2C2C2C]/90 text-center mb-1">Agent selected successfully!</p>
+            <button
+              onClick={() => setShowSuccessPopup(false)}
+              className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors mt-4"
+            >
+              Continue
+ </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
