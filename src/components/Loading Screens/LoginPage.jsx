@@ -181,24 +181,49 @@ const LoginPage = () => {
               </div>
 
               <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-3.5 px-6 rounded-lg bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white font-semibold 
-                            hover:from-[#5F72F3] hover:to-[#C057CB] transition-all duration-300 
-                            disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
-                >
-                  <span className="relative z-10">
-                    {isLoading ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Signing In...</span>
-                      </div>
-                    ) : (
-                      'Sign In →'
-                    )}
-                  </span>
-                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </button>
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3.5 px-6 rounded-lg bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white font-semibold 
+                            hover:from-[#5F72F3] hover:to-[#C057CB] transition-all duration-300 ease-out
+                            disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group
+                            hover:scale-[1.02] shadow-lg hover:shadow-[#0534F0]/10"
+              >
+                {/* Glossy overlay */}
+                <div className="absolute inset-0 opacity-30 group-hover:opacity-40 transition-opacity
+                              bg-[radial-gradient(circle_at_center,_transparent)]" />
+  
+                {/* Animated background */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
+                              bg-[conic-gradient(from_90deg_at_50%_50%,#0534F030_0%,#98009E30_50%,#0534F030_100%)] 
+                              animate-rotate" />
+  
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 -left-full group-hover:translate-x-full transition-all duration-700
+                                bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {isLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin 
+                                    [animation-delay:-0.3s]" />
+                          <span>Signing In...</span>
+                    </>
+                  ) : (
+                    <>
+                    Sign In
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" 
+                        className="w-4 h-4 mt-0.5 transition-transform group-hover:translate-x-1">
+                          <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
+                      </svg>
+                    </>
+                  )}
+                </span>
+
+              {/* Disabled overlay */}
+              {isLoading && (
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
+              )}
+            </button>
 
                 <div className="text-center mt-4">
                   <a 

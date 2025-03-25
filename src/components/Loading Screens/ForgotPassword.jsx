@@ -97,8 +97,9 @@ const ForgotPassword = () => {
                 type="submit"
                 disabled={isLoading}
                 className="w-full py-3.5 px-6 rounded-lg bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white font-semibold 
-                          hover:from-[#5F72F3] hover:to-[#C057CB] transition-all duration-300 
-                          disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
+                            hover:from-[#2d53ed] hover:to-[#C057CB] transition-all duration-300 ease-out
+                            disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group
+                            hover:scale-[1.02] shadow-lg hover:shadow-[#0534F0]/10"
               >
                 <span className="relative z-10">
                   {isLoading ? (
