@@ -393,100 +393,98 @@ function AdminDashboard() {
 
             {/* number row */}
             <div className='grid lg:grid-cols-3 md:grid-cols-2 gap-4 px-4 sm:px-6'>
-  {/* Open for Quotes Card */}
-  <div className="relative p-6 bg-gradient-to-br from-blue-50 to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ease-out group hover:-translate-y-1 border border-gray-100">
-    <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-    <h2 className="text-gray-700 font-semibold text-lg mb-3 flex items-center gap-2">
-      <span className="bg-blue-100 text-blue-800 p-1.5 rounded-lg">
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 32 32">
-        <path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m0 26a12 12 0 0 1 0-24v12l8.481 8.481A11.96 11.96 0 0 1 16 28"/>
-        
-        </svg>
-      </span>
-      Open for Quotes
-    </h2>
-    <hr className='mb-4 h-0.5 bg-gradient-to-r from-blue-400 to-blue-100 border-none rounded-full' />
-    <div className='flex items-center justify-between'>
-      <p className="text-4xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-        {stats.allActiveOrders}
-      </p>
-      <div className="p-3 bg-white rounded-lg shadow-inner border border-gray-100">
-        <div className="animate-pulse bg-gradient-to-br from-blue-200 to-blue-100 w-12 h-12 rounded-md flex items-center justify-center">
-          <svg className="w-7 h-7 text-blue-600" viewBox="0 0 32 32">
-          <path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m0 26a12 12 0 0 1 0-24v12l8.481 8.481A11.96 11.96 0 0 1 16 28"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div className="mt-3 text-sm text-gray-500 flex items-center gap-1">
-    <span className="text-blue-500">Current available all open orders</span>
-    </div>
-    
-  </div>
+              {/* Open for Quotes Card */}
+              <div className="relative p-6 bg-gradient-to-br from-blue-50 to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ease-out group hover:-translate-y-1 border border-gray-100">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                  <h2 className="text-gray-700 font-semibold text-lg mb-3 flex items-center gap-2">
+                    <span className="bg-blue-100 text-blue-800 p-1.5 rounded-lg">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 32 32">
+                        <path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m0 26a12 12 0 0 1 0-24v12l8.481 8.481A11.96 11.96 0 0 1 16 28"/>
+                      </svg>
+                    </span>
+                      Open for Quotes
+                  </h2>
+                  <hr className='mb-4 h-0.5 bg-gradient-to-r from-blue-400 to-blue-100 border-none rounded-full' />
+                  <div className='flex items-center justify-between'>
+                    <p className="text-4xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+                      {stats.allActiveOrders}
+                    </p>
+                    <div className="p-3 bg-white rounded-lg shadow-inner border border-gray-100">
+                      <div className="animate-pulse bg-gradient-to-br from-blue-200 to-blue-100 w-12 h-12 rounded-md flex items-center justify-center">
+                        <svg className="w-7 h-7 text-blue-600" viewBox="0 0 32 32">
+                          <path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m0 26a12 12 0 0 1 0-24v12l8.481 8.481A11.96 11.96 0 0 1 16 28"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-3 text-sm text-gray-500 flex items-center gap-1">
+                    <span className="text-blue-500">Current available all open orders</span>
+                  </div>
+              </div>
 
-  {/* Pending Decision Card */}
-  <div className="relative p-6 bg-gradient-to-br from-amber-50 to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ease-out group hover:-translate-y-1 border border-gray-100">
-    <div className="absolute inset-0 bg-gradient-to-br from-amber-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-    <h2 className="text-gray-700 font-semibold text-lg mb-3 flex items-center gap-2">
-      <span className="bg-amber-100 text-amber-800 p-1.5 rounded-lg">
-        <svg className="w-5 h-5" viewBox="0 0 24 24">
-        <path fill="currentColor" d="M17 22q-2.075 0-3.537-1.463T12 17t1.463-3.537T17 12t3.538 1.463T22 17t-1.463 3.538T17 22m.5-5.2v-2.3q0-.2-.15-.35T17 14t-.35.15t-.15.35v2.275q0 .2.075.388t.225.337l1.525 1.525q.15.15.35.15t.35-.15t.15-.35t-.15-.35zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.175q.275-.875 1.075-1.437T12 1q1 0 1.788.563T14.85 3H19q.825 0 1.413.588T21 5v4q0 .425-.288.713T20 10t-.712-.288T19 9V5h-2v2q0 .425-.288.713T16 8H8q-.425 0-.712-.288T7 7V5H5v14h4.5q.425 0 .713.288T10.5 20t-.288.713T9.5 21zm7-16q.425 0 .713-.288T13 4t-.288-.712T12 3t-.712.288T11 4t.288.713T12 5"/>
-        </svg>
-      </span>
-      Pending Decision
-    </h2>
-    <hr className='mb-4 h-0.5 bg-gradient-to-r from-amber-400 to-amber-100 border-none rounded-full' />
-    <div className='flex items-center justify-between'>
-      <p className="text-4xl font-bold text-gray-800 group-hover:text-amber-600 transition-colors">
-        {stats.allPendingOrders}
-      </p>
-      <div className="p-3 bg-white rounded-lg shadow-inner border border-gray-100">
-        <div className="animate-pulse bg-gradient-to-br from-amber-200 to-amber-100 w-12 h-12 rounded-md flex items-center justify-center">
-          <svg className="w-7 h-7 text-amber-600" viewBox="0 0 24 24">
-          <path fill="currentColor" d="M17 22q-2.075 0-3.537-1.463T12 17t1.463-3.537T17 12t3.538 1.463T22 17t-1.463 3.538T17 22m.5-5.2v-2.3q0-.2-.15-.35T17 14t-.35.15t-.15.35v2.275q0 .2.075.388t.225.337l1.525 1.525q.15.15.35.15t.35-.15t.15-.35t-.15-.35zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.175q.275-.875 1.075-1.437T12 1q1 0 1.788.563T14.85 3H19q.825 0 1.413.588T21 5v4q0 .425-.288.713T20 10t-.712-.288T19 9V5h-2v2q0 .425-.288.713T16 8H8q-.425 0-.712-.288T7 7V5H5v14h4.5q.425 0 .713.288T10.5 20t-.288.713T9.5 21zm7-16q.425 0 .713-.288T13 4t-.288-.712T12 3t-.712.288T11 4t.288.713T12 5"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div className="mt-3 text-sm text-gray-500 flex items-center gap-1">
-      <span className="text-amber-500">Current available all pending orders</span>
-    </div>
-  </div>
+              {/* Pending Decision Card */}
+              <div className="relative p-6 bg-gradient-to-br from-amber-50 to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ease-out group hover:-translate-y-1 border border-gray-100">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                  <h2 className="text-gray-700 font-semibold text-lg mb-3 flex items-center gap-2">
+                    <span className="bg-amber-100 text-amber-800 p-1.5 rounded-lg">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M17 22q-2.075 0-3.537-1.463T12 17t1.463-3.537T17 12t3.538 1.463T22 17t-1.463 3.538T17 22m.5-5.2v-2.3q0-.2-.15-.35T17 14t-.35.15t-.15.35v2.275q0 .2.075.388t.225.337l1.525 1.525q.15.15.35.15t.35-.15t.15-.35t-.15-.35zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.175q.275-.875 1.075-1.437T12 1q1 0 1.788.563T14.85 3H19q.825 0 1.413.588T21 5v4q0 .425-.288.713T20 10t-.712-.288T19 9V5h-2v2q0 .425-.288.713T16 8H8q-.425 0-.712-.288T7 7V5H5v14h4.5q.425 0 .713.288T10.5 20t-.288.713T9.5 21zm7-16q.425 0 .713-.288T13 4t-.288-.712T12 3t-.712.288T11 4t.288.713T12 5"/>
+                      </svg>
+                    </span>
+                      Pending Decision
+                  </h2>
+                  <hr className='mb-4 h-0.5 bg-gradient-to-r from-amber-400 to-amber-100 border-none rounded-full' />
+                  <div className='flex items-center justify-between'>
+                    <p className="text-4xl font-bold text-gray-800 group-hover:text-amber-600 transition-colors">
+                      {stats.allPendingOrders}
+                    </p>
+                    <div className="p-3 bg-white rounded-lg shadow-inner border border-gray-100">
+                      <div className="animate-pulse bg-gradient-to-br from-amber-200 to-amber-100 w-12 h-12 rounded-md flex items-center justify-center">
+                        <svg className="w-7 h-7 text-amber-600" viewBox="0 0 24 24">
+                          <path fill="currentColor" d="M17 22q-2.075 0-3.537-1.463T12 17t1.463-3.537T17 12t3.538 1.463T22 17t-1.463 3.538T17 22m.5-5.2v-2.3q0-.2-.15-.35T17 14t-.35.15t-.15.35v2.275q0 .2.075.388t.225.337l1.525 1.525q.15.15.35.15t.35-.15t.15-.35t-.15-.35zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.175q.275-.875 1.075-1.437T12 1q1 0 1.788.563T14.85 3H19q.825 0 1.413.588T21 5v4q0 .425-.288.713T20 10t-.712-.288T19 9V5h-2v2q0 .425-.288.713T16 8H8q-.425 0-.712-.288T7 7V5H5v14h4.5q.425 0 .713.288T10.5 20t-.288.713T9.5 21zm7-16q.425 0 .713-.288T13 4t-.288-.712T12 3t-.712.288T11 4t.288.713T12 5"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-3 text-sm text-gray-500 flex items-center gap-1">
+                    <span className="text-amber-500">Current available all pending orders</span>
+                  </div>
+              </div>
 
-  {/* Cancelled Orders Card */}
-  <div className="relative p-6 bg-gradient-to-br from-red-50 to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ease-out group hover:-translate-y-1 border border-gray-100 md:col-span-1 sm:col-span-3">
-    <div className="absolute inset-0 bg-gradient-to-br from-red-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-      <h2 className="text-gray-700 font-semibold text-lg flex items-center gap-2">
-        <span className="bg-red-100 text-red-800 p-1.5 rounded-lg">
-          <svg className="w-5 h-5" viewBox="0 0 512 512">
-          <path fill="currentColor" d="M256 42.667c117.821 0 213.334 95.513 213.334 213.333c0 117.821-95.513 213.334-213.334 213.334c-117.82 0-213.333-95.513-213.333-213.334C42.667 138.18 138.18 42.667 256 42.667M85.334 256c0 94.257 76.41 170.667 170.666 170.667c39.44 0 75.754-13.378 104.654-35.843L121.177 151.347C98.71 180.247 85.334 216.56 85.334 256M256 85.334c-39.439 0-75.753 13.377-104.653 35.843l239.477 239.477c22.465-28.9 35.843-65.214 35.843-104.654c0-94.256-76.41-170.666-170.667-170.666"/>
-          </svg>
-        </span>
-        Cancelled Orders
-      </h2>
-      <div className="flex items-center gap-2 flex-wrap">
-        <div className="relative">
-          <select
-            className="pl-3 pr-8 py-2 text-sm bg-white rounded-lg border border-gray-200 focus:border-red-300 focus:ring-2 focus:ring-red-100 transition-all hover:bg-gray-50 cursor-pointer appearance-none"
-            value={cancelledFilterType}
-            onChange={(e) => {
-              setCancelledFilterType(e.target.value);
-              setCancelledFilterValue('');
-              setSelectedYear('');
-              setSelectedMonth('');
-            }}
-          >
-            <option value="all">All Time</option>
-            <option value="year">By Year</option>
-            <option value="month">By Month</option>
-          </select>
-          <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+              {/* Cancelled Orders Card */}
+              <div className="relative p-6 bg-gradient-to-br from-red-50 to-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 ease-out group hover:-translate-y-1 border border-gray-100 md:col-span-1 sm:col-span-3">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                    <h2 className="text-gray-700 font-semibold text-lg flex items-center gap-2">
+                      <span className="bg-red-100 text-red-800 p-1.5 rounded-lg">
+                        <svg className="w-5 h-5" viewBox="0 0 512 512">
+                          <path fill="currentColor" d="M256 42.667c117.821 0 213.334 95.513 213.334 213.333c0 117.821-95.513 213.334-213.334 213.334c-117.82 0-213.333-95.513-213.333-213.334C42.667 138.18 138.18 42.667 256 42.667M85.334 256c0 94.257 76.41 170.667 170.666 170.667c39.44 0 75.754-13.378 104.654-35.843L121.177 151.347C98.71 180.247 85.334 216.56 85.334 256M256 85.334c-39.439 0-75.753 13.377-104.653 35.843l239.477 239.477c22.465-28.9 35.843-65.214 35.843-104.654c0-94.256-76.41-170.666-170.667-170.666"/>
+                        </svg>
+                      </span>
+                        Cancelled Orders
+                    </h2>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <div className="relative">
+                        <select
+                          className="pl-3 pr-8 py-1 text-sm bg-transparent rounded-lg border border-red-200 focus:border-red-100 focus:ring-1 focus:ring-red-100 transition-all hover:bg-red-200 cursor-pointer appearance-none"
+                          value={cancelledFilterType}
+                          onChange={(e) => {
+                            setCancelledFilterType(e.target.value);
+                            setCancelledFilterValue('');
+                            setSelectedYear('');
+                            setSelectedMonth('');
+                          }}
+                        >
+                          <option value="all">All Time</option>
+                          <option value="year">By Year</option>
+                          <option value="month">By Month</option>
+                        </select>
+                        {/* <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
             
-          </div>
-        </div>
+                        </div> */}
+                      </div>
         
-        {/* Year Selector */}
+                      {/* Year Selector */}
                       {cancelledFilterType === 'year' && (
                       <div className="relative w-[70px]">
                         <select
