@@ -32,7 +32,12 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'], // Use Poppins as the default sans font
+      },transitionProperty: {
+        'transform': 'transform',
       },
+      translate: {
+        'full': '100%',
+      }
     },
   },
   plugins: [
