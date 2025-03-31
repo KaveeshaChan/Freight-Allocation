@@ -33,6 +33,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState(null);
   const userId = localStorage.getItem('userId');
+  const [dueIssue, setDueIssue] = useState({})
   const navigate = useNavigate();
 
   const onFileUpload = async (e) => {
@@ -47,8 +48,13 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     }
   };
 
+  const getCurrentDate = () => {
+    return new Date().toISOString().split("T")[0];
+  };
+
   const validateForm = () => {
     let formErrors = {};
+  
     if (!formData.orderNumber) formErrors.orderNumber = "Order number is required";
     if (!formData.routeFrom) formErrors.routeFrom = "Route from is required";
     if (!formData.routeTo) formErrors.routeTo = "Route to is required";
@@ -60,11 +66,29 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     if (!formData.cargoType) formErrors.cargoType = "Cargo type is required";
     if (!formData.cargoCBM) formErrors.cargoCBM = "Cargo CBM is required";
     if (!formData.dueDate) formErrors.dueDate = "Due Date is required";
-    if (formData.cargoType === "PalletizedCargo" && !formData.noOfPallets) formErrors.noOfPallets = "Number of pallets is required";
+    if (formData.cargoType === "PalletizedCargo" && !formData.noOfPallets) {
+      formErrors.noOfPallets = "Number of pallets is required";
+    }
     if (!formData.targetDate) formErrors.targetDate = "Target date is required";
+  
+    // Ensure shipmentReadyDate is before currentDate() + dueDate
+    if (formData.shipmentReadyDate && formData.dueDate) {
+      const shipmentReadyDate = new Date(formData.shipmentReadyDate);
+      const currentDate = new Date(getCurrentDate());
+      
+      // Calculate the target due date by adding dueDate (days) to currentDate
+      const targetDueDate = new Date(currentDate);
+      targetDueDate.setDate(targetDueDate.getDate() + Number(formData.dueDate));
+  
+      if (shipmentReadyDate <= targetDueDate) {
+        formErrors.dueDate = "Due Date should be greater than at least 15 days before the shipment ready date";       
+      }
+    }
+  
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
+  
   
   const handleFormSubmit = async (e) => {
     e.preventDefault();
