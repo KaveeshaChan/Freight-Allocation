@@ -100,16 +100,18 @@ const OrderDetailsPopup = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg max-w-6xl w-full max-h-[70vh] overflow-y-auto p-6">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+      <button 
+        onClick={closePopup} 
+        className="fixed inset-x-50 top-12 text-gray-400 hover:text-gray-600 bg-white rounded-full p-2 transition-colors z-50"
+      >
+        <FiX className="text-2xl" />
+      </button>
+      <div className="bg-white rounded-xl shadow-lg max-w-6xl w-full max-h-[70vh] overflow-y-auto p-6 relative">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-2xl font-bold text-gray-800">Order Details</h3>
-          <button onClick={closePopup} className="text-gray-400 hover:text-gray-600">
-            <FiX className="text-2xl" />
-          </button>
         </div>
-
-        {renderOrderDetails(order)}
+          {renderOrderDetails(order)}
 
         {/* Action Sections */}
         <div className="space-y-4 mt-6">
@@ -196,7 +198,7 @@ const OrderDetailsPopup = ({
           </div>
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 

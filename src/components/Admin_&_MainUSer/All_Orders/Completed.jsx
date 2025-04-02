@@ -113,7 +113,7 @@ const Dashboard = ({ children }) => {
                   </select>
 
                   <select
-                    className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+                    className=" py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 min-w-[120px]"
                     value={shipmentType}
                     onChange={(e) => setShipmentType(e.target.value)}
                   >
@@ -161,14 +161,14 @@ const Dashboard = ({ children }) => {
                         <td className="py-5 px-4 font-medium text-gray-800 w-[16%] text-center">{order.orderNumber}</td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
-                            ${order.orderType === 'Export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                            ${order.orderType === 'export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                             {order.orderType}
                           </span>
                         </td>
                         <td className="py-5 px-4 w-[16%] text-center">
                           <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
                             ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
-                              order.shipmentType === 'LCL' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                              order.shipmentType === 'lcl' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
                             {order.shipmentType}
                           </span>
                         </td>

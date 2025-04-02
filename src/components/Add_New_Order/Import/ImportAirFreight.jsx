@@ -27,7 +27,7 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
 const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType }) => {
   const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("Please fill all required fields");
+  const [errorMessage, setErrorMessage] = useState("Review the highlighted fields.");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -45,6 +45,10 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       setErrorMessage("Error uploading file:", error);
       setShowErrorPopup(true);
     }
+  };
+
+  const getCurrentDate = () => {
+    return new Date().toISOString().split("T")[0];
   };
 
   const validateForm = () => {
@@ -65,6 +69,21 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     if (formData.cargoType === "PalletizedCargo" && !formData.length) formErrors.length = "Length is required";
     if (formData.cargoType === "PalletizedCargo" && !formData.height) formErrors.height = "Height is required";
     if (formData.cargoType === "PalletizedCargo" && !formData.width) formErrors.width = "Width is required";
+    
+    // Ensure shipmentReadyDate is before currentDate() + dueDate
+    if (formData.shipmentReadyDate && formData.dueDate) {
+      const shipmentReadyDate = new Date(formData.shipmentReadyDate);
+      const currentDate = new Date(getCurrentDate());
+          
+      // Calculate the target due date by adding dueDate (days) to currentDate
+      const targetDueDate = new Date(currentDate);
+      targetDueDate.setDate(targetDueDate.getDate() + Number(formData.dueDate));
+      
+      if (shipmentReadyDate <= targetDueDate) {
+        formErrors.dueDate = "Invalid due date: must be before the shipment ready date.";       
+      }
+    }
+
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };

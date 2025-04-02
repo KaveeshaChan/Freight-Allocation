@@ -27,7 +27,7 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
 const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType }) => {
   const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("Please fill all required fields");
+  const [errorMessage, setErrorMessage] = useState("Review the highlighted fields.");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -56,8 +56,8 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
     let formErrors = {};
   
     if (!formData.orderNumber) formErrors.orderNumber = "Order number is required";
-    if (!formData.routeFrom) formErrors.routeFrom = "Route from is required";
-    if (!formData.routeTo) formErrors.routeTo = "Route to is required";
+    if (!formData.routeFrom) formErrors.routeFrom = "Origin is required";
+    if (!formData.routeTo) formErrors.routeTo = "Destination is required";
     if (!formData.shipmentReadyDate) formErrors.shipmentReadyDate = "Shipment ready date is required";
     if (!formData.deliveryTerm) formErrors.deliveryTerm = "Delivery term is required";
     if (!formData.type) formErrors.type = "Type is required";
@@ -81,7 +81,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
       targetDueDate.setDate(targetDueDate.getDate() + Number(formData.dueDate));
   
       if (shipmentReadyDate <= targetDueDate) {
-        formErrors.dueDate = "Due Date should be greater than at least 15 days before the shipment ready date";       
+        formErrors.dueDate = "Invalid due date: must be before the shipment ready date.";       
       }
     }
   

@@ -27,7 +27,7 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
 const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => {
   const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("Please fill all required fields");
+  const [errorMessage, setErrorMessage] = useState("Review the highlighted fields.");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -47,6 +47,10 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
     }
   };
 
+  const getCurrentDate = () => {
+    return new Date().toISOString().split("T")[0];
+  };
+
   const validateForm = () => {
     let formErrors = {};
     if (!formData.orderNumber) formErrors.orderNumber = "Order number is required";
@@ -62,6 +66,20 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
 
     if (!formData.noOfPallets) formErrors.noOfPallets = "Number of pallets is required";
     if (!formData.targetDate) formErrors.targetDate = "Target date is required";
+
+    // Ensure shipmentReadyDate is before currentDate() + dueDate
+    if (formData.shipmentReadyDate && formData.dueDate) {
+      const shipmentReadyDate = new Date(formData.shipmentReadyDate);
+      const currentDate = new Date(getCurrentDate());
+        
+      // Calculate the target due date by adding dueDate (days) to currentDate
+      const targetDueDate = new Date(currentDate);
+      targetDueDate.setDate(targetDueDate.getDate() + Number(formData.dueDate));
+      
+      if (shipmentReadyDate <= targetDueDate) {
+        formErrors.dueDate = "Invalid due date: must be before the shipment ready date.";       
+      }
+    }
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;

@@ -159,11 +159,18 @@ const Dashboard = ({ children }) => {
                       <tr key={order.orderNumber} className="hover:bg-gray-50 transition-colors text-center">
                         <td className="py-5 px-4 w-[15%] font-medium text-gray-800">{order.orderNumber}</td>
                         <td className="py-5 px-4 w-[15%]">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm">
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm 
+                            ${order.orderType === 'export' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                             {order.orderType}
                           </span>
                         </td>
-                        <td className="py-5 px-4 w-[15%] text-gray-600">{order.shipmentType}</td>
+                        <td className="py-5 px-4 w-[15%] text-gray-600">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm
+                            ${order.shipmentType === 'airFreight' ? 'bg-purple-100 text-purple-700' :
+                              order.shipmentType === 'lcl' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                            {order.shipmentType}
+                          </span>
+                        </td>
                         <td className="py-5 px-4 w-[15%]">
                           <div className="flex items-center gap-2 justify-center">
                             <span className="text-gray-600">{order.daysRemaining}</span>

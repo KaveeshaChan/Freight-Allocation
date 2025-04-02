@@ -27,7 +27,7 @@ const InputField = ({ label, name, value, placeholder, onChange, error, type = "
 const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => {
   const [errors, setErrors] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("Please fill all required fields");
+  const [errorMessage, setErrorMessage] = useState("Review the highlighted fields.");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [fileName, setFileName] = useState(null);
@@ -47,10 +47,14 @@ const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
     }
   };
 
+  const getCurrentDate = () => {
+    return new Date().toISOString().split("T")[0];
+  };
+
   const validateForm = () => {
     let formErrors = {};
     if (!formData.orderNumber) formErrors.orderNumber = "Order number is required";
-    if (!formData.routeFrom) formErrors.routeFrom = "Route from is required";
+    if (!formData.routeFrom) formErrors.routeFrom = "Origin is required";
     if (!formData.routeTo) formErrors.routeTo = "Route to is required";
     if (!formData.shipmentReadyDate) formErrors.shipmentReadyDate = "Shipment ready date is required";
     if (!formData.deliveryTerm) formErrors.deliveryTerm = "Delivery term is required";
@@ -59,6 +63,19 @@ const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
     if (!formData.targetDate) formErrors.targetDate = "Target date is required";
     if (!formData.dueDate) formErrors.dueDate = "Due Date is required";
 
+      // Ensure shipmentReadyDate is before currentDate() + dueDate
+      if (formData.shipmentReadyDate && formData.dueDate) {
+        const shipmentReadyDate = new Date(formData.shipmentReadyDate);
+        const currentDate = new Date(getCurrentDate());
+          
+        // Calculate the target due date by adding dueDate (days) to currentDate
+        const targetDueDate = new Date(currentDate);
+        targetDueDate.setDate(targetDueDate.getDate() + Number(formData.dueDate));
+      
+        if (shipmentReadyDate <= targetDueDate) {
+          formErrors.dueDate = "Invalid due date: must be before the shipment ready date.";       
+        }
+        }
     
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
