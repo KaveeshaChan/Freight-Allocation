@@ -90,7 +90,7 @@ const Header = ({ userName, userEmail }) => {
                     transition-[background-size,color] duration-500 hover:bg-[0_3px,100%_4px]
                       ${location.pathname === item.path 
                         ? 'text-[#3b82f6] bg-[length:100%_3px,100%_3px] bg-[linear-gradient(#3b82f6, #3b82f6)] bg-[100%_3px,50%_4px] font-bold bg-[position:0_100%,50%_100%]'
-                        : 'text-neutral-950 '}`
+                        : 'text-neutral-950'}`
                   }
                 >
                   {item.name}

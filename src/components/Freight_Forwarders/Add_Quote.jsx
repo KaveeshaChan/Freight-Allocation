@@ -222,10 +222,10 @@ const ShipmentForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <Header />
-      <main className="mt-32">
-        <div className={`mx-auto p-8 bg-white rounded-xl shadow-sm transition-all duration-200 ${showScreen ? 'max-w-8xl' : 'max-w-3xl'}`}>
+      <main className="pt-[150px]">
+        <div className={`mx-auto p-8 bg-white rounded-xl shadow-lg transition-all duration-200 ${showScreen ? 'max-w-8xl' : 'max-w-3xl'}`}>
           {!showScreen ? (
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="border-b border-gray-200 pb-6">

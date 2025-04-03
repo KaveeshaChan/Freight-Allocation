@@ -21,7 +21,7 @@ const Dashboard = ({ children }) => {
       try {
         const token = localStorage.getItem('token'); // Get token from storage
         if (!token) {
-          navigate('/login'); // Redirect to login if no token
+          navigate('/login');
           return;
         }
 
@@ -39,6 +39,10 @@ const Dashboard = ({ children }) => {
         setAvailableOrders(data.orders || []);
       } catch (error) {
         console.error('Error fetching orders:', error.message);
+        if (error.message.includes("401")) {
+          navigate('/login');
+          return;
+        }
       }
     };
     fetchAvailableOrders();
@@ -144,7 +148,7 @@ const Dashboard = ({ children }) => {
                       <th className="py-5 px-4 w-[15%]">Shipment</th>
                       <th className="py-5 px-4 w-[15%]">Valid Days</th>
                       <th className="py-5 px-4 w-[15%]">Quoting Status</th>
-                      {userRole !== 'freightAgent' && <th className="py-4 px-6">Actions</th>}
+                      {userRole !== 'freightAgent' && <th className="py-4 px-4 w-[15%]">Actions</th>}
                     </tr>
                   </thead>
 

@@ -48,9 +48,9 @@ const MembersPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <Header />
-      <main className="pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+      <main className="pt-[150px] pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg p-8">
             {/* Header Section */}

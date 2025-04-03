@@ -4,14 +4,14 @@ const QuoteDetailsPopup = ({ quote, order, onClose, onSelectAgent }) => {
   if (!quote) return null;
   
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-lg p-6 max-w-7xl w-full">
           <h2 className="text-xl font-bold mb-4">Quote Details</h2>
           
           {/* First Table: Order Details */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
             <div className="p-4 border-b border-gray-200 bg-gray-50 rounded-t-xl">
-              <h3 className="font-semibold text-gray-700">Order Details</h3>
+              <h3 className="font-semibold text-gray-700">Order Details for <span className="text-blue-500">{order.orderNumber}</span> </h3>
             </div>
             <div className="overflow-x-auto p-4">
               <table className="w-full">
@@ -40,10 +40,10 @@ const QuoteDetailsPopup = ({ quote, order, onClose, onSelectAgent }) => {
                       order.deliveryTerm,
                       order.Type,
                       order.cargoType,
-                      order.numberOfPallets,
-                      order.chargeableWeight,
-                      order.grossWeight,
-                      order.cargoCBM,
+                      order.numberOfPallets || 'N/A',
+                      order.chargeableWeight || 'N/A',
+                      order.grossWeight || 'N/A',
+                      order.cargoCBM || 'N/A',
                       new Date(order.targetDate).toISOString().split('T')[0]
                     ].map((value, index) => (
                       <td
@@ -68,25 +68,27 @@ const QuoteDetailsPopup = ({ quote, order, onClose, onSelectAgent }) => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Freight Agent Details</th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Air Freight Cost</th>
                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">AWB($)</th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Carrier</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">HAWB($)</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Air Line</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Trans Shipment Port</th>
                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Transit Time</th>
                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Flight Details</th>
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Net Freight</th>
                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Freight</th>
                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Validity Time</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   <tr>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.Freight_Agent}</td>
 
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.airFreightCost}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.AWB}</td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.carrier}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.HAWB}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.airLine}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.transShipmentPort}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.transitTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.vesselOrFlightDetails}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.netFreight}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{order.totalFreight}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(order.validityTime).toISOString().split('T')[0]}</td>
                   </tr>

@@ -108,7 +108,7 @@ const OrderTabs = () => {
       className={`z-30 flex items-center justify-center w-full p-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer ${
         activeTab === tab 
           ? "bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white shadow-lg" 
-          : "text-slate-600 hover:bg-white hover:text-blue-600"
+          : "text-slate-600 hover:bg-gray-200 hover:text-blue-600"
       }`}
       onClick={() => {
         setActiveTab(tab);

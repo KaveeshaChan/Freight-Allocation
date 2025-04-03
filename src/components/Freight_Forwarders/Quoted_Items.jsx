@@ -85,7 +85,6 @@ const Dashboard = ({ children }) => {
   };
 
   const handleSelectAgentInPopup = () => {
-    // Add logic to handle selecting an agent within the popup
     handleClosePopup();
   };
   

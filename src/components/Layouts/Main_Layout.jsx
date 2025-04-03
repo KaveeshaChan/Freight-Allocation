@@ -32,7 +32,7 @@ const Header = () => {
 
   const handleMouseEnter = () => {
     if (hideTimeout) {
-      clearTimeout(hideTimeout); // Prevents the menu from closing immediately
+      clearTimeout(hideTimeout);
     }
     setUserDropdownOpen(true);
   };

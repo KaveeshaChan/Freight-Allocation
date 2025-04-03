@@ -46,10 +46,8 @@ function Dashboard() {
       } catch (error) {
         console.error("Error fetching freight agents:", error.message);
         if (error.message.includes("401")) {
-          console.error("Unauthorized. Redirecting to login.");
           navigate('/login'); // Navigate to login page
           return;
-          // Handle unauthorized error (e.g., redirect to login page)
         }
       }
     };
