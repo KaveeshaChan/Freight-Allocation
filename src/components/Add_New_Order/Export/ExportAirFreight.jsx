@@ -130,7 +130,7 @@ const ExportAirFreight = ({ formData, handleInputChange, orderType, shipmentType
         };
 
         const orderResponse = await fetch(
-            "http://localhost:5056/api/orderHandling/add-new-order/export-airFreight",
+            "http://192.168.100.20:5056/api/orderHandling/add-new-order/export-airFreight",
             {
                 method: "POST",
                 headers: {

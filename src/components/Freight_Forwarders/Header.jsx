@@ -40,7 +40,7 @@ const Header = ({ userName, userEmail }) => {
     }
   
     try {
-      const response = await fetch('http://localhost:5056/api/logout', {
+      const response = await fetch('http://192.168.100.20:5056/api/logout', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`, 

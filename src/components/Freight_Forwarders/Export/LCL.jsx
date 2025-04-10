@@ -15,7 +15,7 @@ const ExportLCL = ({ order }) => {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found. Please log in again.');
 
-        const response = await fetch("http://localhost:5056/api/select/view-orders/documentData", {
+        const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/documentData", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const ExportLCL = ({ order }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/export-lcl', {
+      const response = await fetch('http://192.168.100.20:5056/api/orderHandling/add-quoatation/export-lcl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

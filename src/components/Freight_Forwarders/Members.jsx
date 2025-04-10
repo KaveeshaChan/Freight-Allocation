@@ -18,7 +18,7 @@ const MembersPage = () => {
         }
         const agentID = localStorage.getItem('agentID');
         const response = await fetch(
-          `http://localhost:5056/api/select/view-freight-agents/coordinators/${agentID}`, 
+          `http://192.168.100.20:5056/api/select/view-freight-agents/coordinators/${agentID}`, 
           {
             method: "GET",
             headers: {

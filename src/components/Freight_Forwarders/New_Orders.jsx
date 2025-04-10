@@ -25,7 +25,7 @@ const Dashboard = ({ children }) => {
           return;
         }
 
-        const response = await fetch("http://localhost:5056/api/select/view-orders/", {
+        const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

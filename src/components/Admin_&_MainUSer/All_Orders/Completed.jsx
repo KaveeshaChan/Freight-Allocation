@@ -18,7 +18,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, {
+      const response = await fetch(`http://192.168.100.20:5056/api/select/view-orders/exporter?status=${status}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

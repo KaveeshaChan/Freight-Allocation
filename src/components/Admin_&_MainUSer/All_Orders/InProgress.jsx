@@ -30,7 +30,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch("http://localhost:5056/api/select/view-orders/exporter", {
+      const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/exporter", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch("http://localhost:5056/api/update/order-status", {
+      const response = await fetch("http://192.168.100.20:5056/api/update/order-status", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch("http://localhost:5056/api/update/cancel-order/", {
+      const response = await fetch("http://192.168.100.20:5056/api/update/cancel-order/", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -27,7 +27,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, {
+      const response = await fetch(`http://192.168.100.20:5056/api/select/view-orders/exporter?status=${status}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ const Dashboard = ({ children }) => {
   const handlePendingOrder = async (OrderID) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch("http://localhost:5056/api/update/order-status", {
+      const response = await fetch("http://192.168.100.20:5056/api/update/order-status", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const Dashboard = ({ children }) => {
   const handleCancelOrder = async (order, reason) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5056/api/orders/${order.orderNumber}/cancel`, {
+      const response = await fetch(`http://192.168.100.20:5056/api/orders/${order.orderNumber}/cancel`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

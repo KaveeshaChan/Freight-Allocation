@@ -34,7 +34,7 @@ const AddFreightCoordinator = () => {
         }
     
         const response = await axios.get(
-          'http://localhost:5056/api/addFreightAgentCoordinator/freight-agents-list',
+          'http://192.168.100.20:5056/api/addFreightAgentCoordinator/freight-agents-list',
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -117,7 +117,7 @@ const AddFreightCoordinator = () => {
       try {
         console.log(formData);
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5056/api/addFreightAgentCoordinator/add-freight-coordinator', {
+        const response = await fetch('http://192.168.100.20:5056/api/addFreightAgentCoordinator/add-freight-coordinator', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

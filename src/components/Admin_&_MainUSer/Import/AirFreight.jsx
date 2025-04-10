@@ -33,7 +33,7 @@ const ImportAirFreight = ({ order }) => {
         navigate('/login');
       }
 
-      const response = await fetch("http://localhost:5056/api/orderhandling/select-best-quote/", {
+      const response = await fetch("http://192.168.100.20:5056/api/orderhandling/select-best-quote/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const ImportAirFreight = ({ order }) => {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found. Please log in again.');
 
-        const response = await fetch("http://localhost:5056/api/select/view-orders/documentData", {
+        const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/documentData", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -108,7 +108,7 @@ const ImportAirFreight = ({ order }) => {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found. Please log in again.');
 
-        const response = await fetch(`http://localhost:5056/api/select/view-quotes/?orderNumber=${order.orderNumber}`, {
+        const response = await fetch(`http://192.168.100.20:5056/api/select/view-quotes/?orderNumber=${order.orderNumber}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
