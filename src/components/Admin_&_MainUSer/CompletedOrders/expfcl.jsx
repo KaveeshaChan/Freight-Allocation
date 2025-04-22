@@ -185,9 +185,9 @@ const AirfreightExport = ({ order }) => {
               Freight Quotes
             </h3>
           </div>
-          <div className="overflow-x-auto p-4">
-            <table className="w-full">
-              <thead className="bg-gray-50">
+          <div className="overflow-x-auto h-[600px] px-4 pb-4">
+            <table className="w-full ">
+              <thead className="bg-gray-100 mt-3 sticky top-0 z-10">
                 <tr>
                                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Freight Agent Details</th>
                 

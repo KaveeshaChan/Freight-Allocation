@@ -8,12 +8,21 @@ const ImportAirFreight = ({ order }) => {
   const [documentData, setDocumentData] = useState(null);
   const [documentName, setDocumentName] = useState(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleContinueClick = () => {
+    setShowSuccessPopup(false);
+    navigate('/user-dashboard');
+  };
 
   useEffect(() => {
     const fetchDocumentData = async () => {
       try {
         const token = localStorage.getItem('token');
-        if (!token) throw new Error('No token found. Please log in again.');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
 
         const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/documentData", {
           method: "POST",
@@ -35,7 +44,6 @@ const ImportAirFreight = ({ order }) => {
         }
 
         const data = await response.json();
-        console.log(data);
 
         if (data.documentData) {
           const decodedData = JSON.parse(atob(data.documentData));
@@ -77,10 +85,8 @@ const ImportAirFreight = ({ order }) => {
   const navigate = useNavigate();
 
   const handleAddQuotation = () => {
-    console.log('Current Quotation:', currentQuotation);
     const isEmptyField = Object.values(currentQuotation).some(value => value.trim() === '');
     if (isEmptyField) {
-      console.log('One or more fields are empty.');
       alert('Please fill all fields before adding a quotation');
       return;
     }
@@ -108,13 +114,12 @@ const ImportAirFreight = ({ order }) => {
       validityTime: quotation.validityTime,
     }));
 
-    console.log('Payload to send:', payload);
-
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login'); // Navigate to login page
+      navigate('/login');
       return;
     }
+    setIsLoading(true);
 
     try {
       const response = await fetch('http://192.168.100.20:5056/api/orderHandling/add-quoatation/import-airFreight', {
@@ -131,12 +136,8 @@ const ImportAirFreight = ({ order }) => {
       }
 
       const result = await response.json();
-    console.log('Quotes submitted successfully:', result);
     setShowSuccessPopup(true);
-    setTimeout(() => {
-      setShowSuccessPopup(false);
-      navigate('/user-dashboard'); // Refresh the page after 3 seconds
-    }, 1000); // Hide popup after 3 seconds
+    setIsLoading(false);
   } catch (error) {
     console.error('Error submitting quotes:', error);
     alert(error);
@@ -263,9 +264,9 @@ const ImportAirFreight = ({ order }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { label: 'Air Freight Cost', name: 'airFreightCost' },
-              { label: 'AWB (USD)', name: 'AWB', type: 'number' },
+              { label: 'AWB ($)', name: 'AWB', type: 'number' },
               { label: 'Carrier', name: 'carrier' },
-              { label: 'Transit Time', name: 'transitTime', placeholder: 'Days/hours' },
+              { label: 'Transit Time', name: 'transitTime', placeholder: 'Number of days' },
               { label: 'Flight Details', name: 'vesselOrFlightDetails' },
               { label: 'Validity Date', name: 'validityTime', type: 'date' },
             ].map((field, index) => (
@@ -365,17 +366,30 @@ const ImportAirFreight = ({ order }) => {
       <div className="sticky bottom-0 bg-white border-t border-gray-200 py-4">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-end gap-4">
-            <button
+          <button
+              type='submit'
               onClick={handleSubmit}
-              disabled={savedQuotations.length === 0}
-              className={`flex items-center gap-2 px-8 py-3 rounded-lg transition-colors shadow-sm ${
-                savedQuotations.length === 0 
-                  ? 'bg-gray-300 cursor-not-allowed' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-md'
-              }`}
-            >
-              <FiSave className="text-xl" />
-              Submit All Quotes
+              disabled={isLoading || savedQuotations.length === 0}
+              className={` py-3.5 px-6 rounded-lg bg-gradient-to-r from-[#0534F0] to-[#98009E] text-white font-semibold 
+                        hover:from-[#5F72F3] hover:to-[#C057CB] transition-all duration-300 
+                        disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group ${savedQuotations.length === 0 
+                          ? 'bg-gray-300 cursor-not-allowed' 
+                          : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-md'}`}
+              >
+                <span className='relative z-10'>
+                  {isLoading ? (
+                    <div className='flex items-center justify-center space-x-2'>
+                      <div className='w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin' />
+                      <span>Submitting...</span>
+                    </div>
+                  ) : (
+                    <span className="flex items-center space-x-2">
+                      <FiSave className="text-xl" />
+                    <span>Submit All Quotes</span>
+                  </span>
+                  )}
+                </span>
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
           </div>
         </div>
@@ -397,7 +411,7 @@ const ImportAirFreight = ({ order }) => {
             <p className="text-[#2C2C2C]/90 text-center mb-1">Your quotes have been successfully submitted.</p>
             
             <button
-              onClick={() => setShowSuccessPopup(false)}
+              onClick={() => handleContinueClick()}
               className=" mt-4 w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors"
             >
               Continue

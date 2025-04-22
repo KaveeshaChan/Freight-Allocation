@@ -35,7 +35,7 @@ const Header = ({ userName, userEmail }) => {
   const handleLogout = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error('No token found');
+      navigate('/login');
       return;
     }
   

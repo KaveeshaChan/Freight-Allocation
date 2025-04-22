@@ -46,7 +46,10 @@ const Header = () => {
 
   const handleLogout = async () => {
     const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!token) {
+      navigate('/login');
+      return;
+    }
   
     try {
       const response = await fetch('http://192.168.100.20:5056/api/logout', {
