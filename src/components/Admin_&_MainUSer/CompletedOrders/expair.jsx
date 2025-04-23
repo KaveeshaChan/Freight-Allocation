@@ -4,6 +4,7 @@ import { FiArrowUp, FiArrowDown, FiInfo } from 'react-icons/fi';
 const AirfreightExport = ({ order }) => {
   const [freightQuotes, setFreightQuotes] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+  const [selectedOrderQuoteID, setSelectedOrderQuoteID] = useState('');
 
   useEffect(() => {
     const fetchFreightQuotes = async () => {
@@ -28,6 +29,7 @@ const AirfreightExport = ({ order }) => {
         // Extract the 'quotes' array from the response object
         if (Array.isArray(data.quotes)) {
           setFreightQuotes(data.quotes);
+          setSelectedOrderQuoteID(order.OrderQuoteID);
         } else {
           console.error("Unexpected API response format:", data);
           setFreightQuotes([]); // Fallback to prevent errors
@@ -39,7 +41,7 @@ const AirfreightExport = ({ order }) => {
     };
 
     fetchFreightQuotes();
-  }, [order.orderNumber]);
+  }, [order.orderNumber], [selectedOrderQuoteID]);
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -122,17 +124,17 @@ const AirfreightExport = ({ order }) => {
         </div>
 
         {/* Additional Notes */}
-              {order.additionalNotes && (
-                <div className="bg-blue-50 p-5 rounded-lg border border-blue-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <FiInfo className="text-blue-600 flex-shrink-0" />
-                    <h4 className="font-semibold text-blue-800">Additional Notes</h4>
-                  </div>
-                  <p className="text-gray-700 text-base leading-relaxed">
-                    {order.additionalNotes}
-                  </p>
-                </div>
-              )}
+        {order.additionalNotes && (
+          <div className="bg-blue-50 p-5 rounded-lg border border-blue-200">
+            <div className="flex items-center gap-2 mb-2">
+              <FiInfo className="text-blue-600 flex-shrink-0" />
+              <h4 className="font-semibold text-blue-800">Additional Notes</h4>
+            </div>
+            <p className="text-gray-700 text-base leading-relaxed">
+              {order.additionalNotes}
+            </p>
+          </div>
+        )}
 
         {/* Second Table: Freight Quote Details */}
         <div className="bg-white rounded-xl shadow-sm border border-green-300 mt-4">
@@ -209,21 +211,23 @@ const AirfreightExport = ({ order }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {sortedQuotes.map((quote, index) => (
+                {sortedQuotes
+                .filter(quote => quote.OrderQuoteID !== selectedOrderQuoteID)
+                .map((quote, index) => (
                   <tr key={index} className="cursor-pointer hover:bg-gray-50">
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
+                    <td className="px-4 py-3 text-sm text-left overflow-x-auto max-w-[250px] text-gray-700 whitespace-nowrap">
                       <span className="font-medium text-gray-900">{quote.Agent}</span>
                       <span className="block text-gray-500">{quote.createdUser}</span>
                     </td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.netFreight}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.AWB}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.HAWB}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.airLine}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transShipmentPort}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.totalFreight}</td>
-                    <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{quote.netFreight}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{quote.AWB}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{quote.HAWB}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{quote.airLine}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transShipmentPort}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
+                    <td className="px-4 py-3 text-sm overflow-x-auto max-w-[200px] text-left text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{quote.totalFreight}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
                   </tr>
                 ))}
               </tbody>
