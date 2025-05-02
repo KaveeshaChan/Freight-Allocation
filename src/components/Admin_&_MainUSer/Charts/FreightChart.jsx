@@ -11,7 +11,7 @@ const FreightChart = ({ selectedType }) => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "http://192.168.100.20:5056/api/select/view-freight-agents/shipments",
+          "http://localhost:5056/api/select/view-freight-agents/shipments",
           {
             method: "GET",
             headers: {

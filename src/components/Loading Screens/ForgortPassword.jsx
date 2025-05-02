@@ -7,7 +7,7 @@ const ForgotPassword = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +15,7 @@ const ForgotPassword = () => {
     setError('');
     setSuccess('');
     try {
-      const response = await fetch('http://192.168.100.20:5056/api/forgot-password', {
+      const response = await fetch('http://localhost:5056/api/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

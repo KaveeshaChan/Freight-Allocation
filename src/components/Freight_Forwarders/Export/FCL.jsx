@@ -24,7 +24,7 @@ const ExportFCL = ({ order }) => {
           return;
         }
 
-        const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/documentData", {
+        const response = await fetch("http://localhost:5056/api/select/view-orders/documentData", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -127,7 +127,7 @@ const ExportFCL = ({ order }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://192.168.100.20:5056/api/orderHandling/add-quoatation/export-fcl', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/export-fcl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

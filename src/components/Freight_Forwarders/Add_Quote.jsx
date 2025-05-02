@@ -60,7 +60,7 @@ const ShipmentForm = () => {
           return;
         }
         const response = await fetch(
-          "http://192.168.100.20:5056/api/select/view-orders/", 
+          "http://localhost:5056/api/select/view-orders/", 
           {
             method: "GET",
             headers: {

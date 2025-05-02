@@ -25,7 +25,7 @@ const Dashboard = ({ children }) => {
           return;
         }
 
-        const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/", {
+        const response = await fetch("http://localhost:5056/api/select/view-orders/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -177,10 +177,17 @@ const Dashboard = ({ children }) => {
                         </td>
                         <td className="py-5 px-4 w-[15%]">
                           <div className="flex items-center gap-2 justify-center">
-                            <span className="text-gray-600">{order.daysRemaining}</span>
-                            <span className="text-sm text-gray-400">days</span>
+                            {order.daysRemaining === 0 ? (
+                              <span className="text-red-600 font-semibold text-sm">Closing Today</span>
+                            ) : (
+                              <>
+                                <span className="text-gray-600">{order.daysRemaining}</span>
+                                <span className="text-sm text-gray-400">days</span>
+                              </>
+                            )}
                           </div>
                         </td>
+
                         <td className="py-5 px-4 w-[15%]">
                           {order.alreadyQuoted === 'Yes' ? (
                             <span className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm">

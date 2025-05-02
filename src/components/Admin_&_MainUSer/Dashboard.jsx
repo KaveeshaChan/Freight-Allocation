@@ -292,7 +292,7 @@ function AdminDashboard() {
 
             //fetching agents
             const agentCounts = await fetch(
-                "http://192.168.100.20:5056/api/select/view-freight-agents/active-agents",
+                "http://localhost:5056/api/select/view-freight-agents/active-agents",
                 {
                   method: "GET", // Use GET for fetching data
                   headers: {
@@ -303,7 +303,7 @@ function AdminDashboard() {
             );
             //fetching order counts
             const orderCounts = await fetch(
-                "http://192.168.100.20:5056/api/select/view-orders/order-counts",
+                "http://localhost:5056/api/select/view-orders/order-counts",
                 {
                   method: "GET", // Use GET for fetching data
                   headers: {
@@ -314,7 +314,7 @@ function AdminDashboard() {
             )
             //fetching cancelled counts
             const cancelledCounts = await fetch(
-                `http://192.168.100.20:5056/api/select/view-orders/cancelled-counts?cancelledFilterType=${cancelledFilterType}&cancelledFilterValue=${cancelledFilterValue}`,
+                `http://localhost:5056/api/select/view-orders/cancelled-counts?cancelledFilterType=${cancelledFilterType}&cancelledFilterValue=${cancelledFilterValue}`,
                     {
                       method: "GET",
                       headers: {
@@ -325,7 +325,7 @@ function AdminDashboard() {
             )
             //fetching order quotes
             const orderQuotes = await fetch(
-                "http://192.168.100.20:5056/api/select/view-quotes/quote-counts",
+                "http://localhost:5056/api/select/view-quotes/quote-counts",
                     {
                         method: "GET", // Use GET for fetching data
                         headers: {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Layouts/Main_Layout';
-import { FiSearch, FiPlusCircle, FiRefreshCw, FiClock, FiX, FiBox, FiTruck, FiAnchor, FiMapPin, FiCalendar, FiPackage } from 'react-icons/fi';
+import { FiSearch, FiRefreshCw } from 'react-icons/fi';
 
 const Dashboard = ({ children }) => {
   const [availableOrders, setAvailableOrders] = useState([]);
@@ -18,7 +18,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch(`http://192.168.100.20:5056/api/select/view-orders/exporter?status=${status}`, {
+      const response = await fetch(`http://localhost:5056/api/select/view-orders/exporter?status=${status}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -30,9 +30,9 @@ const LoginPage = () => {
       localStorage.removeItem("rememberedEmail");
     }
   
-    const apiUrl = "http://192.168.100.20:5056/api/login";
+    const apiUrl = "http://localhost:5056/api/login";
     const payload = { email, password };
-    //http://192.168.100.20:5056
+    //http://localhost:5056
   
     try {
       const response = await fetch(apiUrl, {

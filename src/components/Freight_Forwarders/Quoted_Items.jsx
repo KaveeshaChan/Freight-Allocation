@@ -27,7 +27,7 @@ const Dashboard = ({ children }) => {
         return;
       }
 
-      const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/quoted", {
+      const response = await fetch("http://localhost:5056/api/select/view-orders/quoted", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -196,7 +196,7 @@ const Dashboard = ({ children }) => {
                     <tr className="text-sm font-semibold text-gray-600 text-center">
                       <th className="py-5 px-4 w-[16%]">Order Number</th>
                       <th className="py-5 px-4 w-[16%]">Type</th>
-                      <th className="py-5 px-4 w-[16%]">Shipment</th>
+                      <th className="py-5 px-4 w-[17%]">Shipment</th>
                     </tr>
                   </thead>
                 </table>
@@ -221,7 +221,7 @@ const Dashboard = ({ children }) => {
                               order.shipmentType === 'lcl' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
                             {order.shipmentType}
                           </span>
-                        </td>                                       
+                        </td>                                     
                       </tr>
                     ))}
                   </tbody>

@@ -122,7 +122,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         setLoading(true);
 
         const response = await fetch(
-          "http://192.168.100.20:5056/api/orderHandling/add-new-order/import-lcl",
+          "http://localhost:5056/api/orderHandling/add-new-order/import-lcl",
           {
             method: "POST",
             headers: {

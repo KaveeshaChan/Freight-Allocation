@@ -30,7 +30,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/exporter", {
+      const response = await fetch("http://localhost:5056/api/select/view-orders/exporter", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch("http://192.168.100.20:5056/api/update/order-status", {
+      const response = await fetch("http://localhost:5056/api/update/order-status", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const Dashboard = ({ children }) => {
         navigate('/login');
       }
 
-      const response = await fetch("http://192.168.100.20:5056/api/update/cancel-order/", {
+      const response = await fetch("http://localhost:5056/api/update/cancel-order/", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -250,16 +250,22 @@ const Dashboard = ({ children }) => {
                         </td>
                         <td className="py-5 px-4 w-[20%] text-center">
 
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full
-                            ${order.daysRemaining <= 3 ? 'text-red-600 font-bold text-md' :
-                              order.daysRemaining > 3 && order.daysRemaining < 8 ? 'bg-transparent text-gray-700 text-sm' : 'bg-transparenttext-gray-700 text-md'}`}>
-
-                            <span>{order.daysRemaining}</span>
-                            <span className="text-sm "> &nbsp; days</span>
+                        {order.daysRemaining === 0 ? (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-red-600 font-bold text-md">
+                            Closing Today
                           </span>
-                          
-
-                          
+                        ) : (
+                          <span
+                            className={`inline-flex items-center px-3 py-1 rounded-full
+                            ${order.daysRemaining <= 3
+                            ? 'text-red-600 font-bold text-md'
+                            : order.daysRemaining < 8
+                            ? 'bg-transparent text-gray-700 text-sm'
+                            : 'bg-transparent text-gray-700 text-md'}`}>   
+                            <span>{order.daysRemaining}</span>
+                            <span className="text-sm">&nbsp;days</span>
+                          </span>
+                        )}                         
                         </td>
                         <td className="py-5 px-4 font-medium text-gray-800 w-[20%] text-center">{order.quotationCount}</td>
                       </tr>

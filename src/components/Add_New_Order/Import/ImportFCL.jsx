@@ -114,7 +114,7 @@ const ExportFCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         setLoading(true);
 
         const response = await fetch(
-          "http://192.168.100.20:5056/api/orderHandling/add-new-order/import-fcl",
+          "http://localhost:5056/api/orderHandling/add-new-order/import-fcl",
           {
             method: "POST",
             headers: {

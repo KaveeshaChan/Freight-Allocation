@@ -60,7 +60,7 @@ const AddMainUser = () => {
       if (!token) {
         navigate('/login');
       }
-      const response = await fetch('http://192.168.100.20:5056/api/add-main-user/', {
+      const response = await fetch('http://localhost:5056/api/add-main-user/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

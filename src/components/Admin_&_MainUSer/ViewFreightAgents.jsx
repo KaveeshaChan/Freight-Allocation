@@ -26,7 +26,7 @@ function Dashboard() {
         }
 
         const response = await fetch(
-          "http://192.168.100.20:5056/api/select/view-freight-agents",
+          "http://localhost:5056/api/select/view-freight-agents",
           {
             method: "GET", // Use GET for fetching data
             headers: {
@@ -87,7 +87,7 @@ function Dashboard() {
     if (selectedAgent) {
       try {
         const token = localStorage.getItem("token"); // Retrieve authentication token
-        const response = await fetch("http://192.168.100.20:5056/api/update/update-freight-agents/status", {
+        const response = await fetch("http://localhost:5056/api/update/update-freight-agents/status", {
           method: "PUT", // Use PUT or POST based on your backend implementation
           headers: {
             "Content-Type": "application/json",
@@ -107,7 +107,7 @@ function Dashboard() {
   
       // Fetch fresh data after successful update
       const refreshResponse = await fetch(
-        "http://192.168.100.20:5056/api/select/view-freight-agents",
+        "http://localhost:5056/api/select/view-freight-agents",
         {
           method: "GET",
           headers: {
@@ -171,7 +171,7 @@ const closeCoordinatorPopup = () => {
 
           // Fetch coordinators for the selected agent
     const response = await fetch(
-      `http://192.168.100.20:5056/api/select/view-freight-agents/coordinators/${agentID}`,
+      `http://localhost:5056/api/select/view-freight-agents/coordinators/${agentID}`,
       {
         method: "GET",
         headers: {

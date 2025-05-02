@@ -24,7 +24,7 @@ const ImportAirFreight = ({ order }) => {
           return;
         }
 
-        const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/documentData", {
+        const response = await fetch("http://localhost:5056/api/select/view-orders/documentData", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const ImportAirFreight = ({ order }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://192.168.100.20:5056/api/orderHandling/add-quoatation/import-airFreight', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/import-airFreight', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

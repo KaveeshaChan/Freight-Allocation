@@ -121,7 +121,7 @@ const ExportLCL = ({ formData, handleInputChange, orderType, shipmentType }) => 
         }
 
         const response = await fetch(
-          "http://192.168.100.20:5056/api/orderHandling/add-new-order/export-lcl",
+          "http://localhost:5056/api/orderHandling/add-new-order/export-lcl",
           {
             method: "POST",
             headers: {

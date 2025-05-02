@@ -153,7 +153,7 @@ const OrderDetailsPopup = ({
                       onClick={() => setShowCancelReason(true)}
                       className="ml-auto px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors text-sm"
                     >
-                      Start Cancellation
+                      Cancel this order
                     </button>
                   )}
                 </div>

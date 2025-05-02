@@ -24,7 +24,7 @@ const ImportFCL = ({ order }) => {
           return;
         }
 
-        const response = await fetch("http://192.168.100.20:5056/api/select/view-orders/documentData", {
+        const response = await fetch("http://localhost:5056/api/select/view-orders/documentData", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -118,8 +118,6 @@ const ImportFCL = ({ order }) => {
       validityTime: quotation.validityTime,
     }));
 
-    console.log('Payload to send:', payload);
-
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/login'); // Navigate to login page
@@ -128,7 +126,7 @@ const ImportFCL = ({ order }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://192.168.100.20:5056/api/orderHandling/add-quoatation/import-fcl', {
+      const response = await fetch('http://localhost:5056/api/orderHandling/add-quoatation/import-fcl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
