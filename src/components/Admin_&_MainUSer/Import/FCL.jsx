@@ -5,6 +5,12 @@ import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandle
 import PDFGenerator from '../All_Orders/PDF/PdfImFcl'; // Import the PDFGenerator component
 import QuoteDetailsPopup from '../PopupForSelectAgent/ImportFCL';
 
+// Helper to safely format dates
+function formatDate(dateString) {
+  const d = new Date(dateString);
+  return !dateString || isNaN(d) ? '' : d.toISOString().split('T')[0];
+}
+
 const ImportFCL = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);
   const [documentData, setDocumentData] = useState(null);
@@ -14,10 +20,9 @@ const ImportFCL = ({ order }) => {
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-     const [errorMessage, setErrorMessage] = useState('');
-     const navigate = useNavigate();
-  
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleRowSelect = (quote) => {
     setSelectedQuote(quote);
@@ -88,8 +93,6 @@ const ImportFCL = ({ order }) => {
         }
 
         const data = await response.json();
-        console.log(data);
-
         if (data.documentData) {
           const decodedData = JSON.parse(atob(data.documentData));
           setDocumentData(decodedData);
@@ -129,11 +132,11 @@ const ImportFCL = ({ order }) => {
           setFreightQuotes(data.quotes);
         } else {
           console.error("Unexpected API response format:", data);
-          setFreightQuotes([]); // Fallback to prevent errors
+          setFreightQuotes([]);
         }
       } catch (error) {
         console.error('Error fetching freight quotes:', error);
-        setFreightQuotes([]); // Ensure state remains an array
+        setFreightQuotes([]);
       }
     };
     fetchDocumentData();
@@ -146,7 +149,12 @@ const ImportFCL = ({ order }) => {
     }
   };
 
-  const cheapestQuote = freightQuotes.reduce((min, quote) => quote.netFreight < min.netFreight ? quote : min, freightQuotes[0] || { netFreight: Infinity });
+  // Defensive: skip quotes without a valid netFreight
+  const cheapestQuote = freightQuotes.filter(q => typeof q.netFreight === 'number' && !isNaN(q.netFreight))
+    .reduce(
+      (min, quote) => quote.netFreight < min.netFreight ? quote : min,
+      freightQuotes[0] || { netFreight: Infinity }
+    );
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -171,6 +179,9 @@ const ImportFCL = ({ order }) => {
     }
     return sortableQuotes;
   }, [freightQuotes, sortConfig]);
+
+  // Separate cheapest quote for top highlighted row
+  const otherQuotes = sortedQuotes.filter(q => q !== cheapestQuote);
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
@@ -230,11 +241,11 @@ const ImportFCL = ({ order }) => {
               <tr>
                 {[
                   `${order.from} - ${order.to}`,
-                  new Date(order.shipmentReadyDate).toISOString().split('T')[0],
+                  formatDate(order.shipmentReadyDate),
                   order.deliveryTerm,
                   order.Type,
                   order.numberOfContainers,
-                  new Date(order.targetDate).toISOString().split('T')[0]
+                  formatDate(order.targetDate)
                 ].map((value, index) => (
                   <td
                     key={index}
@@ -281,25 +292,46 @@ const ImportFCL = ({ order }) => {
                 DO Fee {sortConfig.key === 'DOFee' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Trans Shipment Port</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('freeTime')}>
-                                  Free Time {sortConfig.key === 'freeTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
-                                </th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Carrier</th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('transitTime')}>
+                  Free Time {sortConfig.key === 'freeTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Carrier</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('transitTime')}>
                   Transit Time {sortConfig.key === 'transitTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
                 </th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Flight/Vessel Details</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('validityTime')}>
-                Validity Time {sortConfig.key === 'validityTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
+                  Validity Time {sortConfig.key === 'validityTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
                 </th>
-                </tr>
+              </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {sortedQuotes.map((quote, index) => (
+              {/* Cheapest quote row always at the top */}
+              {cheapestQuote && typeof cheapestQuote.netFreight === 'number' && !isNaN(cheapestQuote.netFreight) && (
                 <tr
-                key={index}
-                className={`${quote.netFreight === cheapestQuote.netFreight ? 'bg-green-100' : ''} cursor-pointer hover:bg-gray-50`}
-                onClick={() => handleRowSelect(quote)}
-              >
+                  className="bg-green-200 font-bold cursor-pointer hover:bg-green-300"
+                  onClick={() => handleRowSelect(cheapestQuote)}
+                >
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
+                    <span className="font-medium text-gray-900">{cheapestQuote.Agent}</span>
+                    <span className="block text-gray-500">{cheapestQuote.createdUser}</span>
+                  </td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.netFreight}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.DOFee}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.transShipmentPort}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.freeTime}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.carrier}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.transitTime}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.vesselOrFlightDetails}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{formatDate(cheapestQuote.validityTime)}</td>
+                </tr>
+              )}
+              {/* The rest of the sorted quotes, skipping the cheapest */}
+              {otherQuotes.map((quote, index) => (
+                <tr
+                  key={index}
+                  className="cursor-pointer hover:bg-gray-50"
+                  onClick={() => handleRowSelect(quote)}
+                >
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
                     <span className="font-medium text-gray-900">{quote.Agent}</span>
                     <span className="block text-gray-500">{quote.createdUser}</span>
@@ -311,7 +343,7 @@ const ImportFCL = ({ order }) => {
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.carrier}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{formatDate(quote.validityTime)}</td>
                 </tr>
               ))}
             </tbody>
@@ -323,7 +355,7 @@ const ImportFCL = ({ order }) => {
       {isPopupVisible && (
         <QuoteDetailsPopup
           quote={selectedQuote}
-          order={order} // Pass the order prop here
+          order={order}
           onClose={() => setIsPopupVisible(false)}
           onSelectAgent={handleSelectAgent}
         />
@@ -335,7 +367,7 @@ const ImportFCL = ({ order }) => {
             <div className="flex items-center mb-4">
               <div className="bg-red-100 p-2 rounded-full mr-3">
                 <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z"/>
                 </svg>
               </div>
               <h3 className="text-lg font-semibold text-gray-800">Validation Error</h3>
@@ -369,7 +401,7 @@ const ImportFCL = ({ order }) => {
               className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors mt-4"
             >
               Continue
- </button>
+            </button>
           </div>
         </div>
       )}

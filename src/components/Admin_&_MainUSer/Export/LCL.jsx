@@ -5,6 +5,12 @@ import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandle
 import PDFGenerator from '../All_Orders/PDF/PdfExpLcl'; // Import the PDFGenerator component
 import QuoteDetailsPopup from '../PopupForSelectAgent/ExportLCL';
 
+// Helper to safely format dates
+function formatDate(dateString) {
+  const d = new Date(dateString);
+  return !dateString || isNaN(d) ? '' : d.toISOString().split('T')[0];
+}
+
 const ExportLCL = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);
   const [documentData, setDocumentData] = useState(null);
@@ -85,8 +91,6 @@ const ExportLCL = ({ order }) => {
         }
 
         const data = await response.json();
-        console.log(data);
-
         if (data.documentData) {
           const decodedData = JSON.parse(atob(data.documentData));
           setDocumentData(decodedData);
@@ -126,11 +130,11 @@ const ExportLCL = ({ order }) => {
           setFreightQuotes(data.quotes);
         } else {
           console.error("Unexpected API response format:", data);
-          setFreightQuotes([]); // Fallback to prevent errors
+          setFreightQuotes([]);
         }
       } catch (error) {
         console.error('Error fetching freight quotes:', error);
-        setFreightQuotes([]); // Ensure state remains an array
+        setFreightQuotes([]);
       }
     };
     fetchDocumentData();
@@ -143,7 +147,12 @@ const ExportLCL = ({ order }) => {
     }
   };
 
-  const cheapestQuote = freightQuotes.reduce((min, quote) => quote.totalFreight < min.totalFreight ? quote : min, freightQuotes[0] || { totalFreight: Infinity });
+  // Defensive: skip quotes without a valid totalFreight
+  const cheapestQuote = freightQuotes.filter(q => typeof q.totalFreight === 'number' && !isNaN(q.totalFreight))
+    .reduce(
+      (min, quote) => quote.totalFreight < min.totalFreight ? quote : min,
+      freightQuotes[0] || { totalFreight: Infinity }
+    );
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -168,6 +177,9 @@ const ExportLCL = ({ order }) => {
     }
     return sortableQuotes;
   }, [freightQuotes, sortConfig]);
+
+  // Separate cheapest quote for top highlighted row
+  const otherQuotes = sortedQuotes.filter(q => q !== cheapestQuote);
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
@@ -228,14 +240,14 @@ const ExportLCL = ({ order }) => {
               <tr>
                  {[
                   `${order.from} - ${order.to}`,
-                  new Date(order.shipmentReadyDate).toISOString().split('T')[0],
+                  formatDate(order.shipmentReadyDate),
                   order.deliveryTerm,
                   order.Type,
                   order.numberOfPallets,
                   order.palletCBM,
                   order.cargoCBM,
                   order.grossWeight,
-                  new Date(order.targetDate).toISOString().split('T')[0]
+                  formatDate(order.targetDate)
                 ].map((value, index) => (
                   <td
                     key={index}
@@ -295,14 +307,32 @@ const ExportLCL = ({ order }) => {
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('validityTime')}>
                 Validity Time {sortConfig.key === 'validityTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
                 </th>
-
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {sortedQuotes.map((quote, index) => (
+              {/* Cheapest quote row always at the top */}
+              {cheapestQuote && typeof cheapestQuote.totalFreight === 'number' && !isNaN(cheapestQuote.totalFreight) && (
+                <tr
+                  className="bg-green-200 font-bold cursor-pointer hover:bg-green-300"
+                  onClick={() => handleRowSelect(cheapestQuote)}
+                >
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
+                    <span className="font-medium text-gray-900">{cheapestQuote.Agent}</span>
+                    <span className="block text-gray-500">{cheapestQuote.createdUser}</span>
+                  </td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.netFreight}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.transShipmentPort}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.transitTime}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.vesselOrFlightDetails}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.totalFreight}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{formatDate(cheapestQuote.validityTime)}</td>
+                </tr>
+              )}
+              {/* The rest of the sorted quotes, skipping the cheapest */}
+              {otherQuotes.map((quote, index) => (
                 <tr
                   key={index}
-                  className={`${quote.totalFreight === cheapestQuote.totalFreight ? 'bg-green-100' : ''} cursor-pointer hover:bg-gray-50`}
+                  className="cursor-pointer hover:bg-gray-50"
                   onClick={() => handleRowSelect(quote)}
                 >
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
@@ -314,8 +344,8 @@ const ExportLCL = ({ order }) => {
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.totalFreight}</td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
-                  </tr>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{formatDate(quote.validityTime)}</td>
+                </tr>
               ))}
             </tbody>
           </table>
@@ -326,7 +356,7 @@ const ExportLCL = ({ order }) => {
       {isPopupVisible && (
         <QuoteDetailsPopup
           quote={selectedQuote}
-          order={order} // Pass the order prop here
+          order={order}
           onClose={() => setIsPopupVisible(false)}
           onSelectAgent={handleSelectAgent}
         />
@@ -369,11 +399,14 @@ const ExportLCL = ({ order }) => {
             </div>
             <p className="text-[#2C2C2C]/90 text-center mb-1">Agent selected successfully!</p>
             <button
-              onClick={() => setShowSuccessPopup(false)}
+              onClick={() => {
+                setShowSuccessPopup(false);
+                navigate('/All-Orders');
+              }}
               className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors mt-4"
             >
               Continue
- </button>
+            </button>
           </div>
         </div>
       )}

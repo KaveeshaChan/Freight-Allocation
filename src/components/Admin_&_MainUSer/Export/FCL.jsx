@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { FiDownload, FiInfo, FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { exportToExcel } from '../../Freight_Forwarders/utils/fileDownloadHandler';
-import PDFGenerator from '../All_Orders/PDF/PdfExFcl'; // Import the PDFGenerator component
+import PDFGenerator from '../All_Orders/PDF/PdfExFcl';
 import QuoteDetailsPopup from '../PopupForSelectAgent/ExportFCL';
+
+// Helper to safely format dates
+function formatDate(dateString) {
+  const d = new Date(dateString);
+  return !dateString || isNaN(d) ? '' : d.toISOString().split('T')[0];
+}
 
 const ExportFCL = ({ order }) => {
   const [hasDocument, setHasDocument] = useState(false);
@@ -85,8 +91,6 @@ const ExportFCL = ({ order }) => {
         }
 
         const data = await response.json();
-        console.log(data);
-
         if (data.documentData) {
           const decodedData = JSON.parse(atob(data.documentData));
           setDocumentData(decodedData);
@@ -143,7 +147,12 @@ const ExportFCL = ({ order }) => {
     }
   };
 
-  const cheapestQuote = freightQuotes.reduce((min, quote) => quote.netFreight < min.netFreight ? quote : min, freightQuotes[0] || { netFreight: Infinity });
+  // Defensive: skip quotes without a valid netFreight
+  const cheapestQuote = freightQuotes.filter(q => typeof q.netFreight === 'number' && !isNaN(q.netFreight))
+    .reduce(
+      (min, quote) => quote.netFreight < min.netFreight ? quote : min,
+      freightQuotes[0] || { netFreight: Infinity }
+    );
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -168,6 +177,9 @@ const ExportFCL = ({ order }) => {
     }
     return sortableQuotes;
   }, [freightQuotes, sortConfig]);
+
+  // Separate cheapest quote for top highlighted row
+  const otherQuotes = sortedQuotes.filter(q => q !== cheapestQuote);
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
@@ -227,11 +239,11 @@ const ExportFCL = ({ order }) => {
               <tr>
                 {[
                   `${order.from} - ${order.to}`,
-                  new Date(order.shipmentReadyDate).toISOString().split('T')[0],
+                  formatDate(order.shipmentReadyDate),
                   order.deliveryTerm,
                   order.Type,
                   order.numberOfContainers,
-                  new Date(order.targetDate).toISOString().split('T')[0]
+                  formatDate(order.targetDate)
                 ].map((value, index) => (
                   <td
                     key={index}
@@ -294,34 +306,52 @@ const ExportFCL = ({ order }) => {
 
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Flight/Vessel Details</th>
 
-                
-
                 <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" onClick={() => requestSort('validityTime')}>
                 Validity Time {sortConfig.key === 'validityTime' ? (sortConfig.direction === 'ascending' ? <FiArrowUp /> : <FiArrowDown />) : null}
                 </th>
-
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {sortedQuotes.map((quote, index) => (
+              {/* Cheapest quote row always at the top */}
+              {cheapestQuote && typeof cheapestQuote.netFreight === 'number' && !isNaN(cheapestQuote.netFreight) && (
+                <tr
+                  className="bg-green-200 font-bold cursor-pointer hover:bg-green-300"
+                  onClick={() => handleRowSelect(cheapestQuote)}
+                >
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
+                    <span className="font-medium text-gray-900">{cheapestQuote.Agent}</span>
+                    <span className="block text-gray-500">{cheapestQuote.createdUser}</span>
+                  </td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.netFreight}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.DTHC}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.freeTime}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.transShipmentPort}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.carrier}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.transitTime}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{cheapestQuote.vesselOrFlightDetails}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{formatDate(cheapestQuote.validityTime)}</td>
+                </tr>
+              )}
+              {/* The rest of the sorted quotes, skipping the cheapest */}
+              {otherQuotes.map((quote, index) => (
                 <tr
                   key={index}
-                  className={`${quote.netFreight === cheapestQuote.netFreight ? 'bg-green-100' : ''} cursor-pointer hover:bg-gray-50`}
+                  className="cursor-pointer hover:bg-gray-50"
                   onClick={() => handleRowSelect(quote)}
                 >
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">
                     <span className="font-medium text-gray-900">{quote.Agent}</span>
                     <span className="block text-gray-500">{quote.createdUser}</span>
                   </td>
-                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.netFreight}</td>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.netFreight}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.DTHC}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.freeTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transShipmentPort}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.carrier}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.transitTime}</td>
                   <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{quote.vesselOrFlightDetails}</td>
-                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{new Date(quote.validityTime).toISOString().split('T')[0]}</td>
-                  </tr>
+                  <td className="px-4 py-3.5 text-sm text-center text-gray-700 whitespace-nowrap">{formatDate(quote.validityTime)}</td>
+                </tr>
               ))}
             </tbody>
           </table>
@@ -332,7 +362,7 @@ const ExportFCL = ({ order }) => {
       {isPopupVisible && (
         <QuoteDetailsPopup
           quote={selectedQuote}
-          order={order} // Pass the order prop here
+          order={order}
           onClose={() => setIsPopupVisible(false)}
           onSelectAgent={handleSelectAgent}
         />
@@ -377,7 +407,7 @@ const ExportFCL = ({ order }) => {
             <button
               onClick={() => {
                 setShowSuccessPopup(false);
-                navigate('/All-Orders'); // Navigate to the desired location
+                navigate('/All-Orders');
               }}
               className="w-full py-2 px-4 bg-[#38B000] hover:bg-[#38B000]/90 text-white rounded-lg transition-colors mt-4"
             >
